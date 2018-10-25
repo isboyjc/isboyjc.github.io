@@ -1,0 +1,117 @@
+/* 主体 */
+section{
+	--rectWH: 300;
+	--calcWH: 150;
+	display: none;
+}
+/* 主体块1 */
+#sect_one{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background: var(--colorbg);
+	transition: all .5s;
+}
+
+#sect_one>.wraper{
+	width: calc(var(--rectWH) * 1px);
+	height: calc(var(--rectWH) * 1px);
+	position: absolute;
+	top: 50%;left: 50%;
+	transform: translate(-50%, -50%);
+	perspective: 1000px;
+	transition: all .5s;
+}
+
+.cube {
+	height: 100%;
+	width: 100%;
+	position: relative;
+	transform-style: preserve-3d;
+	/*transform: rotateX(-30deg) rotateY(-45deg);*/
+	animation: spin 5s ease-in-out;
+}
+
+@keyframes spin {
+	from {
+		transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+	}
+	to {
+		transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+	}
+}
+
+.cube>div {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;left: 0;
+	box-shadow: 0px 0px 150px 0px var(--colorsd) inset;
+	background-color: var(--coloropc);
+	text-align: center;
+	line-height: calc(var(--rectWH) * 1px);
+	color: var(--colorft);
+	font-size: 30px;
+	user-select: none;
+	cursor: var(--hoverCur),auto;
+	transition: all .5s;
+}
+
+.front {
+	transform: translateZ(calc(var(--calcWH) * 1px));
+}
+
+.end {
+	transform: rotateY(180deg) translateZ(calc(var(--calcWH) * 1px));
+}
+
+.top {
+	transform: rotateX(90deg) translateZ(calc(var(--calcWH) * 1px));
+}
+
+.bottom {
+	transform: rotateX(-90deg) translateZ(calc(var(--calcWH) * 1px));
+}
+
+.left {
+	transform: rotateY(-90deg) translateZ(calc(var(--calcWH) * 1px));
+}
+
+.right {
+	transform: rotateY(90deg) translateZ(calc(var(--calcWH) * 1px));
+}
+
+
+/* 主体块2 */
+/* #sect_two{
+	width: 100%;
+	height: 90%;
+	position: absolute;
+	top: 100%;
+	z-index: 5;
+	background: var(--colorbg);
+	transition: all .5s;
+	overflow: hidden;
+} */
+
+
+/* 屏幕小于700px时 */
+@media screen and (min-width: 701px ) and (max-width: 1000px ) {
+	/* 主体 */
+	section{
+		--rectWH: 250;
+		--calcWH: 125;
+	}
+}
+
+/* 屏幕小于700px时 */
+@media screen and (max-width: 700px ) {
+	/* 主体 */
+	section{
+		--rectWH: 200;
+		--calcWH: 100;
+	}
+	.cube>div {
+		font-size: 20px;
+	}
+}
