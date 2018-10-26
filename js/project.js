@@ -177,7 +177,7 @@
 	var wraper = document.querySelector('.wraper')
 	for(var i=0;i<cubes.length;i++){
 		cubes[i].addEventListener("click",function(){
-			this.innerHTML = 'sorry,No page!'
+			window.location.href = 'https://github.com/isboyjc'
 		})
 	}
 }()
