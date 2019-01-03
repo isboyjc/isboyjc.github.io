@@ -307,6 +307,7 @@ window.onload = function(){
     var audioBtn = document.querySelector('.audio')
     audio.src = "./audio/BeautifulHawaii.mp3";
     audio.loop = true; //歌曲循环
+    audio.pause()
     audioBtn.onclick = function(){
         if(audio.paused){
             audioBtn.classList.remove('audio-pause')
@@ -324,8 +325,11 @@ window.onload = function(){
     // 关闭加载页面
     !function close(){
         // 关闭加载页面
-        
+        document.querySelector('.loading').classList.remove('loading')
+        // 音乐播放
+        audio.play()
         // 火车驶出
         document.querySelector('.train').classList.add('train-active')
+
     }()
 }
