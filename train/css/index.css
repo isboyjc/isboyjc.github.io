@@ -1,0 +1,128 @@
+body{
+    margin: 0;padding: 0;
+    background-color: #7CBFF4;
+}
+.scroll{
+    position:absolute; 
+    overflow:scroll; 
+    -webkit-overflow-scrolling: touch; 
+    top:0; left:0; bottom:0; right:0;
+}
+/* 盒子 */
+.boss{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+/* 容器 */
+.cantainer{
+    width: inherit;
+}
+/* 背景 */
+.cantainer>.bg{
+    width: inherit;
+}
+/* 前景 */
+.cantainer>.bgcao{
+    width: 24.28vw;
+    position: absolute;
+    top: 0;left: 0;
+    z-index: 1000;
+}
+/* 2018 */
+.cantainer>.start{
+    width: 79.2vw;
+    position: absolute;
+    z-index: 100;
+    top: 0;left: 0;
+}
+/* 列车 */
+.cantainer>.train{
+    width: 29.9vw;
+    position: absolute;
+    top: 127.6vw;left: 15vw;
+    z-index: 99;
+    -webkit-transform: translateY(-34vw);
+    transform: translateY(-34vw);
+}
+/* 2019 */
+.cantainer>.end{
+    width: 79.2vw;
+    position: absolute;
+    z-index: 100;
+    bottom: 0;left: 0;
+}
+/* 人 */
+.cantainer>.person{
+    width: 33.2vw;
+    position: absolute;
+    top: 339vw;left: 8.5vw;z-index: 98;
+}
+/* 站牌 */
+.cantainer>.board{
+    width: inherit;
+    height: inherit;
+    position: absolute;
+    top: 0;left: 0;z-index: 97;
+}
+.board>.no1,.no2,.no3,.no4,.no5,.no6,.no7,.no8,.no9,.no10{
+    position: relative;
+    left: 16.5vw;
+}
+.board>div>img:first-child{
+    width: 57.85vw;
+}
+.board>.no1{top: 327.5vw;}
+.board>.no2{top: 454.5vw;}
+.board>.no3{top: 640.5vw;}
+.board>.no4{top: 765.5vw;}
+.board>.no5{top: 913.5vw;}
+.board>.no6{top: 1028.5vw;}
+.board>.no7{top: 1176.5vw;}
+.board>.no8{top: 1336.5vw;}
+.board>.no9{top: 1458.5vw;}
+.board>.no10{top: 1642.5vw;}
+.board>div>img:last-child{
+    width: 10.5vw;
+    position: absolute;
+    left: 60vw;top: 50%;
+    -webkit-transform: translate(0,-50%);
+    transform: translate(0,-50%);
+    -webkit-animation: arrow 1s infinite alternate;
+    animation: arrow 1s infinite alternate;
+}
+@-webkit-keyframes arrow{
+    0%{-webkit-transform: translate(0,-50%);transform: translate(0,-50%);}
+    100%{-webkit-transform: translate(3vw,-50%);transform: translate(3vw,-50%);}
+}
+@keyframes arrow{
+    0%{-webkit-transform: translate(0,-50%);transform: translate(0,-50%);}
+    100%{-webkit-transform: translate(3vw,-50%);transform: translate(3vw,-50%);}
+}
+
+/* 站牌弹框 */
+.cantainer>.alert{
+    position: fixed;
+    top: 0;left:0;
+    width: 100vw;
+    height: 0vh;
+    overflow: hidden;
+    background-color: rgba(0,0,0,.7);
+    z-index: 1000;
+    transition: all .5s;
+}
+.cantainer>.alert-active{
+    height: 100vh;
+}
+.alert>img{
+    position: absolute;
+    top: 50vh;left: 50vw;
+    width: 75.7vw;
+    -webkit-transform: translate(150%,-50%);
+    transform: translate(150%,-50%);
+    transition: all 1s .5s;
+}
+.alert-active>.img-alert{
+    -webkit-transform: translate(-45%,-50%);
+    transform: translate(-45%,-50%);
+}
