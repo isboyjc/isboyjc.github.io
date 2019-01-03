@@ -224,7 +224,7 @@ Scroll.prototype = {
         /*设置最大值*/
         temDis = temDis < -this.maxValue ? -this.maxValue : temDis;
         console.log(temDis)
-        this.$el.style["transitionDuration"] = '400ms';
+        this.$el.style["transitionDuration"] = '300ms';
         this.$el.style["transitionTimingFunction"] = 'ease-out';
         /*确定最终的滚动位置*/
         setTimeout(()=> {
@@ -282,6 +282,8 @@ function affair(){
 window.onload = function(){
     console.log('加载完成')
     isbool = true
+
+    // 站牌弹窗
     var boards = document.querySelectorAll('.board>div>img:first-child')
     var alerts = document.querySelectorAll('.alert>img')
     for(var i=0;i<boards.length;i++){
@@ -300,7 +302,30 @@ window.onload = function(){
         this.classList.toggle('alert-active')
     }
 
+    // 音频
     var audio = document.getElementById("audio");
-    audio.src = "http://www.ytmp3.cn/down/46143.mp3";
+    var audioBtn = document.querySelector('.audio')
+    audio.src = "./audio/BeautifulHawaii.mp3";
     audio.loop = true; //歌曲循环
+    audioBtn.onclick = function(){
+        if(audio.paused){
+            audioBtn.classList.remove('audio-pause')
+            audio.play()
+            audioBtn.style.webkitAnimationPlayState = "running";
+            console.log('播放')
+        }else{
+            audio.pause()
+            audioBtn.style.webkitAnimationPlayState = "paused";
+            audioBtn.classList.add('audio-pause')
+            console.log('暂停')
+        }
+    }
+
+    // 关闭加载页面
+    !function close(){
+        // 关闭加载页面
+        
+        // 火车驶出
+        document.querySelector('.train').classList.add('train-active')
+    }()
 }
