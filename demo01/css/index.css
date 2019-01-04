@@ -1,0 +1,213 @@
+body{
+    margin: 0;padding: 0;
+    background-color: #7CBFF4;
+}
+/*加载页面*/
+.loading{
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,.99);
+    position: fixed;
+    top: 0;left: 0;z-index: 1001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+.scroll{
+    position:absolute; 
+    overflow:scroll; 
+    -webkit-overflow-scrolling: touch; 
+    top:0; left:0; bottom:0; right:0;
+}
+/* 盒子 */
+.boss{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+/* 容器 */
+.cantainer{
+    width: inherit;
+    position: relative;
+    top: 0;left: 0;
+}
+/* 背景 */
+.cantainer>.bg{
+    width: inherit;
+}
+/* 前景-植物 */
+.cantainer>.bgcao{
+    width: 24.27vw;
+    position: absolute;
+    top: 0;left: 0;
+    z-index: 1000;
+}
+/* 2018 */
+.cantainer>.start{
+    width: 79.2vw;
+    position: absolute;
+    z-index: 100;
+    top: 0;left: 0;
+}
+/* 列车 */
+.cantainer>.train{
+    width: 29.9vw;
+    position: absolute;
+    top: 127.6vw;left: 15vw;
+    z-index: 99;
+    transition: transform 1s ease-in;
+    -webkit-transform: translateY(-135vw);
+    transform: translateY(-135vw);
+}
+.cantainer>.train-active{
+    -webkit-transform: translateY(-35vw)!important;
+    transform: translateY(-35vw)!important;
+}
+/* 站牌前-人 */
+.cantainer>.person{
+    width: 33.73vw;
+    position: absolute;
+    top: 413vw;left: 8.5vw;z-index: 98;
+    -webkit-animation: person 6s ease infinite alternate;
+    animation: person 6s ease infinite alternate;
+}
+@-webkit-keyframes person{
+    0%{-webkit-transform: translate(0,0);transform: translate(0,0);}
+    100%{-webkit-transform: translate(1vw,-1vw);transform: translate(1vw,-1vw);}
+}
+@keyframes person{
+    0%{-webkit-transform: translate(0,0);transform: translate(0,0);}
+    100%{-webkit-transform: translate(1vw,-1vw);transform: translate(1vw,-1vw);}
+}
+/* 站牌 */
+.cantainer>.board{
+    width: inherit;
+    height: inherit;
+    position: absolute;
+    top: 0;left: 0;z-index: 97;
+}
+.board>.no1,.no2,.no3,.no4,.no5,.no6,.no7,.no8,.no9,.no10,.no11,.no12,.no13{
+    position: relative;
+    left: 16vw;
+}
+.board>div>img:first-child{
+    width: 57.85vw;
+}
+.board>.no1{top: 399vw;}
+.board>.no2{top: 574.5vw;}
+.board>.no3{top: 814.5vw;}
+.board>.no4{top: 958.5vw;}
+.board>.no5{top: 1116.5vw;}
+.board>.no6{top: 1224.5vw;}
+.board>.no7{top: 1386.5vw;}
+.board>.no8{top: 1579.5vw;}
+.board>.no9{top: 1684.5vw;}
+.board>.no10{top: 1890.5vw;}
+.board>.no11{top: 2057.5vw;}
+.board>.no12{top: 2173.5vw;}
+.board>.no13{top: 2323.5vw;}
+.board>div>img:last-child{
+    width: 10.5vw;
+    position: absolute;
+    left: 60vw;top: 50%;
+    -webkit-transform: translate(0,-50%);
+    transform: translate(0,-50%);
+    -webkit-animation: arrow 1s infinite alternate;
+    animation: arrow 1s infinite alternate;
+}
+@-webkit-keyframes arrow{
+    0%{-webkit-transform: translate(0,-50%);transform: translate(0,-50%);}
+    100%{-webkit-transform: translate(3vw,-50%);transform: translate(3vw,-50%);}
+}
+@keyframes arrow{
+    0%{-webkit-transform: translate(0,-50%);transform: translate(0,-50%);}
+    100%{-webkit-transform: translate(3vw,-50%);transform: translate(3vw,-50%);}
+}
+
+/* 站牌弹框 */
+.cantainer>.alert{
+    position: fixed;
+    top: 0;left:0;
+    width: 100vw;
+    height: 0vh;
+    overflow: hidden;
+    background-color: rgba(0,0,0,.5);
+    z-index: 1000;
+    transition: all .5s;
+}
+.cantainer>.alert-active{
+    height: 100vh;
+}
+.alert>img{
+    position: absolute;
+    top: 50vh;left: 50vw;
+    width: 75.7vw;
+    -webkit-transform: translate(150%,-50%);
+    transform: translate(150%,-50%);
+    transition: all 1s .5s;
+}
+.alert-active>.img-alert{
+    -webkit-transform: translate(-45%,-50%);
+    transform: translate(-45%,-50%);
+}
+
+/* 2019 */
+.cantainer>.end{
+    width: 79.2vw;
+    position: absolute;
+    z-index: 100;
+    bottom: 110vh;left: 0;
+}
+/* end-弹窗 */
+.cantainer>.no-end{
+    width: 77.33vw;
+    position: absolute;
+    z-index: 1000;
+    bottom: 50vh;left: 50vw;
+    transform: translate(-40%,50%);
+}
+
+/*音频控制按钮*/
+.audio{
+    position: fixed;
+    top: 3vw;right: 3vw;
+    z-index: 100;
+    transform-origin: 4vw 4vw;
+    animation: turn 5s linear infinite;
+}
+.audio-pause::after{
+    content: '';
+    width: 8vw;
+    height: .6vw;
+    background-color: #00ADAA;
+    position: absolute;
+    top: 50%;left: 0;
+    transform: translateY(-.3vw);
+}
+.audio>i{
+    font-size: 8vw;
+    color: #00ADAA;
+}
+@keyframes turn{
+    0%{transform: rotateZ(0deg);}
+    50%{transform: rotateZ(180deg);}
+    100%{transform: rotateZ(360deg);}
+}
+
+/*图标样式*/
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot?t=1546498753978'); /* IE9*/
+  src: url('iconfont.eot?t=1546498753978#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAUQAAsAAAAAB6gAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAARAAAAFY8f0kCY21hcAAAAYAAAABWAAABhmic0N9nbHlmAAAB2AAAAUIAAAGI3vI6Q2hlYWQAAAMcAAAALwAAADYTxut/aGhlYQAAA0wAAAAcAAAAJAfeA4RobXR4AAADaAAAAAwAAAAMDAAAAGxvY2EAAAN0AAAACAAAAAgAXADEbWF4cAAAA3wAAAAfAAAAIAERAEtuYW1lAAADnAAAAUUAAAJtPlT+fXBvc3QAAATkAAAAKwAAAD/1meyweJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2BkYWCcwMDKwMHUyXSGgYGhH0IzvmYwYuRgYGBiYGVmwAoC0lxTGByecT4XYG7438AQw9zA0AAUZgTJAQDfJgv9eJztkLENgDAMBO+TEAlEwRgUDETF+GSMYDuwBS+d334njYEJyMZhFNCFcJ2WKvLMEnmJN9VcpHtuW+/wuUm2q+bJ/6nya426v1Pyaw28b9sAPb2MDa4AAHicTY6xTsJQGIX/v+1tRZDbQumNBBqBUEwEhlKKjQkQZjcJuDk5+BY8inEp72ACWx+iQ7s46CsQevWCCWE5/zk5/5cckAF+VwrIK8gDgwEAOtBRQbOA+dD2YSSMiI7wQ9nGiqkxf+h1+tjRDKfVVCvmwPUVIDyNY54Sgo04xsbeI6hGEaqE8F0U8R1+SVh9NnK9l5qZs9q33elr7x5X4pWco2eEyOqVquOTYTNq0W7DrV+ULORvN83rBxsUsXsrb+Up1MEBF8ZiuRjlOWKS0cdWETUb2RhH5ePxHNF6vmuZavlU9VEWiDAiFlH6mcxRZ7QyqM+WkrScTZcy1h67eV3n0V0QLIKguskIyTb/GqaKkoZHxUyajwuUFvh3yRTkgZ9P8NJuIlJG+Qce6EUgvZ/oTbb/VJJ1mBCShOvkD8khZAQAAHicY2BkYGAAYiuNhInx/DZfGbhZGEDgRvDlgwj6fwMLA3MDkMvBwAQSBQAhswqSAHicY2BkYGBu+N/AEMPCAAJAkpEBFTADAEcJAmwEAAAABAAAAAQAAAAAAAAAAFwAxHicY2BkYGBgZrBnYGEAASYg5gJCBob/YD4DAA8eAV0AeJxlj01OwzAQhV/6B6QSqqhgh+QFYgEo/RGrblhUavdddN+mTpsqiSPHrdQDcB6OwAk4AtyAO/BIJ5s2lsffvHljTwDc4Acejt8t95E9XDI7cg0XuBeuU38QbpBfhJto41W4Rf1N2MczpsJtdGF5g9e4YvaEd2EPHXwI13CNT+E69S/hBvlbuIk7/Aq30PHqwj7mXle4jUcv9sdWL5xeqeVBxaHJIpM5v4KZXu+Sha3S6pxrW8QmU4OgX0lTnWlb3VPs10PnIhVZk6oJqzpJjMqt2erQBRvn8lGvF4kehCblWGP+tsYCjnEFhSUOjDFCGGSIyujoO1Vm9K+xQ8Jee1Y9zed0WxTU/3OFAQL0z1xTurLSeTpPgT1fG1J1dCtuy56UNJFezUkSskJe1rZUQuoBNmVXjhF6XNGJPyhnSP8ACVpuyAAAAHicY2BigAAuBuyAmZGJkZmRhYG3MjMvJzW3tDgz2cjQhBXMY2AAAFziBygA') format('woff'),
+  url('iconfont.ttf?t=1546498753978') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1546498753978#iconfont') format('svg'); /* iOS 4.1- */
+}
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-yinlemusic214:before { content: "\e710"; }
