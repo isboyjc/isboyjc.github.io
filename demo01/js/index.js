@@ -32,7 +32,6 @@ function Touch(ele) {// 创建触屏移动构造函数
     };
     this.events = {
         handleEvent: function(event) {
-            console.log(1)
             switch (event.type) {
                 case 'touchstart':
                     that.start(event);
@@ -55,16 +54,14 @@ Touch.prototype = {// 添加原型对象
             y: touches.pageY - this.endTop.y,
             id: touches.identifier
         };
-        console.log('aaa');
+        // console.log('aaa');
         document.addEventListener('touchmove', that.events, false);
         document.addEventListener('touchend', that.events, false);
-
-        if(isbool){ affair() }
     },
     move: function(ev) {// 移动中
         var touches = ev.targetTouches[0];
         if (touches.identifier == this.disP.id) {
-            console.log('move');
+            // console.log('move');
             this.endTop = {
                 y: touches.pageY - this.disP.y
             };
@@ -82,8 +79,6 @@ Touch.prototype = {// 添加原型对象
             document.removeEventListener('touchmove', that.events, false);
             document.removeEventListener('touchend', that.events, false);
         }
-
-        if(isbool){ affair() }
     },
     init: function() {// 初始化方法
         var that = this;
@@ -110,8 +105,7 @@ function contains(arrays, obj) {
 // 火车头定位
 var isbool = false
 function affair(){
-    var top = Math.abs(String(cantainer.style.top).match(/\+?\-?\d+/g)[0])
-    console.log(top)
+    var top = Math.abs(String(document.querySelector('.cantainer').style.top).match(/\+?\-?\d+/g)[0])
     var train = document.querySelector('.train')
     if(top>=486){
         if(train.style.position=='fixed'){ return }
@@ -124,14 +118,13 @@ function affair(){
     }
 }
 
-// 获取元素
-var cantainer = document.querySelector('.cantainer')
-var touch = new Touch(cantainer);// 实例化Touch对象
-
 window.onload = function(){
     console.log('加载完成')
     isbool = true
 
+    // 获取元素
+    var cantainer = document.querySelector('.cantainer')
+    var touch = new Touch(cantainer);// 实例化Touch对象
     maxTop = cantainer.offsetHeight-window.screen.height// 获取最大top值
     touch.init();// 初始化触屏方法
 
