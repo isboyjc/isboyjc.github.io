@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <style>
+        body{padding: 0;margin: 0;}
+        #app{
+            padding: 0px 20px;
+            box-sizing: border-box;
+        }
+        .box{
+            width: 100%;
+        }
+        .item{
+            margin-top: 20px;
+            width: 100%;height: 450px;
+            background-color: #eee;
+            padding: 20px 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+        }
+        .item>div:first-child{width: 30%;height: 100%;}
+        .item>div:last-child{width: 67%;height: 100%;}
+        .item>div>iframe{width: 100%;height: 100%;}
+        .item-num{
+            width: 100%;height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+        }
+        .group-btn{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="box">
+            <div class="item" v-for="(item,i) of formArr" :key="i">
+                <div>
+                    <el-form :model="item" label-width="80px">
+                        <el-form-item label="输入URL">
+                            <el-input v-model="item.url" :disabled="item.start"></el-input>
+                        </el-form-item>
+                        <el-form-item label="显示网页">
+                            <el-switch v-model="item.bool" :disabled="item.start"></el-switch>
+                        </el-form-item>
+                        <el-form-item label="刷新间隔">
+                            <el-select v-model="item.time" placeholder="ms/次" :disabled="item.start">
+                                <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="刷新方式">
+                            <el-radio-group v-model="item.type" :disabled="item.start">
+                                <el-radio :label="1">自动刷新</el-radio>
+                                <el-radio :label="2">次数刷新</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="自动刷新" v-if="item.type==1">
+                            <el-input value="自动刷新点击结束才能结束" :disabled="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="次数刷新" v-if="item.type==2">
+                            <el-slider v-model="item.value" show-input :min="1" :max="1000" :disabled="item.start"></el-slider>
+                        </el-form-item>
+                        <el-form-item label="刷新次数">
+                            <el-input :value="`已刷新${item.num}次`" :disabled="true"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <div class="group-btn">
+                                <el-button-group>
+                                    <el-button type="primary" @click="onStart(i)">开始刷新</el-button>
+                                    <el-button type="primary" @click="onEnd(i)">结束刷新</el-button>
+                                </el-button-group>
+                                <el-button-group v-if="i == formArr.length-1">
+                                    <el-button type="primary" circle icon="el-icon-plus" @click="addCart(i)"></el-button>
+                                    <el-button type="primary" circle icon="el-icon-minus" @click="deleteCart(i)"></el-button>
+                                </el-button-group>
+                            </div>
+                        </el-form-item>
+                    </el-form>
+                </div>
+                <div>
+                    <iframe class="item-no" v-show="item.bool" :src="item.url"></iframe>
+                    <div class="item-num" v-show="!item.bool">第{{item.num}}次</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let app = new Vue({
+            el: '#app',
+            data:{
+                options: [{
+                    value: 300,
+                    label: '300ms/次'
+                },{
+                    value: 500,
+                    label: '500ms/次(推荐)'
+                }, {
+                    value: 800,
+                    label: '800ms/次(推荐)'
+                }, {
+                    value: 1000,
+                    label: '1000ms/次'
+                }],
+                formArr: [
+                    { url: 'https://paimai.jd.com/album/522577',bool: true,type: 1,value:1,time:500, timer:null, num:0, start:false},
+                ]
+            },
+            methods:{
+                // 开始
+                onStart(i){
+                    this.formArr[i].start = true
+                    clearInterval(this.formArr[i].timer)
+                    this.formArr[i].num = 0
+
+                    if(this.formArr[i].type==1){
+                        this.formArr[i].timer = setInterval(()=>{
+                            this.redraw(i)
+                            this.formArr[i].num++
+                        },this.formArr[i].time)
+                    }
+                    if(this.formArr[i].type==2){
+                        this.formArr[i].timer = setInterval(()=>{
+                            if(this.formArr[i].num==this.formArr[i].value){
+                                this.onEnd(i)
+                                return
+                            }
+                            this.redraw(i)
+                            this.formArr[i].num++
+                        },this.formArr[i].time)
+                    }
+                    
+                },
+                // 结束
+                onEnd(i){
+                    clearInterval(this.formArr[i].timer)
+                    this.formArr[i].start = false
+                },
+                // 刷新函数
+                redraw(i){
+                    let iframe = document.querySelectorAll('.item-no')[i]
+                    iframe.src = this.formArr[i].url
+                    var iframeDocument = iframe.contentWindow
+                    console.log(iframe)
+                    console.log(iframeDocument)
+                },
+                // 添加卡片
+                addCart(i){
+                    if(this.formArr.length>5){
+                        this.$message('最大一页同开五个,可多开窗口!')
+                        return
+                    }
+                    this.formArr.push({ url: '',bool: true,type: 1,value:1,time:500, timer:null, num:0, start:false})
+                    this.$message({
+                        message: '添加成功',
+                        type: 'success'
+                    })
+                },
+                // 删除卡片
+                deleteCart(i){
+                    if(this.formArr.length<=1){
+                        this.$message('最后一个不可删除!')
+                        return
+                    }
+                    this.formArr.splice(i,1)
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    })
+                }
+            },
+            created(){}
+        })
+    </script>
+</body>
+</html>
