@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
     <title>jd-信息抓取</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
     <style>
         body{
             opacity: 1;
@@ -14,22 +15,26 @@
     </style>
 </head>
 <body>
-    <iframe class="iframe" src="https://paimai.jd.com/109878592" width="1000" height="500" frameborder="0"></iframe>
+    <!-- <iframe class="iframe" src="https://paimai.jd.com/109878592" width="1000" height="500" frameborder="0"></iframe> -->
+    <button>按钮</button>
+    <div></div>
 
     <script>
-        // let iframe = document.querySelector('.iframe')
-        // console.dir(iframe.contentDocument.body)
-        // console.log(iframe.contentWindow.document)
-        var iframe = document.querySelector('.iframe')
-        if (iframe.attachEvent) {
-            iframe.attachEvent("onload", function () {
-                console.log(iframe.contentWindow.document.body.innerHTML)
-            })
-        } else {
-            iframe.onload = function () {
-                console.log(iframe.contentWindow.document.body.innerHTML)
-            }
-        }
+        // var iframe = document.querySelector('.iframe')
+        // if (iframe.attachEvent) {
+        //     iframe.attachEvent("onload", function () {
+        //         console.log(iframe.contentWindow.document.body.innerHTML)
+        //     })
+        // } else {
+        //     iframe.onload = function () {
+        //         console.log(iframe.contentWindow.document.body.innerHTML)
+        //     }
+        // }
+
+        $("button").click(function(){
+            $("div").load('https://paimai.jd.com/109878592 #container')
+            console.log($("div").load('https://paimai.jd.com/109878592'))
+        })
     </script>
 </body>
 </html>
