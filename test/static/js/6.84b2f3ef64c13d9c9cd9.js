@@ -1,0 +1,2 @@
+webpackJsonp([6],{"NZ/x":function(e,t,a){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",{staticClass:"healthData-views"},[t("router-view")],1)},staticRenderFns:[]};var r=a("VU/8")({},n,!1,function(e){a("vE4x")},"data-v-2e3ea768",null);t.default=r.exports},vE4x:function(e,t){}});
+//# sourceMappingURL=6.84b2f3ef64c13d9c9cd9.js.map

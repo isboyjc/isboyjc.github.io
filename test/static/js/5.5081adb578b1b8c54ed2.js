@@ -1,0 +1,2 @@
+webpackJsonp([5],{"+VEQ":function(e,t){},tHww:function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",{staticClass:"classroomreport-views"},[t("router-view")],1)},staticRenderFns:[]};var s=r("VU/8")({},n,!1,function(e){r("+VEQ")},"data-v-597eb0e2",null);t.default=s.exports}});
+//# sourceMappingURL=5.5081adb578b1b8c54ed2.js.map
