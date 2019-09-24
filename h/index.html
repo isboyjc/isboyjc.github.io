@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+        <title>图片合成</title>
+        <style>
+            body{margin: 0;padding: 0;}
+            .container{width: 100vw;height: 100vh;}
+            .container>div{background-color: pink;width: 100px;height: 100px;}
+            .container>div>img{width: 100%;height: 100%;}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="img1"><img src="./images/lizi.jpg" alt=""></div>
+            <div class="img2"><img src="./images/70.png" alt=""></div>
+            <div class="img3"><img src="" alt=""></div>
+            <button id="btn">合成</button>
+        </div>
+        <script>
+            document.getElementById('btn').onclick = function(){
+                var canvas = document.createElement("canvas")       // 新建canvas画布
+                var context = canvas.getContext("2d")               // 获取canvas画布上下文
+                canvas.width = 700                                  // 设置canvas画布宽高
+                canvas.height = 700
+                
+                context.rect(0,0,canvas.width,canvas.height)
+                context.fillStyle = 'transparent'                   // 画布填充颜色
+                context.fill()
+
+                var myImage1 = document.querySelector('.img1>img')  // 获取图片底图
+                myImage1.crossOrigin = 'Anonymous'                  // 图片允许跨域
+
+                context.drawImage(myImage1 , 0 , 0 , 700 , 700)     // 将底图绘制到canvas画布上
+
+                var myImage2 = document.querySelector('.img2>img')  // 获取顶部png图
+                myImage2.crossOrigin = 'Anonymous'                  // 图片允许跨域
+                
+                context.drawImage(myImage2 , 500 , 500 , 200 , 200)     // 吧顶部png图绘制到canvas画布上
+                var base64 = canvas.toDataURL("image/png")          // 将合成好的canvas画布生成图片base64格式
+
+                var img = document.querySelector('.img3>img')       // 获取空白img标签
+                console.log(base64)
+                img.src = base64                                    // 将合成好的base64放置src
+            }
+
+        </script>
+    </body>
+</html>
