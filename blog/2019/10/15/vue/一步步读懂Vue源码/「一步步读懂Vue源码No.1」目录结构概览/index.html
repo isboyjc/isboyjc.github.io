@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.jpeg">
+  <link rel="icon" type="image/png" href="/img/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="">
+  <title>「一步步读懂Vue源码No.1」目录结构概览 - U ~ ISBOYJC</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css"  >
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css"  >
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css"  >
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css"  >
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+
+  <link rel="stylesheet" href="/lib/prettify/github-v2.min.css"  >
+
+<link rel="stylesheet" href="/css/main.css"  >
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css"  >
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">首页</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">归档</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">分类</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('/img/banner/b030.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  星期二, 十月 15日 2019, 7:00 晚上
+                </p>
+              
+
+              <p>
+                
+                  
+                  &nbsp;<i class="far fa-chart-bar"></i>
+                  <span class="post-count">
+                    3.4k 字
+                  </span>&nbsp;
+                
+
+                
+                  
+                  &nbsp;<i class="far fa-clock"></i>
+                  <span class="post-count">
+                      12 分钟
+                  </span>&nbsp;
+                
+
+                
+                  <!-- 不蒜子统计文章PV -->
+                  
+                  &nbsp;<i class="far fa-eye" aria-hidden="true"></i>&nbsp;
+                  <span id="busuanzi_container_page_pv">
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>&nbsp;
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <h1 id="「一步步读懂-Vue-源码-No-1」目录结构概览"><a href="#「一步步读懂-Vue-源码-No-1」目录结构概览" class="headerlink" title="「一步步读懂 Vue 源码 No.1」目录结构概览"></a>「一步步读懂 Vue 源码 No.1」目录结构概览</h1><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><h4 id="为什么学习源码"><a href="#为什么学习源码" class="headerlink" title="为什么学习源码"></a>为什么学习源码</h4><p>工作中难免会遇到一些问题，学习源码最直接的好处是能帮我们直接定位问题的根本原因，从而帮助我们解决问题</p>
+<p>学习源码可以很好地巩固基础，修炼内功，提升技术 , 日常开发中我们很难把 js 的一些核心(类型、变量、函数、作用域、闭包、原型链、event loop 等 )在实践中运用自如，主要原因还是实践的少了，大部分时间都在写业务代码 , 学习源码可以让我们 js 功底更加深厚</p>
+<p>前端框架 , 不知道如何形容 React 的好 , 但是我个人更喜欢 Vue 一点 , 作为 Vue 的爱好者和开发者 , 当然不能仅仅局限于使用 Vue 上 , 要了解 Vue 背后一系列的运行机制(数据驱动 , 数据更新 , 虚拟 DOM, diff 实现 , API 实现等等) , 才能更好的掌握 Vue , 而想要了解这些 , 最好的方式就是读源码</p>
+<h4 id="关于本帖"><a href="#关于本帖" class="headerlink" title="关于本帖"></a>关于本帖</h4><p>源码是很枯燥的 , 只是看很难理解 , 需要多动手实践 , 所以在此记录下在源码学习中的理解 , 持续更新 ,争取年前整理完 vue 源码吧</p>
+<p>码字的过程中收集了很多零碎帖子参考(当然要说抄袭也是可以的 , 这个我完全不反驳 , 毕竟你也可以每天奋战到 12 点 , 每天看上百篇帖子 , 取其精华 , 弃其糟糠 , 可惜并没有 , 而且我看过的其中我觉得值得大家阅读的文章我也会列出来 , 希望更多的人能够阅读) , 再加上一些自己的理解</p>
+<p>所有涉及到的帖子会在每一节末列出来供大家阅读 , 码字不易 , 好文值得推荐</p>
+<p>由于参考查阅的帖子太多，除却一些个人认为非常非常好的帖子(其实都很好), 不会全部列出(主要是太多了 , 只是这一篇帖子就参考了不下 30 篇文章 , 学习看他们怎么写的有什么区别 , 来保证自己所写全面又无错 , 当然这个全面不是指的所有细节面面俱到 , 而是指除却 vue 核心源码外所涉及的知识体系我都会尽可能的做一个简述列出来为大家的源码学习标注下 , 这些简述的部分会提供我看过的相关优秀帖子供大家参阅 , 所学所写皆来自网上各位前辈的尽心输出 , 我也在尽我所能反馈更多的人 , 这就是一种十分理想互联网生态 , 既帮助自己巩固 , 又可以帮到他人 , 技术学习应当如此 ^-^ )</p>
+<p>每一篇帖子都花费了大量时间 , 已极力保证无错 , 奈何本人水平有限 , 如有不正 , 敬请指出 , 不喜勿喷 , 谢谢</p>
+<p>进入正文</p>
+<h3 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h3><p>在 github 克隆<a href="https://github.com/vuejs/vue" target="_blank" rel="noopener">Vue 官方源码传送门</a></p>
+<p>当前克隆版本 : 2.6.10</p>
+<h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><h4 id="结构简述"><a href="#结构简述" class="headerlink" title="结构简述"></a>结构简述</h4><p>打开克隆下的 vue 文件，我们会看到以下的目录结构</p>
+<p>首先我们先总览一下 ，看这些文件都是干什么的，都有什么作用 ，以下是我克隆的 vue 源码目录</p>
+<ul>
+<li>.circleci</li>
+<li>.github</li>
+<li>benchmarks/</li>
+<li>dist/</li>
+<li>examples/</li>
+<li>flow/</li>
+<li>packages/</li>
+<li>scripts/</li>
+<li>src/</li>
+<li>test/</li>
+<li>types/</li>
+<li>.babelrc.js</li>
+<li>.editorconfig</li>
+<li>.eslintignore</li>
+<li>.eslinttrc.js</li>
+<li>.flowconfig</li>
+<li>.gitignore</li>
+<li>BACKERS.md</li>
+<li>LICENSE</li>
+<li>package.json</li>
+<li>REMADE.md</li>
+<li>yarn.lock</li>
+</ul>
+<p>所有文件都在这了 ，先忽略项目中的一些配置，我门来细究其中几个重要文件夹的作用</p>
+<p>文末会有一个概览，简述了所有文件作用</p>
+<h4 id="benchmarks"><a href="#benchmarks" class="headerlink" title="benchmarks/"></a>benchmarks/</h4><p>benchmarks 是性能测试文件，Vue 的性能测试 demo，比如大数据量的 table 或者渲染大量 SVG，不做赘述</p>
+<h4 id="dist"><a href="#dist" class="headerlink" title="dist/"></a>dist/</h4><h5 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h5><p>dist 文件夹中是打包之后输出的不同版本 Vue 文件</p>
+<p>关于各种版本的作用，要在哪种情况下使用，dist 目录下有 REMADE.md 说明文件，很详细，不过是比较官方的英文版，中文通俗版翻译如下</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>UMD</th>
+<th>CommonJS</th>
+<th>ES Module(基于构建工具使用)</th>
+<th>ES Module(直接用于浏览器)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>完整版</td>
+<td>vue.js</td>
+<td>vue.common.js</td>
+<td>vue.esm.js</td>
+<td>vue.esm.browser.js</td>
+</tr>
+<tr>
+<td>只包含运行时版</td>
+<td>vue.runtime.js</td>
+<td>vue.runtime.common.js</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>完整版(生产环境)</td>
+<td>vue.min.js</td>
+<td></td>
+<td></td>
+<td>vue.esm.browser.min.js</td>
+</tr>
+<tr>
+<td>只包含运行时版(生产环境)</td>
+<td>vue.runtime.min.js</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h5 id="术语解释"><a href="#术语解释" class="headerlink" title="术语解释"></a>术语解释</h5><p><strong>完整版(Full)</strong>: 同时包含编译器和运行时的版本</p>
+<p><strong>编译器(Compiler)</strong>：用来将模板字符串编译成为 JavaScript 渲染函数的代码</p>
+<p><strong>运行时(runtime)</strong>： 用来创建 Vue 实例、渲染并处理虚拟 DOM 等的代码。基本上就是除了编译器其它都有</p>
+<p><strong>UMD</strong>：UMD 版本可以通过 <code>&lt;script&gt;标签直接用在浏览器中。</code> 位于<a href="https://Unpkg.com/vue的Unpkg" target="_blank" rel="noopener">https://Unpkg.com/vue的Unpkg</a> CDN 的默认文件 vue.js 运行时 + 编译器的 UMD 版本 (vue.js)</p>
+<p><strong>CommonJS</strong>：CommonJS 版本用来配合老的打包工具比如 Browserify 或 webpack 1。这些打包工具的默认文件 (<code>pkg.main</code>) 是只包含运行时的 CommonJS 版本 (<code>vue.runtime.common.js</code>)</p>
+<p><strong>ES Module</strong>： 从 2.6 开始 Vue 会提供两个 ES Modules (ESM) 构建文件：</p>
+<ul>
+<li>为打包工具提供的 ESM：为诸如 webpack 2 或 Rollup 提供的现代打包工具。ESM 格式被设计为可以被静态分析，所以打包工具可以利用这一点来进行“tree-shaking”将用不到的代码排除出。为这些打包工具提供的默认文件 (<code>pkg.module</code>) 是只有运行时的 ES Module 构建 (<code>vue.runtime.esm.js</code>)。</li>
+<li>为浏览器提供的 ESM (2.6+)：用于在现代浏览器中通过 <code>&lt;script type=&quot;module&quot;&gt;</code> 直接导入</li>
+</ul>
+<h5 id="运行时-编译器-vs-仅运行时"><a href="#运行时-编译器-vs-仅运行时" class="headerlink" title="运行时+编译器 vs 仅运行时"></a>运行时+编译器 vs 仅运行时</h5><p>如果你需要动态编译模板（例如，使用项目中我们使用了 template 模板，或者使用其 in-dom html 作为模板安装到一个元素），那么就需要编译器把它编译</p>
+<p>例如我们在 cli 或其他地方中使用 vue loader 或 vueify 时，*.vue 文件中的模板在生成时会编译为 js。打包好的 js 已经编译过了，我们就不需要编译器了，因此可以使用仅运行时的 vue.js 包。</p>
+<p>例如我们老项目迭代开发中，在原生 html 中使用 vue 模版语法，在 js 中创建 vue 实例并挂载 dom，使用 cdn 引入 vue.js，这个时候需要对模版进行编译，那么我们就要使用带有编译器的版本(vue.js)</p>
+<p>由于仅运行时的包比完整的包体积要轻 30%，因此官方说应尽可能使用仅运行时</p>
+<h5 id="开发-Development-vs-生产-Production-模式"><a href="#开发-Development-vs-生产-Production-模式" class="headerlink" title="开发(Development) vs 生产(Production)模式"></a>开发(Development) vs 生产(Production)模式</h5><p>开发/生产模式简单来说就是未压缩的文件用于开发，压缩后的文件用于生产</p>
+<p>CommonJS 和 ES 模块的包是为 npm 捆绑包设计的，因此官方没有为它们提供压缩版本，因为我们有使用到它们的场景时，使用完了肯定得自己打包，因为我们使用了 npm 捆绑包嘛 ，到最后就直接连同项目一块打包了，不需要压缩版本</p>
+<p>commonjs 和 es 模块构建还保留对 process.env.node_env 的原始检查，用以确定它们应该运行的模式。应该使用适当的绑定器配置来替换这些环境变量，方便控制将在哪种模式下运行 Vue。用字符串文字替换 process.env.NODE_env 还允许像 UglifyJS(可以理解为一个打包 js 的插件)这样的小型化程序完全删除仅用于开发的代码块，从而减少最终文件大小</p>
+<h4 id="examples"><a href="#examples" class="headerlink" title="examples/"></a>examples/</h4><p>examples 文件中存有 vue 官方的一些通用功能示例 demo，有时间可以看下</p>
+<h4 id="flow"><a href="#flow" class="headerlink" title="flow/"></a>flow/</h4><p>JavaScript 是一门动态类型语言，变量的类型是可以随时改变的，这种灵活性虽然可以使代码编写过程不用太多考虑类型的适配和转变，但是会提高在运行时产生错误的概率，这也是大多后端瞧不上 js 的一个点，说是 js 不严格啥的，我觉得挺好，嘿嘿</p>
+<p>当然我们可以使用 TS 弥补这种短板，但是 TS 我们需要重新学习一套语言而且它还需要编译器把相应的代码编译成原生的 JavaScript 代码 ，成本较高</p>
+<p>为了弥补这种不足，在<code>Vue</code>源码里，尤大采用了<code>Flow</code>作为静态类型检查，<code>Flow</code>是<code>facebook</code>出品的静态类型检查工具，在现有项目中加上类型标注后，可以在代码阶段就检测出对变量的不恰当使用，利用 Flow 进行类型检查，可以使项目代码更加健壮，确保项目的其他参与者也可以写出规范的代码</p>
+<p>尤大曾在知乎上提及过对比 TS，Flow 的优点 , 以及为什么 vue2.0+为什么使用他</p>
+<ul>
+<li>Flow 可以一个一个文件地迁移，如果使用 TypeScript，则需要全部替换，成本极高，短期内并不现实</li>
+<li>Babel 和 ESLint 都有对应的 Flow 插件以支持语法，可以完全沿用现有的构建配置，非常小成本的改动就可以拥有静态类型检查的能力</li>
+<li>更贴近 ES 规范。除了 Flow 的类型声明之外，其他都是标准的 ES。万一哪天不想用 Flow 了，用<code>babel-plugin-transform-flow-strip-types</code>转一下，就得到符合规范的 ES</li>
+<li>在需要的地方保留 ES 的灵活性，并且对于生成的代码尺寸有更好的控制力 (rollup / 自定义 babel 插件）</li>
+</ul>
+<p>所以 flow 文件就是做数据类型声明的，我们会经常看到下图中这种类型声明的代码</p>
+<p><img src="/img/blog/Vue%E6%BA%90%E7%A0%81%E7%B3%BB%E5%88%97.assets/vue_flow.png" srcset="/img/loading.gif" alt="vue_flow"></p>
+<p>vue 中使用 flow 做的类型校验，而这些类型统一在 flow 文件夹下定义</p>
+<p>关于 Flow 的使用在这里不做赘述了，太麻烦，这里给大家粘一个知乎上关于 Flow 的帖子，看完包会那种，毕竟我这么笨的人都看的美滋滋，官方文档一并粘在下方</p>
+<p><a href="https://zhuanlan.zhihu.com/p/26204569" target="_blank" rel="noopener">Flow 使用入门-知乎传送门</a></p>
+<p><a href="https://flow.org/en/docs/getting-started/" target="_blank" rel="noopener">Flow 官方文档传送门</a></p>
+<p><a href="https://www.jianshu.com/nb/28560782" target="_blank" rel="noopener">Flow 中文文档–简书十篇</a></p>
+<p><strong>另</strong>: 了解了解就行了，毕竟 vue3.0 源码使用的 Ts，哈哈</p>
+<h4 id="packages"><a href="#packages" class="headerlink" title="packages/"></a>packages/</h4><p>packages 文件夹下包含 4 个 vue 相关又独立的 NPM 包 ，有<code>vue-server-render,weex-vue-framework</code>等 , 提供给不同使用场景使用</p>
+<h4 id="scripts"><a href="#scripts" class="headerlink" title="scripts/"></a>scripts/</h4><h4 id="src"><a href="#src" class="headerlink" title="src/"></a>src/</h4><h4 id="test"><a href="#test" class="headerlink" title="test/"></a>test/</h4><p>test 文件夹下就是一些测试用例 (如单元测试 , 端到端测试 , weex 、ssr 测试等等) , 不做赘述</p>
+<h4 id="types"><a href="#types" class="headerlink" title="types/"></a>types/</h4><p>types 文件下是使用 TypeScript 定义的类型声明，其中还包含了一些测试文件 , 因为 vue2.+有对 TS 的支持</p>
+<p>对此文件不做赘述 , 了解是干什么的就行 , 因为 2.+版本类型检测主要是用的 Flow , vue3.+就全面使用 TS 了</p>
+<h4 id="结构概览"><a href="#结构概览" class="headerlink" title="结构概览"></a>结构概览</h4><pre><code class="js">├── .circleci ---------------------------------- 包含CircleCI持续集成/持续部署工具的配置文件
+├── .github ------------------------------------ 项目相关的说明文档
+├── benchmarks --------------------------------- 性能测试文件,处理大量数据时测试demo
+├── dist --------------------------------------- 打包之后输出的不同版本Vue文件
+├── examples ----------------------------------- 官方给出的实用demo案例代码
+├── flow --------------------------------------- Flow 数据类型声明文件
+├── packages ----------------------------------- 特定环境下独立的包(weex,服务端渲染器等)
+├── scripts ------------------------------------ 构建(打包)的脚本配置文件
+│   ├── git-hooks ------------------------------ git钩子的目录
+│   ├── alias.js ------------------------------- 别名配置文件
+│   ├── build.js ------------------------------- Rollup 构建文件
+│   ├── config.js ------------------------------ Rollup 构建配置的文件(重)
+│   ├── gen-release-note.js -------------------- 生成发布通知
+│   ├── get-weex-version.js -------------------- 获取 weex 版本
+│   ├── release-weex.sh ------------------------ 自动发布新版本weex脚本
+│   ├── ci.sh ---------------------------------- 持续集成运行的脚本
+│   ├── release.sh ----------------------------- 自动发布新版本脚本
+├── src ---------------------------------------- vue核心源码文件
+│   ├── compiler ------------------------------- 编译相关，主要将 template 编译为 render 函数
+│   ├── core ----------------------------------- 最核心代码，和平台无关
+│   │   ├── components ------------------------- 抽象出来的通用组件
+│   │   ├── instance --------------------------- Vue 构造函数设计相关的代码
+│   │   ├── global-api ------------------------- Vue 构造函数挂载全局方法(静态方法)或属性的代码
+│   │   ├── observer --------------------------- 响应系统，包含数据观测的核心代码
+│   │   ├── vdom ------------------------------- vDOM创建(creation)&amp;打补丁(patching)函数
+├── ├── platforms ------------------------------ 平台特有的相关代码，不同平台的构建入口文件
+│   │   ├── web -------------------------------- web平台
+│   │   │   ├── entry-runtime.js --------------- 不带编译器构建的入口
+│   │   │   ├── entry-runtime-with-compiler.js - 自带编译器构建的入口
+│   │   │   ├── entry-compiler.js -------------- vue-template-compiler 包的入口文件
+│   │   │   ├── entry-server-renderer.js ------- vue-server-renderer 包的入口文件
+│   │   │   ├── entry-server-basic-renderer.js - 输出 packages/vue-server-renderer/basic.js
+│   │   ├── weex ------------------------------- 混合应用
+├── ├── server --------------------------------- 服务端渲染
+│   ├── sfc ------------------------------------ .vue 文件解析
+│   ├── shared --------------------------------- 整个项目通用代码
+├── test --------------------------------------- 测试用例
+├── types -------------------------------------- TypeScript定义的类型声明，包含了测试文件
+├── .babelrc ----------------------------------- babel 配置文件
+├── .editorconfig ------------------------------ 编辑器语法规范配置
+├── .eslintignore ------------------------------ eslint 校验忽略文件
+├── .eslintrc ---------------------------------- eslint 配置文件
+├── .flowconfig -------------------------------- flow 的配置文件
+├── .gitignore --------------------------------- git 忽略配置
+├── BACKERS.md --------------------------------- 发起人和赞助者信息文件
+├── README.md ---------------------------------- 项目说明文档
+├── LICENSE ------------------------------------ 项目开源协议
+├── package.json ------------------------------- 项目管理文件
+├── README.md ---------------------------------- 项目文档
+├── yarn.lock||package-lock.json --------------- yarn||npm 版本锁定文件</code></pre>
+<blockquote>
+<p>本文相关参考:</p>
+<p>学习路线相关:</p>
+<p><a href="https://juejin.im/post/5b18d2d7f265da6e410e0e20" target="_blank" rel="noopener">来聊聊源码学习–掘金传送门</a></p>
+<p>Flow 相关:</p>
+<p><a href="https://zhuanlan.zhihu.com/p/26204569" target="_blank" rel="noopener">Flow 使用入门-知乎传送门</a></p>
+<p><a href="https://www.jianshu.com/nb/28560782" target="_blank" rel="noopener">Flow 中文文档–简书十篇</a></p>
+<p><a href="https://flow.org/en/docs/getting-started/" target="_blank" rel="noopener">Flow 官方文档传送门</a></p>
+<p>短篇 Vue 源码阐述:</p>
+<p><a href="https://my.oschina.net/u/3692906/blog/2050377#h2_1" target="_blank" rel="noopener">Vue 源码全方位剖析–OSCHINA 社区传送门</a></p>
+<p>系统 Vue 源码文章:</p>
+<p><a href="https://ustbhuangyi.github.io/vue-analysis/v2/prepare/" target="_blank" rel="noopener">Vue 技术揭秘–电子书</a></p>
+<p><a href="https://github.com/answershuto/learnVue" target="_blank" rel="noopener">Vue.js 源码解析–github</a></p>
+</blockquote>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/%E4%B8%80%E6%AD%A5%E6%AD%A5%E8%AF%BB%E6%87%82Vue%E6%BA%90%E7%A0%81">一步步读懂Vue源码</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/Vue">Vue</a>
+                
+                  <a class="hover-with-bg" href="/tags/%E6%BA%90%E7%A0%81">源码</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">水平有限，欢迎指错！<br />联系邮箱：214930661@qq.com<br />本站文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" target="_blank" rel="nofollow noopener noopener">CC BY-SA 3.0协议</a> ，商业转载请联系作者获得授权，非商业转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="/img/gongzhonghao.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><div style="text-align: center;">更多精彩，请关注公众号【不正经的前端】</div> <div style="text-align: center;">回复【加群】加入技术交流群，回复【资料】获取精选学习资料</div>
+    </div>
+  </div>
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+      <br><br>
+      
+      
+  <div id="vcomments" style="width: 90%; margin: 0 auto;"></div>
+  <script defer src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var notify = 'false' === true;
+    var verify = 'false' === true;
+    var oldLoad = window.onload;
+    window.onload = function () {
+      new Valine({
+        el: '#vcomments',
+        notify: notify,
+        verify: verify,
+        app_id: "OuIO62anqvXdvjruYtvDefqV-gzGzoHsz",
+        app_key: "G9BfnEel5vlsGHJqmPkr2B1P",
+        placeholder: "说点什么",
+        avatar: "retro",
+        meta: ['nick', 'mail', 'link'],
+        pageSize: "10",
+      });
+      oldLoad && oldLoad();
+    };
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"
+      ><b>Hexo</b></a
+    >
+    <i class="iconfont icon-love"></i>
+    <a
+      href="https://github.com/fluid-dev/hexo-theme-fluid"
+      target="_blank"
+      rel="nofollow noopener"
+    >
+      <b>Fluid</b></a
+    >
+    <br />
+
+    
+  
+    <!-- 不蒜子统计PV -->
+    
+    &nbsp;<span id="busuanzi_container_site_pv">总访问量 
+          <span id="busuanzi_value_site_pv"></span> 次</span>&nbsp;
+  
+  
+    <!-- 不蒜子统计UV -->
+    
+    &nbsp;<span id="busuanzi_container_site_uv">总访客数 
+            <span id="busuanzi_value_site_uv"></span> 人</span>&nbsp;
+  
+  <br>
+
+ 
+
+
+    <!-- cnzz Analytics icon -->
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+<!-- Plugins -->
+
+
+  
+
+  
+
+  
+    <!-- Tencent Analytics -->
+    <script>
+      var _mtac = {};
+      (function () {
+        var mta = document.createElement("script");
+        mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+        mta.setAttribute("name", "MTAH5");
+        mta.setAttribute("sid", "500711128");
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(mta, s);
+      })();
+    </script>
+  
+
+  
+
+  <!-- cnzz Analytics -->
+  
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "「一步步读懂Vue源码No.1」目录结构概览 - U&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

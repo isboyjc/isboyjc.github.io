@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.jpeg">
+  <link rel="icon" type="image/png" href="/img/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="">
+  <title>ISBOYJC</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css"  >
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css"  >
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css"  >
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css"  >
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+
+  <link rel="stylesheet" href="/lib/prettify/github-v2.min.css"  >
+
+<link rel="stylesheet" href="/css/main.css"  >
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css"  >
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+  <header style="height: 100vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">首页</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">归档</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">分类</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('/img/banner/b016.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+          </div>
+
+          
+            <div class="scroll-down-bar">
+              <i class="fas fa-angle-down scroll-down-arrow"></i>
+            </div>
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-md">
+        <div class="py-5 z-depth-3" id="board">
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/2020/02/14/javascript/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" target="_self">
+          <img src="/img/blog_banner/js01.jpg" srcset="/img/loading.gif" alt="「硬核JS」深入了解异步解决方案" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2020/02/14/javascript/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
+        <p class="h4 index-header">「硬核JS」深入了解异步解决方案</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+
+「硬核 JS」深入了解异步解决方案前言Javascript 语言的执行环境是单线程(single thread，指一次只能完成一件任务，如果有多个任务，就必须排队，前面一个任务完成，再执行后面一个任务，以此类推)
+这种模式的好处是实现起来比较简单，执行环境相对单纯，坏处是只要有一个任务耗时很长，后面的任务都必须排队等着，会拖延整个程序的执行，常见的浏览器无响应(假死)，往往就是因为某一段 Javascript 代码长时间运行(比如死循环)，导致整个页面卡在这个地方，其他任务无法执行
+为了解决这个问题，Javascript 将任务的执行模式分成两种：同步(Synchronous)和异步(Asynchronous)
+同步模式 就是后一个任务等待前一个任务结束，然后再执行，程序的执行顺序与任务的排列顺序是一致的、同步的
+异步模式则完全不同，每一个任务有一个或多个回调函数(callback)，前一个任务结束后，不是执行后一个任务，而是执行回调函数，后一个任务则是不等前一个任务结束就执行，所以程序的执行顺序与任务的排列顺序是不一致的、异步的，在浏览器端，耗时很长的操作都应该异步执行，避免浏览</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-02-14&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E7%A1%AC%E6%A0%B8JS%E7%B3%BB%E5%88%97">硬核JS系列</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/JavaScript">JavaScript</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/2020/01/18/javascript/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6/" target="_self">
+          <img src="/img/blog_banner/js01.jpg" srcset="/img/loading.gif" alt="「硬核 JS」一次搞懂 JS 运行机制" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2020/01/18/javascript/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6/">
+        <p class="h4 index-header">「硬核 JS」一次搞懂 JS 运行机制</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+
+「硬核 JS」一次搞懂 JS 运行机制前言从开始做前端到目前为止，陆续看了很多帖子讲 JS 运行机制，看过不久就忘了，还是自己理一遍好些
+通过码字使自己对 JS 运行机制相关内容更加深刻(自己用心写过的贴子，内容也会牢记于心)
+顺道给大家看看(我太难了，深夜码字，反复修改，说这么多就是想请你点个赞在看)
+参考了很多资料(帖子)，取其精华，去其糟糠，都在文末，可自行了解
+是时候搞一波我大 js 了
+从零到一百再到一，从多方面了解 JS 的运行机制，体会更深刻，请认真读下去
+本文大致分为以下这样的步骤来帮助我们由广入深更加清晰的了解 JS 运行机制
+
+首先我们要了解进程和线程的概念
+其次我们要知道浏览器的进程线程常识
+再然后通过 Event Loop、宏任务(macrotask)微任务(microtask)来看浏览器的几个线程间是怎样配合的
+再然后通过例子来印证我们的猜想
+最后提下 NodeJS 的运行机制
+
+灵魂一问JS 运行机制在平常前端面试时不管是笔试题还是面试题命中率都极高
+说到 JS 运行机制，你知道多少
+看到这大家可能会说：JS 运行机制嘛，很简单，事件循环、宏微任务那点东</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-01-18&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E7%A1%AC%E6%A0%B8JS%E7%B3%BB%E5%88%97">硬核JS系列</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/JavaScript">JavaScript</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/2019/12/23/else/%E4%B8%80%E4%B8%AA%E5%89%8D%E7%AB%AF%E7%9A%84%E5%AE%89%E5%88%A9/" target="_self">
+          <img src="/img/blog_banner/else01.jpg" srcset="/img/loading.gif" alt="一个前端的安利" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/12/23/else/%E4%B8%80%E4%B8%AA%E5%89%8D%E7%AB%AF%E7%9A%84%E5%AE%89%E5%88%A9/">
+        <p class="h4 index-header">一个前端的安利</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">一个前端的安利前言此文安利内容皆是我在使用的，我之所用，皆为精品，哈哈，并不是胡乱分享，觉得十分好用，就分享下，所以虽有花哨，却也实用
+Chrome 插件写在前面作为一个正八经的前端，与 chrome 打交道必不可少，chrome 扩展程序有很多，实用且好玩，之前有段不务正业的时光，每天闲下来就喜欢找各种扩展，看着好玩就安装使用，不好用就卸载，后来还去看了看 chrome 扩展开发，还写了几个小扩展 demo，学习技术的动力是升职加薪，是不被淘汰，并不是不喜欢，只是技术是饭碗，所以久而久之，学习技术变成了理所当然，但是插件脚本这些花里胡哨的则是兴趣，接下来为大家安利我目前觉得很 nice 的几款 chrome 扩展
+No.1 GoogleHelper谷歌上网助手，我就以 Helper 简称了，Helper 是专门为科研、外贸、跨境电商、海淘人员、开发人员服务的上网加速工具，chrome 内核浏览器专用!可以解决 chrome 扩展无法自动更新的问题，同时可&gt;以访问谷歌 google 搜索，gmail 邮箱，google+等谷歌产品
+上面是官方解释，通俗来说，我们是不能访问谷歌的，</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-12-23&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E5%AE%89%E5%88%A9%E7%B3%BB%E5%88%97">安利系列</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E5%AE%89%E5%88%A9">安利</a>&nbsp;
+          
+            <a href="/tags/Chrome">Chrome</a>&nbsp;
+          
+            <a href="/tags/Vscode">Vscode</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/2019/11/25/vue/%E4%B8%80%E6%AD%A5%E6%AD%A5%E8%AF%BB%E6%87%82Vue%E6%BA%90%E7%A0%81/%E3%80%8C%E4%B8%80%E6%AD%A5%E6%AD%A5%E8%AF%BB%E6%87%82Vue%E6%BA%90%E7%A0%81No.2%E3%80%8D%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" target="_self">
+          <img src="/img/blog_banner/vue03.png" srcset="/img/loading.gif" alt="「一步步读懂Vue源码No.2」调试环境搭建 - U" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/11/25/vue/%E4%B8%80%E6%AD%A5%E6%AD%A5%E8%AF%BB%E6%87%82Vue%E6%BA%90%E7%A0%81/%E3%80%8C%E4%B8%80%E6%AD%A5%E6%AD%A5%E8%AF%BB%E6%87%82Vue%E6%BA%90%E7%A0%81No.2%E3%80%8D%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+        <p class="h4 index-header">「一步步读懂Vue源码No.2」调试环境搭建 - U</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">「Vue 源码解析 No.2」调试环境搭建安装依赖下载好 Vue 源码后使用npm install安装依赖
+vue 是基于 rollup 构建的 , 所以如果没有安装 rollup , 要先安装 rollup
+npm 安装 rollop : npm i -g rollup
+注：rollup 是一个 Js 模块打包器 , rollup 也可以打包项目, 不过这不是它擅长的, 他不支持热模块替换, 它最擅长的是打包 js , rollup 对于代码的 tree-shaking 和 es6 模块有算法优势的支持, 所以一些类库都在使用它(vue , react 等) , 继 grunt、gulp 实现自动化构建之后，webpack 引领了前端打包潮流，vue-cli 的脚手架就是基于 webpack 进行项目打包的。而 webpack 还在上升的势头的时候，又出了一个打包神器 parcel , 市面上常用的一些打包工具都在这里了, 具体差异 , 自行百度吧
+调试环境搭建生成 SourceMap(源码映射)修改package.json中 dev 脚本 , 加上--sourcemap
+&quot</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-11-25&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E4%B8%80%E6%AD%A5%E6%AD%A5%E8%AF%BB%E6%87%82Vue%E6%BA%90%E7%A0%81">一步步读懂Vue源码</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Vue">Vue</a>&nbsp;
+          
+            <a href="/tags/%E6%BA%90%E7%A0%81">源码</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/2019/11/16/vue/Vue%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BC%98%E9%9B%85%E4%BD%BF%E7%94%A8icon/" target="_self">
+          <img src="/img/blog_banner/vue01.jpg" srcset="/img/loading.gif" alt="Vue 项目中优雅使用 icon" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/11/16/vue/Vue%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BC%98%E9%9B%85%E4%BD%BF%E7%94%A8icon/">
+        <p class="h4 index-header">Vue 项目中优雅使用 icon</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">Vue 项目中优雅使用 icon前言icon 在我们前端日常开发中是很常用的，它有很多种使用方式，时至今日，它的使用方式经过了很多种演变，本文会为大家介绍 icon 的一些历史演变，分析一下这几种使用方式的优劣，我们将采用svg sprites这种方式使用 icon，演示代码使用 vue+vue-cli3+，看完之后，你会发现这种使用方式完全称得上优雅二字
+追溯历史Img 标签引入最早我们使用图标时只是单纯 img 标签引入图片，个人感觉也还好
+但是这样网页上会有很多 img 图标的资源请求，这是它最大的缺点
+雪碧图(css sprites)后来我们为了优化资源请求开始使用 CSS 雪碧图(css sprites)
+CSS Sprites 在国内很多人叫 css 精灵/css 雪碧图(啥都行)，是一种网页图片应用处理方式。它允许你将一个页面涉及到的所有零星图片都包含到一张大图中去，这样一来，当访问该页面时，载入的图片就不会像以前那样一幅一幅地慢慢显示出来了。加速的关键，不是降低质量，而是减少个数
+CSS Sprites 其实就是把网页中一些背景图片整合到一张图片文件中，再利用 CSS </div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-11-16&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Vue%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97">Vue实战系列</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Vue">Vue</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/2019/10/15/vue/%E4%B8%80%E6%AD%A5%E6%AD%A5%E8%AF%BB%E6%87%82Vue%E6%BA%90%E7%A0%81/%E3%80%8C%E4%B8%80%E6%AD%A5%E6%AD%A5%E8%AF%BB%E6%87%82Vue%E6%BA%90%E7%A0%81No.1%E3%80%8D%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E6%A6%82%E8%A7%88/" target="_self">
+          <img src="/img/blog_banner/vue03.png" srcset="/img/loading.gif" alt="「一步步读懂Vue源码No.1」目录结构概览 - U" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/10/15/vue/%E4%B8%80%E6%AD%A5%E6%AD%A5%E8%AF%BB%E6%87%82Vue%E6%BA%90%E7%A0%81/%E3%80%8C%E4%B8%80%E6%AD%A5%E6%AD%A5%E8%AF%BB%E6%87%82Vue%E6%BA%90%E7%A0%81No.1%E3%80%8D%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E6%A6%82%E8%A7%88/">
+        <p class="h4 index-header">「一步步读懂Vue源码No.1」目录结构概览 - U</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">「一步步读懂 Vue 源码 No.1」目录结构概览前言为什么学习源码工作中难免会遇到一些问题，学习源码最直接的好处是能帮我们直接定位问题的根本原因，从而帮助我们解决问题
+学习源码可以很好地巩固基础，修炼内功，提升技术 , 日常开发中我们很难把 js 的一些核心(类型、变量、函数、作用域、闭包、原型链、event loop 等 )在实践中运用自如，主要原因还是实践的少了，大部分时间都在写业务代码 , 学习源码可以让我们 js 功底更加深厚
+前端框架 , 不知道如何形容 React 的好 , 但是我个人更喜欢 Vue 一点 , 作为 Vue 的爱好者和开发者 , 当然不能仅仅局限于使用 Vue 上 , 要了解 Vue 背后一系列的运行机制(数据驱动 , 数据更新 , 虚拟 DOM, diff 实现 , API 实现等等) , 才能更好的掌握 Vue , 而想要了解这些 , 最好的方式就是读源码
+关于本帖源码是很枯燥的 , 只是看很难理解 , 需要多动手实践 , 所以在此记录下在源码学习中的理解 , 持续更新 ,争取年前整理完 vue 源码吧
+码字的过程中收集了很多零碎帖子参考(当然要说抄袭</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-10-15&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E4%B8%80%E6%AD%A5%E6%AD%A5%E8%AF%BB%E6%87%82Vue%E6%BA%90%E7%A0%81">一步步读懂Vue源码</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Vue">Vue</a>&nbsp;
+          
+            <a href="/tags/%E6%BA%90%E7%A0%81">源码</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/2019/09/12/vue/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84Vue/%E3%80%8C%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84Vue%E3%80%8D%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1%E5%A4%A7%E5%85%A8/" target="_self">
+          <img src="/img/blog_banner/vue01.jpg" srcset="/img/loading.gif" alt="「你不知道的 Vue」组件通信大全" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/09/12/vue/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84Vue/%E3%80%8C%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84Vue%E3%80%8D%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1%E5%A4%A7%E5%85%A8/">
+        <p class="h4 index-header">「你不知道的 Vue」组件通信大全</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">「你不知道的 Vue」组件通信大全前言说起 Vue 组件通信，可能都以为是个基础的话题，但是这个基础的东西你可能了解的不太透彻
+参考工作中及 Vue 文档，写了市面上的所有的组件通信方式，如有遗漏欢迎补充
+将来如果面试或者技术交流中有人问你组件通信，可以以此回怼
+中间也穿插了一些和内容相关的我们不经常用却非常实用的小技巧，仔细阅读，会有点收获的
+不知道为什么，好多人宁愿看看贴子，也不愿意仔细读文档，其实官方文档啥都有
+估计大部分人都觉得看文档太慢了，认为搜一篇贴子读完 2 分钟比看文档 10 分钟学到的多
+其实也对，但是官方文档上很全面而且绝对正确，这是贴子比不了的，所以还是有必要读一读文档的
+最后来一句：请仔细阅读我们的 Vue 文档，哈哈
+好了，进入正题
+No.1-prop
+props 属性是开发中最常用的一种组件通信通讯方式 , 父组件中在组件标签上定义属性 , 子组件内定义 props 接收，用大家基本上都会用，但是如果你仔细阅读文档的话，它有很多技巧
+注意 prop 是单向的，它只能父传子不能子传父
+
+基础用法
+父组件传值
+
+&lt;tempalte&gt;
+    &lt;</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-09-12&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84Vue">你不知道的Vue</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Vue">Vue</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/2019/06/10/vue/Vue%E5%9F%BA%E7%A1%80%E9%9D%A2%E8%AF%95%E9%A2%98/" target="_self">
+          <img src="/img/blog_banner/vue01.jpg" srcset="/img/loading.gif" alt="Vue 基础面试题" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/06/10/vue/Vue%E5%9F%BA%E7%A1%80%E9%9D%A2%E8%AF%95%E9%A2%98/">
+        <p class="h4 index-header">Vue 基础面试题</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">Vue 基础面试题1. MVVM&amp;&amp;MVC1.1 MVVMMVVM -&gt; Model-View-ViewModel
+Model 代表数据模型，也可以在Model中定义数据修改和操作的业务逻辑。
+View 代表UI组件，它负责将数据模型转化成UI展现出来。
+ViewModel 监听模型数据的改变和控制视图行为、处理用户交互，简单理解就是一个同步View 和 Model的对象，连接Model和View。
+在MVVM架构下，View 和 Model 之间并没有直接的联系，而是通过ViewModel进行交互，Model 和 ViewModel 之间的交互是双向的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。
+ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来，而View 和 Model 之间的同步工作完全是自动的，无需人为干涉，因此开发者只需关注业务逻辑，不需要手动操作DOM, 不需要关注数据状态的同步问题，复杂的数据状态维护完全由 MVVM 来统一管理。
+1.2 MVCMVC是Mode</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-06-10&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E9%9D%A2%E8%AF%95%E7%B3%BB%E5%88%97">面试系列</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Vue">Vue</a>&nbsp;
+          
+            <a href="/tags/%E9%9D%A2%E8%AF%95">面试</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/2019/04/12/git/GIT%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" target="_self">
+          <img src="/img/blog_banner/git03.jpg" srcset="/img/loading.gif" alt="GIT常用命令" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/04/12/git/GIT%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+        <p class="h4 index-header">GIT常用命令</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">GIT 常用命令SSH 公钥查看本机 ssh 公钥1. 打开git bash窗口
+
+2. 进入.ssh目录： cd ~/.ssh
+
+3. 查看.ssh文件下有无id_rsa.pub文件：ls
+
+4. 查看公钥：cat id_rsa.pub  或者  vim id_rsa.pub
+
+上述步骤合为一步: cat ~/.ssh/id_rsa.pub
+生成本机 ssh 公钥1. 命令行下输入: ssh-keygen
+
+2. 确认存放公钥的地址，默认就是上面说的路径，直接enter键确认
+
+3. 输入密码和确认密码，如果不想设置密码直接不输入内容 按enter键
+
+4. 重复上面查看公钥步骤
+git 中字母代表A         # 增加的文件
+C       # 文件的一个新拷贝
+D       # 删除的一个文件
+M       # 文件的内容或者mode被修改了
+R       # 文件名被修改了
+T       # 文件类型被修改了
+U       # 文件没有被合并(需要完成合并才能进行提交)
+X       # 未知状态(git的bug , 可以向git提交bug report)
+签</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-04-12&nbsp;&nbsp;
+        
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Git">Git</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/2019/03/10/javascript/JavaScript%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AEAPI/" target="_self">
+          <img src="/img/blog_banner/js02.jpg" srcset="/img/loading.gif" alt="JavaScript常用内置API" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/2019/03/10/javascript/JavaScript%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AEAPI/">
+        <p class="h4 index-header">JavaScript常用内置API</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">JavaScript 常用内置 APIJS 简述三大对象本地对象
+与宿主无关，独立于宿主环境的 ECMAScript 实现提供的对象
+简单来说，本地对象就是 ECMA-262 定义的类（引用类型）
+这些引用类型在运行过程中需要通过 new 来创建所需的实例对象
+
+包括：
+引用类型：Object、Function、Array、Date、RegExp
+基本包装类型：String、Boolean、Number
+其他类型：Error、EvalError、RangeError、ReferenceError、SyntaxError、TypeError、URIError等
+内置对象
+与宿主无关，独立于宿主环境的 ECMAScript 实现提供的对象，在 ECMAScript 程序开始执行时出现
+在 ECMAScript 程序开始执行前就存在，本身就是实例化内置对象，开发者无需再去实例化
+内置对象是本地对象的子集
+很多时候，会直接把本地对象和内置对象统称为内置对象，也被叫做单体内置对象
+
+包含：
+Global和Math
+ECMAScript5中增添了JSON这个存在于全局的内置对象
+宿主对象
+由 EC</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-03-10&nbsp;&nbsp;
+        
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/JavaScript">JavaScript</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+
+
+  <nav aria-label="index posts navigation">
+    <span class="pagination pg-blue justify-content-center mt-5" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fas fa-angle-double-right"></i></a>
+    </span>
+  </nav>
+  
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByClassName("page-number")) {
+      ele.href += '#board';
+    }
+  </script>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"
+      ><b>Hexo</b></a
+    >
+    <i class="iconfont icon-love"></i>
+    <a
+      href="https://github.com/fluid-dev/hexo-theme-fluid"
+      target="_blank"
+      rel="nofollow noopener"
+    >
+      <b>Fluid</b></a
+    >
+    <br />
+
+    
+  
+    <!-- 不蒜子统计PV -->
+    
+    &nbsp;<span id="busuanzi_container_site_pv">总访问量 
+          <span id="busuanzi_value_site_pv"></span> 次</span>&nbsp;
+  
+  
+    <!-- 不蒜子统计UV -->
+    
+    &nbsp;<span id="busuanzi_container_site_uv">总访客数 
+            <span id="busuanzi_value_site_uv"></span> 人</span>&nbsp;
+  
+  <br>
+
+ 
+
+
+    <!-- cnzz Analytics icon -->
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+<!-- Plugins -->
+
+
+  
+
+  
+
+  
+    <!-- Tencent Analytics -->
+    <script>
+      var _mtac = {};
+      (function () {
+        var mta = document.createElement("script");
+        mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+        mta.setAttribute("name", "MTAH5");
+        mta.setAttribute("sid", "500711128");
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(mta, s);
+      })();
+    </script>
+  
+
+  
+
+  <!-- cnzz Analytics -->
+  
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "欢迎访问 isboyjc 的博客，分享前端开发的点滴！&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

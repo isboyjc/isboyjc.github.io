@@ -1,0 +1,2262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.jpeg">
+  <link rel="icon" type="image/png" href="/img/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="">
+  <title>「硬核JS」深入了解异步解决方案 ~ ISBOYJC</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css"  >
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css"  >
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css"  >
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css"  >
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+
+  <link rel="stylesheet" href="/lib/prettify/github-v2.min.css"  >
+
+<link rel="stylesheet" href="/css/main.css"  >
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css"  >
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">首页</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">归档</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">分类</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('/img/banner/b037.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  星期五, 二月 14日 2020, 2:00 下午
+                </p>
+              
+
+              <p>
+                
+                  
+                  &nbsp;<i class="far fa-chart-bar"></i>
+                  <span class="post-count">
+                    19.1k 字
+                  </span>&nbsp;
+                
+
+                
+                  
+                  &nbsp;<i class="far fa-clock"></i>
+                  <span class="post-count">
+                      75 分钟
+                  </span>&nbsp;
+                
+
+                
+                  <!-- 不蒜子统计文章PV -->
+                  
+                  &nbsp;<i class="far fa-eye" aria-hidden="true"></i>&nbsp;
+                  <span id="busuanzi_container_page_pv">
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>&nbsp;
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <a id="more"></a>
+
+<h1 id="「硬核-JS」深入了解异步解决方案"><a href="#「硬核-JS」深入了解异步解决方案" class="headerlink" title="「硬核 JS」深入了解异步解决方案"></a>「硬核 JS」深入了解异步解决方案</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Javascript 语言的执行环境是<code>单线程</code>(single thread，指一次只能完成一件任务，如果有多个任务，就必须排队，前面一个任务完成，再执行后面一个任务，以此类推)</p>
+<p>这种模式的好处是实现起来比较简单，执行环境相对单纯，坏处是只要有一个任务耗时很长，后面的任务都必须排队等着，会拖延整个程序的执行，常见的浏览器无响应(假死)，往往就是因为某一段 Javascript 代码长时间运行(比如死循环)，导致整个页面卡在这个地方，其他任务无法执行</p>
+<p>为了解决这个问题，Javascript 将任务的执行模式分成两种：同步(Synchronous)和异步(Asynchronous)</p>
+<p><code>同步模式</code> 就是后一个任务等待前一个任务结束，然后再执行，程序的执行顺序与任务的排列顺序是一致的、同步的</p>
+<p><code>异步模式</code>则完全不同，每一个任务有一个或多个回调函数(callback)，前一个任务结束后，不是执行后一个任务，而是执行回调函数，后一个任务则是不等前一个任务结束就执行，所以程序的执行顺序与任务的排列顺序是不一致的、异步的，在浏览器端，耗时很长的操作都应该异步执行，避免浏览器失去响应，最好的例子就是 Ajax 操作。在服务器端，<code>异步模式</code>甚至是唯一的模式，因为执行环境是单线程的，如果允许同步执行所有 http 请求，服务器性能会急剧下降</p>
+<p>前面都是些无用的话，因为大家都对此很清楚，那么，问题来了，你了解几种异步解决方案？</p>
+<p>本文会由浅入深的叙述下面几种已知的异步解决方案，以及它们的区别</p>
+<ul>
+<li>回调函数(callback)</li>
+<li>事件监听(发布/订阅)解析</li>
+<li>Promise 解析及从 0 ～ 1 的源码体验</li>
+<li>Generator 全面解析</li>
+<li>Async/Await 解析</li>
+</ul>
+<p>赶上春节不出门为国家做贡献，写了这篇帖子，本文有点长，因为本来要写四篇文章分别叙述，但是我觉得还是在一块看比较容易对比理解，大概有两万字左右，如果你肯花 20 分钟的时间阅读本文，定会有所收获，我在耐心写，也希望大家可以耐心看完，基础不太好的同学可以分块看，已详细注明各级标题，希望通过本文可以让大家对大 JS 异步编程加深了解</p>
+<p>哦对了，先赞在看，养成习惯，毕竟码字不易，大家的每一个赞和评论都将为我码下一篇文章添一些动力，多谢 😁</p>
+<h2 id="回调函数-callback"><a href="#回调函数-callback" class="headerlink" title="回调函数(callback)"></a>回调函数(callback)</h2><h3 id="简述回调函数"><a href="#简述回调函数" class="headerlink" title="简述回调函数"></a>简述回调函数</h3><p>回调函数大家都应该清楚，简单理解就是一个函数被作为参数传递给另一个函数</p>
+<p>回调并不一定就是异步，并没有直接关系，只不过回调函数是异步的一种解决方案</p>
+<p>我们用例子来简单说明下</p>
+<pre><code class="js">function fn1(callback) {
+  console.log(&quot;1&quot;)
+  callback &amp;&amp; callback()
+}
+
+function fn2() {
+  console.log(&quot;2&quot;)
+}
+
+fn1(fn2)</code></pre>
+<p>如上代码所示，函数 fn1 参数为一个回调，调用 fn1 时传进入了函数 fn2，那么在函数 fn1 执行到 callback 函数调用时会调用 fn2 执行，这是一个典型的回调函数，不过是同步的，我们可以利用这点来解决异步，如下</p>
+<pre><code class="js">fn1(callback){
+  setTimeout(() =&gt; {
+    callback &amp;&amp; callback()
+  }, 1000)
+}
+
+fn1(()=&gt;{
+  console.log(&quot;1&quot;)
+})</code></pre>
+<p>如上所示，我们使用 setTimeout 在函数 fn1 中模拟了一个耗时 1s 的任务，耗时任务结束会抛出一个回调，那么我们在调用时就可以做到在函数 fn1 的耗时任务结束后执行回调函数了</p>
+<p>采用这种方式，我们把同步操作变成了异步操作，fn1 不会堵塞程序运行，相当于先执行程序的主要逻辑，将耗时的操作推迟执行</p>
+<h3 id="回调函数优-缺"><a href="#回调函数优-缺" class="headerlink" title="回调函数优/缺"></a>回调函数优/缺</h3><p><strong>优点</strong></p>
+<p>一句话，回调函数是异步编程最基本的方法，其优点是简单、容易理解和部署</p>
+<p><strong>缺点</strong></p>
+<p>回调函数最大的缺点是不利于代码的阅读和维护，各个部分之间高度耦合(Coupling)</p>
+<pre><code class="js">fun1(() =&gt; {
+  fun2(() =&gt; {
+    fun3(() =&gt; {
+      fun4(() =&gt; {
+        fun5(() =&gt; {
+          fun6()
+        })
+      })
+    })
+  })
+})</code></pre>
+<p>上面这种代码在之前使用 AJAX 请求时很常见，因为业务上在一个请求结束后发起另一个请求的需求太多了，代码不优雅，不易阅读维护，高耦合，层层嵌套造成这种<strong>回调地狱</strong></p>
+<p>异步回调中，回调函数的执行栈与原函数分离开，外部无法抓住异常，异常会变得不可控</p>
+<p>虽然缺点多，但回调函数日常开发中也不可或缺，使用时注意就好了</p>
+<p>回调函数比较简单常用，就先介绍到这里，接下来我们看事件监听</p>
+<h2 id="事件监听-发布订阅模式"><a href="#事件监听-发布订阅模式" class="headerlink" title="事件监听(发布订阅模式)"></a>事件监听(发布订阅模式)</h2><p>解决异步，可以采用事件驱动，任务的执行不取决于代码的顺序，而取决于某个事件是否发生</p>
+<p>在阮一峰老师早期发布的 <strong>Javascript 异步编程的 4 种方法(参考链接【1】)</strong> 一文中，把事件监听和发布订阅作为了不同的两种解决方案，但是我个人觉得这两种完全可以并为一种，都是利用了发布订阅模式的事件驱动，所以就放一块解释了</p>
+<h3 id="JQuery-实现事件监听"><a href="#JQuery-实现事件监听" class="headerlink" title="JQuery 实现事件监听"></a>JQuery 实现事件监听</h3><p>jquery 实现比较简单，因为 jq 为我们封装好了方法，使用即可，只是 JQ 不常用了，简单了解下</p>
+<p>我们可以使用 jquery 中的<code>on</code>来监听事件，使用<code>trigger</code>触发事件，如下</p>
+<pre><code class="js">$(&quot;body&quot;).on(&quot;done&quot;, fn2)
+
+function fn1() {
+  setTimeout(function() {
+    $(&quot;body&quot;).trigger(&quot;done&quot;)
+  }, 2000)
+}
+
+function fn2() {
+  console.log(&quot;fn2执行了&quot;)
+}
+fn1()</code></pre>
+<p>我们使用 jq 的<code>on</code>监听了一个自定义事件<code>done</code>，传入了 fn2 回调，表示事件触发后立即执行函数 fn2</p>
+<p>在函数 fn1 中使用 setTimeout 模拟了耗时任务，setTimeout 回调中使用<code>trigger</code>触发了<code>done</code>事件</p>
+<p>我们可以使用<code>on</code>来绑定多个事件，每个事件可以指定多个回调函数</p>
+<h3 id="JavaScript-实现事件监听"><a href="#JavaScript-实现事件监听" class="headerlink" title="JavaScript 实现事件监听"></a>JavaScript 实现事件监听</h3><p>在 JS 中我们要自己实现类似 JQ 的<code>on</code>和<code>trigger</code>了</p>
+<p>实现的过程中用到了一个设计模式，也就是发布订阅模式，所以简单提一下</p>
+<h4 id="简述发布订阅模式-观察者模式"><a href="#简述发布订阅模式-观察者模式" class="headerlink" title="简述发布订阅模式(观察者模式)"></a>简述发布订阅模式(观察者模式)</h4><p>发布订阅模式(publish-subscribe pattern)，又叫观察者模式(observer pattern)，定义了对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都将得到通知</p>
+<p>来看一个比较挫的例子</p>
+<pre><code class="js">小李辛辛苦苦做了两年程序猿，攒了些钱，内心激动，要去售楼部买一个心仪已久的房型
+
+到售楼部问了下，售楼部说暂时没有这种房型的房源了，怎么办呢，下次再来吧
+
+但是小李不知道这种房型什么时候有房源，总不能每天打电话到售楼部问吧，小李就把电话和房型信息留到售楼部了，什么时候有这种房源了，售楼部会短信通知
+
+要知道，售楼部不会只通知小李一个人，售楼部会把预留信息所有房型信息一致的人都通知一遍
+
+在这个比较挫的例子中，小李包括每个买房的人都是订阅者，而售楼部就是发布者</code></pre>
+<p>其实我们都用过发布订阅模式，比如我们在 DOM 节点上绑定一个事件函数，就已经使用了</p>
+<pre><code class="js">document.body.addEventListener(&quot;click&quot;, function() {
+  console.log(1)
+})</code></pre>
+<p>但是这只是对发布订阅模式最简单的使用，在很多场景下我们经常会实现一些自定义事件来满足我们的需求</p>
+<p>比如我们下面要防照 JQ 那种来写一个自定义事件监听器，需要监听一个事件，在该事件触发时执行其监听回调</p>
+<h4 id="发布订阅模式实现事件监听器"><a href="#发布订阅模式实现事件监听器" class="headerlink" title="发布订阅模式实现事件监听器"></a>发布订阅模式实现事件监听器</h4><p>发布订阅模式有很多种实现方式，下面我们用<code>class</code>来简单实现下</p>
+<pre><code class="js">class Emitter {
+  constructor() {
+    // _listener数组，key为自定义事件名，value为执行回调数组-因为可能有多个
+    this._listener = []
+  }
+
+  // 订阅 监听事件
+  on(type, fn) {
+    // 判断_listener数组中是否存在该事件命
+    // 存在将回调push到事件名对应的value数组中，不存在直接新增
+    this._listener[type]
+      ? this._listener[type].push(fn)
+      : (this._listener[type] = [fn])
+  }
+
+  // 发布 触发事件
+  trigger(type, ...rest) {
+    // 判断该触发事件是否存在
+    if (!this._listener[type]) return
+    // 遍历执行该事件回调数组并传递参数
+    this._listener[type].forEach(callback =&gt; callback(...rest))
+  }
+}</code></pre>
+<p>如上所示，我们创建了一个<code>Emitter</code>类，并且添加了两个原型方法<code>on</code>和<code>trigger</code>，上面代码中均有注释，所以不过多解释了，基础不好的同学多看几遍自己敲一下，比较简单</p>
+<p>使用时</p>
+<pre><code class="js">// 创建一个emitter实例
+const emitter = new Emitter()
+
+emitter.on(&quot;done&quot;, function(arg1, arg2) {
+  console.log(arg1, arg2)
+})
+
+emitter.on(&quot;done&quot;, function(arg1, arg2) {
+  console.log(arg2, arg1)
+})
+
+function fn1() {
+  console.log(&quot;我是主程序&quot;)
+  setTimeout(() =&gt; {
+    emitter.trigger(&quot;done&quot;, &quot;异步参数一&quot;, &quot;异步参数二&quot;)
+  }, 1000)
+}
+
+fn1()</code></pre>
+<p>如上所示，我们先创建一个 emitter 实例，接着注册事件，再触发事件，用法和上面 JQ 雷同，均解决了异步问题</p>
+<p>Vue 的实现就是一个比较复杂的发布订阅模式，使用 Vue 的同学，上面的这个事件监听器，把<code>trigger</code>名字改成<code>emit</code>是不是就眼熟多了，当然我们这个比较简单，毕竟代码就那么六七行，不过理是这么个理</p>
+<h3 id="事件监听优-缺"><a href="#事件监听优-缺" class="headerlink" title="事件监听优/缺"></a>事件监听优/缺</h3><p><strong>优点</strong></p>
+<p>发布订阅模式实现的事件监听，我们可以绑定多个事件，每个事件也可以指定多个回调函数，还是比较符合模块化思想的，我们自写监听器时可以做很多优化从而更好的监控程序运行</p>
+<p><strong>缺点</strong></p>
+<p>整个程序变成了事件驱动，流程上来说或多或少都会有点影响，每次使用还得注册事件监听再进行触发挺麻烦的，代码也不太优雅，并不是事件驱动不好，毕竟需求只是 <strong>解决异步问题</strong> 而已，何况有更优解</p>
+<h2 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h2><h3 id="Promise-简述"><a href="#Promise-简述" class="headerlink" title="Promise 简述"></a>Promise 简述</h3><p>ES2015 (ES6)标准化和引入了 Promise 对象，它是异步编程的一种解决方案</p>
+<p>简单来说就是用同步的方式写异步的代码，可用来解决回调问题</p>
+<h3 id="Promise-特点"><a href="#Promise-特点" class="headerlink" title="Promise 特点"></a>Promise 特点</h3><h4 id="特点一"><a href="#特点一" class="headerlink" title="特点一"></a>特点一</h4><p>Promise，承诺执行，Promise 对象的状态是不受外界影响的</p>
+<p>Promise 对象代表一个异步操作，它有三种状态</p>
+<ul>
+<li><p>进行中 (Pending)</p>
+</li>
+<li><p>已完成 (Resolved/Fulfilled)</p>
+</li>
+<li><p>已失败 (Rejected)</p>
+</li>
+</ul>
+<p>只有异步操作的结果，可以决定当前是哪一种状态，任何其他操作都无法改变这个状态</p>
+<p>这就是 Promise 这个名字的由来，它的英语意思就是<code>承诺</code>，表示其他手段无法改变</p>
+<h4 id="特点二"><a href="#特点二" class="headerlink" title="特点二"></a>特点二</h4><p>Promise 对象状态一旦改变，就不会再变</p>
+<p>Promise 对象的状态改变，只有两种可能</p>
+<ul>
+<li><p>从 Pending 变为 Resolved</p>
+</li>
+<li><p>从 Pending 变为 Rejected</p>
+</li>
+</ul>
+<p>只要这两种情况发生，状态就凝固，不会再变了，会一直保持这个结果</p>
+<h3 id="Promise-使用"><a href="#Promise-使用" class="headerlink" title="Promise 使用"></a>Promise 使用</h3><p>Promise 是一个构造函数，我们可以通过<code>new</code>关键字来创建一个 Promise 实例，也可以直接使用 Promise 的一些静态方法</p>
+<h4 id="new-一个-Promise-实例"><a href="#new-一个-Promise-实例" class="headerlink" title="new 一个 Promise 实例"></a>new 一个 Promise 实例</h4><p><strong>语法</strong></p>
+<pre><code class="js">new Promise( function(resolve, reject) {...});</code></pre>
+<p><strong>示例</strong></p>
+<pre><code class="js">function fn1() {
+  return new Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+      let num = Math.ceil(Math.random() * 10)
+      if (num &lt; 5) {
+        resolve(num)
+      } else {
+        reject(&quot;数字太大&quot;)
+      }
+    }, 2000)
+  })
+}</code></pre>
+<p>如上所示，我们使用<code>new</code>关键字创建了一个 promise 实例，并在函数 fn1 中<code>return</code>了出来</p>
+<p><code>new Promise</code>创建了一个 promise 实例，Promise 构造函数会把一个叫做处理器函数(executor function)的函数作为它的参数</p>
+<p>处理器函数接收两个参数分别是<code>resolve</code>和<code>reject</code>，这两个参数也是两个回调函数</p>
+<p><code>resolve</code> 函数在异步操作成功时调用，并将异步操作的结果，作为参数传递出去</p>
+<p><code>reject</code> 函数在异步操作失败时调用，并将异步操作报出的错误，作为参数传递出去</p>
+<p>简单理解就是一个是成功回调，一个是失败回调</p>
+<h4 id="Promise-prototype-then"><a href="#Promise-prototype-then" class="headerlink" title="Promise.prototype.then()"></a>Promise.prototype.then()</h4><p>Promise 对象有一个原型方法<code>then</code></p>
+<p>Promise 实例生成以后，可以用<code>then</code>方法指定<code>resolved</code>状态和<code>reject</code>状态的回调函数</p>
+<pre><code class="js">Promise.prototype.then(onFulfilled[, onRejected])</code></pre>
+<p><code>then</code>方法接收两个回调 onFulfilled 和 onRejected</p>
+<ul>
+<li><p>onFulfilled-可选</p>
+<ul>
+<li>当 Promise 变成已完成状态(fulfilled)时调用的回调函数</li>
+<li>该函数有一个参数，即接受的最终结果(the fulfillment value)</li>
+<li>如果该参数不是函数，则会在内部被替换为 <code>(x) =&gt; x</code>，即原样返回 promise 最终结果的函数</li>
+</ul>
+</li>
+<li><p>onRejected-可选</p>
+<ul>
+<li>当 Promise 变成接受状态或拒绝状态(rejected)时调用的回调函数</li>
+<li>该函数有一个参数，即拒绝的原因(rejection reason)</li>
+<li>如果该参数不是函数，则会在内部被替换为一个 <code>Thrower</code> 函数(it throws an error it received as argument)</li>
+</ul>
+</li>
+</ul>
+<p><code>then</code>方法在接收一个 promise 实例后会返回一个新的 Promise 实例(并不是原来那个 Promise 实例)，且原来的 promise 实例的返回值将作为参数传入这个新 Promise 的<code>resolve</code>函数</p>
+<p>那么既然<code>then</code>方法返回一个新的 promise 实例，所以我们可以接着使用<code>then</code>方法，即链式调用，也被称为 <strong>复合(composition)</strong>操作</p>
+<p>接上面的示例，函数 fn1 会返回一个 promise 实例</p>
+<pre><code class="js">fn1().then(
+  data =&gt; {
+    console.log(data)
+  },
+  err =&gt; {
+    console.log(err)
+  }
+)</code></pre>
+<p>如上所示，我们使用了<code>then</code>方法的两个参数</p>
+<p>第一个参数回调我们很常用，其实就是 Promise 变成已完成状态且拿到传递的值</p>
+<p>第二个参数回调就是 Promise 变成接受状态或拒绝状态且拿到错误参数，我们可能用的少，一般都是用<code>catch</code>方法，<code>then</code>方法的第二个参数 onRejected 和<code>catch</code>还是有一些细微区别的，下面会提到</p>
+<p>根据 Promises/A+中对<code>then</code>方法的定义，我们来看<code>then</code>方法的特点</p>
+<p><strong>首先<code>then</code> 方法必须返回一个 <code>promise</code> 对象(划重点)</strong></p>
+<p>链式调用的原理，不论是何种情况 then 方法都会返回一个新的 Promise 对象，这样才会有下个 then 方法</p>
+<p><strong>如果<code>then</code>方法中返回的是一个普通值(如 Number、String 等)就使用此值包装成一个新的 Promise 对象返回</strong></p>
+<p>就像下面这个例子，<code>then</code>方法接收 Promise 对象，<code>then</code>方法中返回一个普通值时，下一个<code>then</code>中是可以接到的</p>
+<pre><code class="js">let p = new Promise((resolve, reject) =&gt; {
+  resolve(1)
+})
+
+p.then(data =&gt; {
+  return 2 // 返回了一个普通值
+}).then(data =&gt; {
+  console.log(data) // 2
+})</code></pre>
+<p><strong>如果<code>then</code>方法中没有<code>return</code>语句，就返回一个用 Undefined 包装的 Promise 对象</strong></p>
+<p>如下面例子的输出结果</p>
+<pre><code class="js">let p = new Promise((resolve, reject) =&gt; {
+  resolve(1)
+})
+
+p.then(data =&gt; {
+  // 无return语句
+}).then(data =&gt; {
+  console.log(data) // undefined
+})</code></pre>
+<p><strong>如果<code>then</code>方法中出现异常，则调用失败态方法(reject)跳转到下一个<code>then</code>的 onRejected</strong></p>
+<p><code>then</code>方法的第二个参数 onRejected 是监测不到当前<code>then</code>方法回调异常的，规范中定义当前<code>then</code>方法出现异常则调用失败态方法(reject)流转到下一个<code>then</code>的 onRejected</p>
+<pre><code class="js">let p = new Promise((resolve, reject) =&gt; {
+  resolve(1)
+})
+
+p.then(data =&gt; 2)
+  .then(
+    data =&gt; {
+      throw &quot;this is err&quot;
+    },
+    err =&gt; {
+      console.log(&quot;err1:&quot; + err)
+    }
+  )
+  .then(
+    data =&gt; {
+      console.log(data)
+    },
+    err =&gt; {
+      console.log(&quot;err2:&quot; + err) // err2:this is err
+    }
+  )</code></pre>
+<p><strong>如果<code>then</code>方法没有传入任何回调，则继续向下传递(即所谓的值穿透)</strong></p>
+<p>下面示例，在第一个<code>then</code>方法之后连续调用了两个空的<code>then</code>方法 ，没有传入任何回调函数，也没有返回值，此时 Promise 会将值一直向下传递，直到接收处理，这就是所谓的值穿透</p>
+<pre><code class="js">let p = new Promise((resolve, reject) =&gt; {
+  resolve(1)
+})
+
+p.then(data =&gt; 2)
+  .then()
+  .then()
+  .then(data =&gt; {
+    console.log(data) // 2
+  })</code></pre>
+<p><strong>如果<code>then</code>方法中返回了一个 Promise 对象，那就以这个对象为准，返回它的结果</strong></p>
+<p>话不多说，来看示例</p>
+<pre><code class="js">let p = new Promise((resolve, reject) =&gt; {
+  resolve(1)
+})
+
+p.then(data =&gt; {
+  return new Promise((resolve, reject) =&gt; {
+    resolve(2)
+  })
+}).then(data =&gt; {
+  console.log(data) // 2
+})</code></pre>
+<h4 id="Promise-prototype-catch"><a href="#Promise-prototype-catch" class="headerlink" title="Promise.prototype.catch()"></a>Promise.prototype.catch()</h4><p>除了原型方法<code>then</code>之外，Promise 对象还有一个<code>catch</code>的原型方法</p>
+<p><code>catch</code>方法可以用于 promise 组合中的错误处理，此方法返回一个 Promise，并且处理拒绝的情况</p>
+<pre><code class="js">p.catch(onRejected)
+
+p.catch(function(reason) {
+  // 拒绝
+})</code></pre>
+<ul>
+<li>onRejected<ul>
+<li>当 Promise 被 rejected 时，被调用的一个回调函数，该函数拥有一个参数为失败原因或错误信息</li>
+</ul>
+</li>
+</ul>
+<p>简单理解就是捕获异常，promise 组合中抛出了错误或 promise 组合中出现 rejected 会被捕获</p>
+<p>同样接最上面的示例，还使用 fn1 函数</p>
+<pre><code class="js">fn1()
+  .then(data =&gt; {
+    console.log(data)
+  })
+  .catch(err =&gt; {
+    console.log(err)
+  })</code></pre>
+<p>使用这种方式捕获错误或失败是不是比<code>then</code>方法的第二个参数看着舒服了点呢，毕竟 Promise 就是链式到底</p>
+<p>同样也需要注意一点，<code>catch</code>方法也返回一个新的 promise 实例，如果 <code>onRejected</code>回调抛出一个错误或返回一个本身失败的 Promise ，通过 <code>catch</code> 返回的 Promise 会被 rejected，否则，它就是一个成功的(resolved)promise 实例</p>
+<p>和上面的<code>then</code>方法中的第二个参数几乎是一致的，我们看例子</p>
+<pre><code class="js">fn1()
+  .catch(err =&gt; {
+    console.log(err)
+    return err
+  })
+  .then(data =&gt; {
+    console.log(data)
+  })
+  .catch(err =&gt; {
+    console.log(err)
+  })</code></pre>
+<p>上面的 fn1 函数有一半的几率返回一个 rejected，当返回一个 rejected 时下面的<code>then</code>方法回调中同样会输出，因为我们在第一个<code>catch</code>中只 return 了错误信息，并没有抛出错误或者返回一个失败 promise，所以第一个<code>catch</code>执行返回的 promise 对象是 resolveing</p>
+<h4 id="Promise-prototype-finally"><a href="#Promise-prototype-finally" class="headerlink" title="Promise.prototype.finally()"></a>Promise.prototype.finally()</h4><p>finally，英文是<code>最后</code>的意思，此方法是<code>ES2018</code>的标准</p>
+<p>原型方法<code>finally</code>，我们使用的可能不多，语法如下</p>
+<pre><code class="js">p.finally(onFinally)
+
+p.finally(function() {
+  // 返回状态为(resolved 或 rejected)
+})</code></pre>
+<p>一句话即可解释<code>finally</code>，在 promise 结束时，不管成功还是失败都将执行其<code>onFinally</code>回调，该回调无参数</p>
+<p>适用于同样的语句需要在<code>then()</code>和<code>catch()</code>中各写一次的情况</p>
+<h4 id="Promise-resolve"><a href="#Promise-resolve" class="headerlink" title="Promise.resolve()"></a>Promise.resolve()</h4><p>一句话概括 Promise.resolve()方法，接收一个值，将现有对象转为 Promise 对象</p>
+<pre><code class="js">Promise.resolve(value)</code></pre>
+<p>如下所示，该值可为任意类型，也可是一个 Promise 对象</p>
+<pre><code class="js">const p = Promise.resolve(123)
+
+Promise.resolve(p).then(value =&gt; {
+  console.log(value) // 123
+})</code></pre>
+<h4 id="Promise-reject"><a href="#Promise-reject" class="headerlink" title="Promise.reject()"></a>Promise.reject()</h4><p><code>Promise.reject()</code>方法同上面<code>Promise.resolve()</code>一样，只不过是返回一个带有拒绝原因的<code>Promise</code>对象</p>
+<pre><code class="js">Promise.reject(123)
+  .then(data =&gt; {
+    console.log(data)
+  })
+  .catch(err =&gt; {
+    console.log(&quot;err:&quot; + err)
+  })
+
+// err:123</code></pre>
+<h4 id="Promise-all"><a href="#Promise-all" class="headerlink" title="Promise.all()"></a>Promise.all()</h4><p><code>Promise.all(iterable)</code>用于将多个 Promise 实例包装成一个新的 Promise 实例，参数为一组 Promise 实例组成的数组</p>
+<p>iterable 类型为 ES6 标准引入，代表可迭代对象，<code>Array</code>、<code>Map</code>和<code>Set</code>都属于<code>iterable</code>类型 ，iterable 下面我们会讲到，这里我们就先把这个参数理解成数组就可以，稍后配合下面的 iterable 来理解</p>
+<pre><code class="js">let p1 = Promise.resolve(1)
+let p2 = Promise.resolve(2)
+let p3 = Promise.resolve(3)
+
+let p = Promise.all([p1, p2, p3])
+
+p.then(data =&gt; {
+  console.log(data) // [1,2,3]
+})</code></pre>
+<p>如上所示，当 p1, p2, p3 状态都 Resolved 的时候，p 的状态才会 Resolved</p>
+<p>只要有一个实例 Rejected ，此时第一个被 Rejected 的实例返回值就会传递给 P 的回调函数</p>
+<pre><code class="js">let p1 = Promise.resolve(1)
+let p2 = Promise.resolve(2)
+let p3 = Promise.reject(3)
+
+let p = Promise.all([p1, p2, p3])
+p.then(data =&gt; {
+  console.log(data)
+}).catch(err =&gt; {
+  console.log(&quot;err:&quot; + err) // 3
+})</code></pre>
+<p>应用场景在我们有一个接口，需要其他两个或多个接口返回的数据作为参数时会多一些</p>
+<h4 id="Promise-race"><a href="#Promise-race" class="headerlink" title="Promise.race()"></a>Promise.race()</h4><p><code>Promise.race(iterable)</code>和上面<code>Promise.all(iterable)</code>类似</p>
+<p><code>all</code>方法是迭代对象中状态全部改变才会执行</p>
+<p><code>race</code>方法正好相反，只要迭代对象中有一个状态改变了，它的状态就跟着改变，并将那个改变状态实例的返回值传递给回调函数</p>
+<pre><code class="js">const p1 = new Promise((resolve, reject) =&gt; {
+  setTimeout(resolve, 1000, &quot;1&quot;)
+})
+
+const p2 = new Promise((resolve, reject) =&gt; {
+  setTimeout(resolve, 500, &quot;2&quot;)
+})
+
+Promise.race([p1, p2]).then(value =&gt; {
+  console.log(value) // 2
+})</code></pre>
+<h4 id="Promise-try"><a href="#Promise-try" class="headerlink" title="Promise.try()"></a>Promise.try()</h4><p>开发中，经常遇到一种情况：不知道或不想区分，函数 fn 是同步函数还是异步函数，但想用 Promise 来处理它</p>
+<p>因为这样就可以不管 fn 是不是异步操作，都用 then 方法指定下一步流程，用 catch 方法处理 fn 抛出的错误</p>
+<p>我们可能会使用<code>Promise.resolve</code>把它转换成 Promise 对象</p>
+<pre><code class="js">let fn = () =&gt; console.log(&quot;fn&quot;)
+Promise.resolve(fn).then(cb =&gt; cb())
+console.log(&quot;hahaha&quot;)
+
+// hahaha
+// fn</code></pre>
+<p>但是这样有一个问题，如果函数 fn 是同步的，那么这波操作会把它转成异步，如上输出</p>
+<p>那么有没有一种方法，让同步函数同步执行，异步函数异步执行，并且让它们具有统一的 API 呢？当然可以</p>
+<p>我们可以这样</p>
+<pre><code class="js">const fn = () =&gt; console.log(&quot;fn&quot;)
+;(() =&gt; new Promise(resolve =&gt; resolve(fn())))()
+  .then(() =&gt; {
+    console.log(222)
+  })
+  .catch(err =&gt; {
+    console.log(err)
+  })
+
+console.log(&quot;111&quot;)
+
+// fn
+// 111
+// 222</code></pre>
+<p>也可以这样</p>
+<pre><code class="js">const fn = () =&gt; console.log(&quot;fn&quot;)
+;(async () =&gt; fn())()
+  .then(() =&gt; {
+    console.log(222)
+  })
+  .catch(err =&gt; {
+    console.log(err)
+  })
+
+console.log(&quot;111&quot;)
+
+// fn
+// 111
+// 222</code></pre>
+<p>但是，代码有点诡异，不优雅</p>
+<p>来看使用<code>try</code>方法</p>
+<pre><code class="js">const fn = () =&gt; console.log(&quot;fn&quot;)
+Promise.try(fn)
+  .then(() =&gt; {
+    console.log(222)
+  })
+  .catch(err =&gt; {
+    console.log(err)
+  })
+
+console.log(&quot;111&quot;)
+
+// fn
+// 111
+// 222</code></pre>
+<p>如上所示，简洁明了，还是很实用的</p>
+<p>其实，<code>Promise.try</code>就是模拟 try 代码块，就像<code>promise.catch</code>模拟的是 catch 代码块</p>
+<p>最后 <code>Promise.try</code> 并不是 Javascript 的一部分</p>
+<p>早在 16 年有过这个提案，有兴趣的同学可以了解下，现在也没下文了，并没有被纳入标准</p>
+<p>如果想要使用的话，需要使用 Promise 库 Bluebird、Q 等，或引入 Polyfill</p>
+<p>虽然没有被纳入标准，但并不代表它不好用，大家自行体验</p>
+<p>想要了解更多此方法推荐大家看参考链接【4】【5】</p>
+<h4 id="onRejected-和-catch-区别"><a href="#onRejected-和-catch-区别" class="headerlink" title="onRejected 和 catch 区别"></a>onRejected 和 catch 区别</h4><p>上面提到了<code>promise.then(onFulfilled, onRejected)</code>中的第二个参数 onRejected 和<code>catch</code></p>
+<p>看到这大家可能会问，同样都是捕获异常它们的区别在哪</p>
+<p>其实<code>promise.then(onFulfilled, onRejected)</code> 在 <code>onFulfilled</code>回调中发生异常的话，在<code>onRejected</code>中是捕获不到这个异常的，使用<code>catch</code>可以捕获到前面的 onFulfilled 的异常</p>
+<p>其实这不算个缺点，我们完全可以在末尾多加一个<code>then</code>从而达到和<code>catch</code>相同的作用，如下</p>
+<pre><code class="js">Promise.reject(1)
+  .then(() =&gt; {
+    console.log(&quot;我是对的&quot;)
+  })
+  .then(null, err =&gt; {
+    console.log(&quot;err:&quot; + err) // err:1
+  })
+
+// 等价于
+
+Promise.reject(1)
+  .then(() =&gt; {
+    console.log(&quot;我是对的&quot;)
+  })
+  .catch(err =&gt; {
+    console.log(&quot;err:&quot; + err) // err:1
+  })</code></pre>
+<p>就这么点区别，不过大部分人都喜欢直接使用<code>catch</code>罢了</p>
+<h4 id="then-中抛错未处理"><a href="#then-中抛错未处理" class="headerlink" title="then 中抛错未处理"></a>then 中抛错未处理</h4><p>如果在 then 中抛错，而没有对错误进行处理(catch)，那么会一直保持 reject 状态，直到 catch 了错误</p>
+<p>我们来看一段代码</p>
+<pre><code class="js">Promise.resolve()
+  .then(() =&gt; {
+    console.log(a)
+    console.log(&quot;Task 1&quot;)
+  })
+  .then(() =&gt; {
+    console.log(&quot;Task 2&quot;)
+  })
+  .catch(err =&gt; {
+    console.log(&quot;err:&quot; + err)
+  })
+  .then(() =&gt; {
+    console.log(&quot;finaltask&quot;)
+  })
+
+// err:ReferenceError: a is not defined
+// finaltask</code></pre>
+<p>我们看上面代码，我们在第一个<code>then</code>中输出了一个未声明的变量</p>
+<p>输出结果先走了<code>catch</code>然后走了最后一个<code>then</code>，第一个<code>then</code>中抛出错误并跳过了第二个<code>then</code></p>
+<p>也就是说如果我们没有处理这个错误(无 catch)的话，就不会往下执行了</p>
+<p>可参考下图</p>
+<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.assets/image-20200201231714043.png" srcset="/img/loading.gif" alt="image-20200201231714043"></p>
+<p>promise 的缺点之一就是无法让 promise 中断，利用这个特性可以让 Promise 中断执行，也算一种办法吧</p>
+<h4 id="异步回调中抛错-catch-捕捉不到"><a href="#异步回调中抛错-catch-捕捉不到" class="headerlink" title="异步回调中抛错 catch 捕捉不到"></a>异步回调中抛错 catch 捕捉不到</h4><p>首先我们看在 Promise 对象的处理器函数中直接抛出错误</p>
+<pre><code class="js">const p = new Promise((resolve, reject) =&gt; {
+  throw new Error(&quot;这是一个错误&quot;)
+})
+p.catch(error =&gt; {
+  console.log(error)
+})</code></pre>
+<p>按照上述内容来看，在 Promise 对象的处理器函数中直接抛出错误，<code>catch</code>是可以捕捉到的</p>
+<p>在下面代码，在 Promise 对象的处理器函数中模拟一个异步抛错</p>
+<pre><code class="js">const p = new Promise((resolve, reject) =&gt; {
+  setTimeout(() =&gt; {
+    throw new Error(&quot;这是一个错误&quot;)
+  }, 0)
+})
+p.catch(error =&gt; {
+  console.log(error)
+})</code></pre>
+<p>这种情况<code>catch</code>是捕捉不到的，这是为什么呢？先想后看，再做不难</p>
+<p><strong>原因</strong></p>
+<p>JS 事件循环列表有宏任务与微任务之分，setTimeOut 是宏任务， promise 是微任务，执行顺序不同</p>
+<p>那么这段代码的执行顺序是：</p>
+<ol>
+<li>代码执行栈进入 promise 触发 setTimeOut，setTimeOut 回调函数入宏任务队列</li>
+<li>代码执行 promise 的 catch 方法，入微任务队列，此时 setTimeOut 回调还没有执行</li>
+<li>执行栈检查发现当前微任务队列执行完毕，开始执行宏任务队列</li>
+<li>执行<code>throw new Error(&#39;这是一个错误&#39;)</code> 此时这个异常其实是在 promise 外部抛出的</li>
+</ol>
+<p><strong>解决</strong></p>
+<p>使用<code>try catch</code>捕获异常主动触发<code>reject</code></p>
+<pre><code class="js">const p = new Promise((resolve, reject) =&gt; {
+  setTimeout(() =&gt; {
+    try {
+      throw new Error(&quot;这是一个错误&quot;)
+    } catch (e) {
+      reject(e)
+    }
+  }, 0)
+})
+p.catch(error =&gt; {
+  console.log(error)
+})</code></pre>
+<h3 id="手写-Promise—符合-Promises-A-规范"><a href="#手写-Promise—符合-Promises-A-规范" class="headerlink" title="手写 Promise—符合 Promises/A+规范"></a>手写 Promise—符合 Promises/A+规范</h3><h4 id="为什么要手写-Promise"><a href="#为什么要手写-Promise" class="headerlink" title="为什么要手写 Promise"></a>为什么要手写 Promise</h4><p>Promise 源码逻辑相对来说不算简单，可能我们只会使用，并不清楚其原理</p>
+<p>自己实现一遍会加深我们对 Promise 的理解，也可以加强我们 JS 的功底</p>
+<p>更何况手写实现 Promise 是一道前端经典的面试题，此处必然不用多说</p>
+<h4 id="Promises-A"><a href="#Promises-A" class="headerlink" title="Promises/A+"></a>Promises/A+</h4><p>了解了 Promise 的基础用法后，我们来一步步倒推实现 Promise</p>
+<p>Promises/A+标准是一个开放、健全且通用的 JavaScript Promise 标准，由开发者制定，供开发者参考</p>
+<p>很多 Promise 三方库都是按照 Promises/A+标准实现的</p>
+<p>so，此次实现我们严格 Promises/A+标准，包括完成后我们会使用开源社区提供的测试包来测试</p>
+<p>简单来说，测试通过的话，足以证明代码符合 Promises/A+标准，是合法的、完全可以上线提供给他人使用的</p>
+<p>更多 Promises/A+标准请看参考链接【6】【7】</p>
+<h4 id="构造方法核心基础搭建"><a href="#构造方法核心基础搭建" class="headerlink" title="构造方法核心基础搭建"></a>构造方法核心基础搭建</h4><p>Promise 的用法上面已经详细讲了，如果阅读仔细的话，我们会知道</p>
+<ul>
+<li>Promise 有三种状态进行中 (Pending)、已完成 (Resolved/Fulfilled)和已失败 (Rejected)</li>
+<li>Promise 是一个构造方法，实例化 Promise 时传入一个函数作为处理器<ul>
+<li>处理器函数有两个参数(resolve 和 reject)分别将结果变为成功态和失败态</li>
+<li>Promise 对象执行成功了要有一个结果，通过 resolve 传递出去，失败的话失败原因通过 reject 传递出入</li>
+</ul>
+</li>
+<li>Promise 的原型上定义着 then 方法</li>
+</ul>
+<p>那么根据我们上面的这些已知需求我们可以写出一个基础的结构(写法千千万，喜欢 class 也可以用 class)</p>
+<pre><code class="js">function Promise(executor) {
+  // 状态描述 pending resolved rejected
+  this.state = &quot;pending&quot;
+  // 成功结果
+  this.value = undefined
+  // 失败原因
+  this.reason = undefined
+
+  function resolve(value) {}
+
+  function reject(reason) {}
+}
+
+Promise.prototype.then = function(onFulfilled, onRejected) {}</code></pre>
+<p>如上所示，我们创建了一个 Promise 构造方法，<code>state</code>属性保存了 Promise 对象的状态，使用<code>value</code>属性保存 Promise 对象执行成功的结果，失败原因使用<code>reason</code>属性保存，这些命名完全贴合 Promises/A+标准</p>
+<p>接着我们在构造函数中创建了<code>resolve</code>和<code>reject</code>两个方法，然后在构造函数的原型上创建了一个<code>then</code>方法，以备待用</p>
+<h4 id="初始化实例-executor-立即执行"><a href="#初始化实例-executor-立即执行" class="headerlink" title="初始化实例 executor 立即执行"></a>初始化实例 executor 立即执行</h4><p>我们知道，在创建一个 Promise 实例时，处理器函数(executor)是会立即执行的，所以我们更改代码</p>
+<pre><code class="js">function Promise(executor) {
+  this.state = &quot;pending&quot;
+  this.value = undefined
+  this.reason = undefined
+
+  // 让其处理器函数立即执行
+  try {
+    executor(resolve, reject)
+  } catch (err) {
+    reject(err)
+  }
+
+  function resolve(value) {}
+  function reject(reason) {}
+}</code></pre>
+<h4 id="resolve-amp-reject-回调实现"><a href="#resolve-amp-reject-回调实现" class="headerlink" title="resolve&amp;reject 回调实现"></a>resolve&amp;reject 回调实现</h4><p>Promises/A+规范中规定，当 Promise 对象已经由 pending 状态改变为成功态(resolved)或失败态(rejected)后不可再次更改状态，也就是说成功或失败后状态不可更新已经凝固</p>
+<p>因此我们更新状态时要判断，如果当前状态是 pending(等待态)才可更新，由此我们来完善<code>resolve</code>和<code>reject</code>方法</p>
+<pre><code class="js">let _this = this
+
+function resolve(value) {
+  if (_this.state === &quot;pending&quot;) {
+    _this.value = value
+    _this.state = &quot;resolved&quot;
+  }
+}
+
+function reject(reason) {
+  if (_this.state === &quot;pending&quot;) {
+    _this.reason = reason
+    _this.state = &quot;rejected&quot;
+  }
+}</code></pre>
+<p>如上所示，首先我们在 Promise 构造函数内部用变量<code>_this</code>托管构造函数的<code>this</code></p>
+<p>接着我们在<code>resolve</code>和<code>reject</code>函数中分别加入了判断，因为只有当前态是 pending 才可进行状态更改操作</p>
+<p>同时将成功结果和失败原因都保存到对应的属性上</p>
+<p>然后将 state 属性置为更新后的状态</p>
+<h4 id="then-方法基础实现"><a href="#then-方法基础实现" class="headerlink" title="then 方法基础实现"></a>then 方法基础实现</h4><p>接着我们来简单实现<code>then</code>方法</p>
+<p>首先<code>then</code>方法有两个回调，当 Promise 的状态发生改变，成功或失败会分别调用<code>then</code>方法的两个回调</p>
+<p>所以，then 方法的实现看起来挺简单，根据 state 状态来调用不同的回调函数即可</p>
+<pre><code class="js">Promise.prototype.then = function(onFulfilled, onRejected) {
+  if (this.state === &quot;resolved&quot;) {
+    if (typeof onFulfilled === &quot;function&quot;) {
+      onFulfilled(this.value)
+    }
+  }
+  if (this.state === &quot;rejected&quot;) {
+    if (typeof onRejected === &quot;function&quot;) {
+      onRejected(this.reason)
+    }
+  }
+}</code></pre>
+<p>如上所示，由于<code>onFulfilled &amp; onRejected</code>两个参数都不是必选参，所以我们在判断状态后又判断了参数类型，当参数不为函数类型，就不执行，因为在 Promises/A+规范中定义非函数类型可忽略</p>
+<h4 id="让-Promise-支持异步"><a href="#让-Promise-支持异步" class="headerlink" title="让 Promise 支持异步"></a>让 Promise 支持异步</h4><p>写到这里，我们可能会觉得，咦？Promise 实现起来也不难嘛，这么快就有模有样了，我们来简单测试下</p>
+<pre><code class="js">let p = new Promise((resolve, reject) =&gt; {
+  resolve(1)
+})
+
+p.then(data =&gt; console.log(data)) // 1</code></pre>
+<p>嗯，符合预期，再来试下异步代码</p>
+<pre><code class="js">let p = new Promise((resolve, reject) =&gt; {
+  setTimeout(() =&gt; {
+    resolve(1);
+  }，1000);
+})
+
+p.then(data =&gt; console.log(data)) // 无输出</code></pre>
+<p>问题来了，Promise 一个异步解决方案被我们写的不支持异步。。。</p>
+<p>我们来分析下，本来是等 1000ms 后执行<code>then</code>方法，运行上面代码发现没有结果，哪里有问题呢？</p>
+<p>setTimeout 函数让<code>resolve</code>变成了异步执行，有延迟，调用<code>then</code>方法的时候，此刻状态还是等待态(pending)，<code>then</code>方法即没有调用<code>onFulfilled</code>也没有调用<code>onRejected</code></p>
+<p>嗯，清楚原因我们开始改造，如果是你，你会如何解决呢，此处可思考 40 秒，想一个可实施的大致思路</p>
+<p><strong>小提示：</strong> 可以参考上文的发布订阅模式，如果 40 秒还没有思路，嗯，有待提高</p>
+<p>|</p>
+<p>|</p>
+<p>–&gt;为了让您小小活动一下左脑并活跃下气氛，我也是煞费苦心(<strong>ps:</strong>都看到这了，不点个赞鼓励下就太没劲了噻 😄)</p>
+<p>|</p>
+<p>|</p>
+<p>回归正题，我们来解决这个问题</p>
+<p>我们可以参照发布订阅模式，在执行<code>then</code>方法时如果还在等待态(pending)，就把回调函数临时寄存到队列(就是一个数组)里，当状态发生改变时依次从数组中取出执行就好了</p>
+<p>思路有了，我们来实现下</p>
+<p>首先，我们要在构造方法中新增两个 Array 类型的数组，用于存放成功和失败的回调函数</p>
+<pre><code class="js">function Promise(executor) {
+  let _this = this
+  this.state = &quot;pending&quot;
+  this.value = undefined
+  this.reason = undefined
+  // 保存成功回调
+  this.onResolvedCallbacks = []
+  // 保存失败回调
+  this.onRejectedCallbacks = []
+  // ...
+}</code></pre>
+<p>我们还需要改善<code>then</code>方法，在<code>then</code>方法执行时如果状态是等待态，就将其回调函数存入对应数组</p>
+<pre><code class="js">Promise.prototype.then = function(onFulfilled, onRejected) {
+  // 新增等待态判断，此时异步代码还未走完，回调入数组队列
+  if (this.state === &quot;pending&quot;) {
+    if (typeof onFulfilled === &quot;function&quot;) {
+      this.onResolvedCallbacks.push(onFulfilled)
+    }
+    if (typeof onRejected === &quot;function&quot;) {
+      this.onRejectedCallbacks.push(onRejected)
+    }
+  }
+
+  // 以下为之前代码块
+  if (this.state === &quot;resolved&quot;) {
+    if (typeof onFulfilled === &quot;function&quot;) {
+      onFulfilled(this.value)
+    }
+  }
+  if (this.state === &quot;rejected&quot;) {
+    if (typeof onRejected === &quot;function&quot;) {
+      onRejected(this.reason)
+    }
+  }
+}</code></pre>
+<p>如上所示，我们改写<code>then</code>方法，除了判断成功态(resolved)、失败态(rejected)，我们又加了一个等待态(pending)判断，当状态为等待态时，异步代码还没有走完，那么我们把对应的回调先存入准备好的数组中即可</p>
+<p>最那么，就差最后一步执行了，我们在<code>resolve</code>和<code>reject</code>方法中调用即可</p>
+<pre><code class="js">function resolve(value) {
+  if (_this.state === &quot;pending&quot;) {
+    _this.value = value
+    // 遍历执行成功回调
+    _this.onResolvedCallbacks.forEach(cb =&gt; cb(value))
+    _this.state = &quot;resolved&quot;
+  }
+}
+
+function reject(reason) {
+  if (_this.state === &quot;pending&quot;) {
+    _this.reason = reason
+    // 遍历执行失败回调
+    _this.onRejectedCallbacks.forEach(cb =&gt; cb(reason))
+    _this.state = &quot;rejected&quot;
+  }
+}</code></pre>
+<p>到了这里，我们已经实现了 Promise 的异步解决，赶快测试下</p>
+<h4 id="实现-Promise-经典的链式调用"><a href="#实现-Promise-经典的链式调用" class="headerlink" title="实现 Promise 经典的链式调用"></a>实现 Promise 经典的链式调用</h4><p>Promise 的<code>then</code>方法可以链式调用，这也是 Promise 的精华之一，在实现起来也算是比较复杂的地方了</p>
+<p>首先我们要理清楚<code>then</code>的需求是什么，这需要仔细看 Promises/A+规范中对<code>then</code>方法的返回值定义及 Promise 解决过程，当然你如果仔细阅读了上文<code>then</code>方法的使用大概也清楚了，我们在这里再次总结下</p>
+<ul>
+<li><p><strong>首先<code>then</code> 方法必须返回一个 <code>promise</code> 对象(划重点)</strong></p>
+</li>
+<li><p><strong>如果<code>then</code>方法中返回的是一个普通值(如 Number、String 等)就使用此值包装成一个新的 Promise 对象返回</strong></p>
+</li>
+<li><p><strong>如果<code>then</code>方法中没有<code>return</code>语句，就返回一个用 Undefined 包装的 Promise 对象</strong></p>
+</li>
+<li><p><strong>如果<code>then</code>方法中出现异常，则调用失败态方法(reject)跳转到下一个<code>then</code>的 onRejected</strong></p>
+</li>
+<li><p><strong>如果<code>then</code>方法没有传入任何回调，则继续向下传递(值穿透)</strong></p>
+</li>
+<li><p><strong>如果<code>then</code>方法中返回了一个 Promise 对象，那就以这个对象为准，返回它的结果</strong></p>
+</li>
+</ul>
+<p>嗯，到此我们需求已经明确，开始代码实现</p>
+<p>需求中说如果<code>then</code>方法没有传入任何回调，则继续向下传递，但是每个<code>then</code>中又返回一个新的 Promise，也就是说当<code>then</code>方法中没有回调时，我们需要把接收到的值继续向下传递，这个其实好办，只需要在判断回调参数不为函数时我们把他变成回调函数返回普通值即可</p>
+<pre><code class="js">Promise.prototype.then = function(onFulfilled, onRejected) {
+  onFulfilled = typeof onFulfilled === &quot;function&quot; ? onFulfilled : value =&gt; value
+  onRejected =
+    typeof onRejected === &quot;function&quot;
+      ? onRejected
+      : err =&gt; {
+          throw err
+        }
+  // ...
+}</code></pre>
+<p>我们上面<code>then</code>实现中，在每个可执行处都加了参数是否为函数的类型校验，但是我们这里在<code>then</code>方法开头统一做了校验，就不需要参数校验了</p>
+<p>现在的<code>then</code>方法变成了</p>
+<pre><code class="js">Promise.prototype.then = function(onFulfilled, onRejected) {
+  onFulfilled = typeof onFulfilled === &quot;function&quot; ? onFulfilled : value =&gt; value
+  onRejected =
+    typeof onRejected === &quot;function&quot;
+      ? onRejected
+      : err =&gt; {
+          throw err
+        }
+
+  if (this.state === &quot;pending&quot;) {
+    this.onResolvedCallbacks.push(onFulfilled)
+    this.onRejectedCallbacks.push(onRejected)
+  }
+
+  if (this.state === &quot;resolved&quot;) {
+    onFulfilled(this.value)
+  }
+  if (this.state === &quot;rejected&quot;) {
+    onRejected(this.reason)
+  }
+}</code></pre>
+<p>接着来</p>
+<p>既然每个<code>thne</code>都反回一个新的 Promise，那么我们就先在<code>then</code>中创建一个 Promise 实例返回，开始改造</p>
+<pre><code class="js">Promise.prototype.then = function(onFulfilled, onRejected) {
+  onFulfilled = typeof onFulfilled === &quot;function&quot; ? onFulfilled : value =&gt; value
+  onRejected =
+    typeof onRejected === &quot;function&quot;
+      ? onRejected
+      : err =&gt; {
+          throw err
+        }
+
+  let promise2 = new Promise((resolve, reject) =&gt; {
+    if (this.state === &quot;pending&quot;) {
+      this.onResolvedCallbacks.push(onFulfilled)
+      this.onRejectedCallbacks.push(onRejected)
+    }
+
+    if (this.state === &quot;resolved&quot;) {
+      onFulfilled(this.value)
+    }
+    if (this.state === &quot;rejected&quot;) {
+      onRejected(this.reason)
+    }
+  })
+  return promise2
+}</code></pre>
+<p>我们在<code>then</code>方法中先实例化了一个 Promise 对象并返回，我们把原来写的代码放到该实例的处理器函数中</p>
+<p>我们把原来写的代码放到该实例的处理器函数中</p>
+<p>接着在每个执行函数处使用<code>try..catch</code>语法，try 中<code>resolve</code>执行结果，catch 中<code>reject</code>异常，原来的<code>then</code>方法中有 resolved、rejected 和 pending 三种逻辑判断，如下</p>
+<p>在 resolved 状态判断时，rejected 和 resolved 逻辑一致</p>
+<pre><code class="js">if (this.state === &quot;resolved&quot;) {
+  try {
+    // 拿到返回值resolve出去
+    let x = onFulfilled(this.value)
+    resolve(x)
+  } catch (e) {
+    // catch捕获异常reject抛出
+    reject(e)
+  }
+}</code></pre>
+<p>pending 状态判断，逻辑也和 resolved 相似，但是由于此处为了处理异步，我们在这里做了 push 操作，所以我们 push 时在 onFulfilled 和 onRejected 回调外面再套一个回调做操作即可，都是 JS 惯用小套路，不过分解释</p>
+<pre><code class="js">if (this.state === &quot;pending&quot;) {
+  // push(onFulfilled)
+  // push(()=&gt;{ onFulfilled() })
+  // 上面两种执行效果一致，后者可在回调中加一些其他功能，如下
+  this.onResolvedCallbacks.push(() =&gt; {
+    try {
+      let x = onFulfilled(this.value)
+      resolve(x)
+    } catch (e) {
+      reject(e)
+    }
+  })
+  this.onRejectedCallbacks.push(() =&gt; {
+    try {
+      let x = onRejected(this.value)
+      resolve(x)
+    } catch (e) {
+      reject(e)
+    }
+  })
+}</code></pre>
+<p>再接下来我们开始处理根据上一个<code>then</code>方法的返回值来生成新 Promise 对象，这块逻辑复杂些，规范中可以抽离出一个方法来做这件事，我们来照做</p>
+<pre><code class="js">/**
+ * 解析then返回值与新Promise对象
+ * @param {Object} 新的Promise对象，就是我们创建的promise2实例
+ * @param {*} x 上一个then的返回值
+ * @param {Function} resolve promise2处理器函数的resolve
+ * @param {Function} reject promise2处理器函数的reject
+ */
+function resolvePromise(promise2, x, resolve, reject) {
+  // ...
+}</code></pre>
+<p>我们来一步步分析完善 resolvePromise 函数</p>
+<p><strong>避免循环引用，当 then 的返回值与新生成的 Promise 对象为同一个(引用地址相同)，则抛出 TypeError 错误</strong></p>
+<p>例：</p>
+<pre><code class="js">let promise2 = p.then(data =&gt; {
+  return promise2
+})
+
+// TypeError: Chaining cycle detected for promise #&lt;Promise&gt;</code></pre>
+<p>如果返回了自己的 Promise 对象，状态永远为等待态(pending)，再也无法成为 resolved 或是 rejected，程序就死掉了，因此要先处理它</p>
+<pre><code class="js">function resolvePromise(promise2, x, resolve, reject) {
+  if (promise2 === x) {
+    reject(new TypeError(&quot;请避免Promise循环引用&quot;))
+  }
+}</code></pre>
+<p><strong>判断 x 类型，分情况处理</strong></p>
+<p>当 x 是一个 Promise，就执行它，成功即成功，失败即失败，如果<code>x</code>是一个对象或是函数，再进一步处理它，否则就是一个普通值</p>
+<pre><code class="js">function resolvePromise(promise2, x, resolve, reject) {
+  if (promise2 === x) {
+    reject(new TypeError(&quot;请避免Promise循环引用&quot;))
+  }
+
+  if (x !== null &amp;&amp; (typeof x === &quot;object&quot; || typeof x === &quot;function&quot;)) {
+    // 可能是个对象或是函数
+  } else {
+    // 是个普通值
+    resolve(x)
+  }
+}</code></pre>
+<p>如果 x 是个对象，尝试将对象上的 then 方法取出来，此时如果报错，那就将 promise2 转为失败态</p>
+<p>在这里 catch 防止报错是因为 Promise 有很多实现，假设另一个人实现的 Promise 对象使用<code>Object.defineProperty()</code>在取值时抛错，我们可以防止代码出现 bug</p>
+<pre><code class="js">// resolvePromise方法内部片段
+
+if (x !== null &amp;&amp; (typeof x === &quot;object&quot; || typeof x === &quot;function&quot;)) {
+  // 可能是个对象或是函数
+  try {
+    // 尝试取出then方法引用
+    let then = x.then
+  } catch (e) {
+    reject(e)
+  }
+} else {
+  // 是个普通值
+  resolve(x)
+}</code></pre>
+<p>如果对象中有<code>then</code>，且<code>then</code>是函数类型，就可以认为是一个 Promise 对象，之后，使用<code>x</code>作为其 this 来调用执行<code>then</code>方法</p>
+<pre><code class="js">// resolvePromise方法内部片段
+
+if (x !== null &amp;&amp; (typeof x === &quot;object&quot; || typeof x === &quot;function&quot;)) {
+  // 可能是个对象或是函数
+  try {
+    // 尝试取出then方法引用
+    let then = x.then
+    if (typeof then === &quot;function&quot;) {
+      // then是function，那么执行Promise
+      then.call(
+        x,
+        y =&gt; {
+          resolve(y)
+        },
+        r =&gt; {
+          reject(r)
+        }
+      )
+    } else {
+      resolve(x)
+    }
+  } catch (e) {
+    reject(e)
+  }
+} else {
+  // 是个普通值
+  resolve(x)
+}</code></pre>
+<p>此时，我们还要考虑到一种情况，如果 Promise 对象转为成功态或是失败时传入的还是一个 Promise 对象，此时应该继续执行，直到最后的 Promise 执行完，例如下面这种</p>
+<pre><code class="js">Promise.resolve(1).then(data =&gt; {
+  return new Promise((resolve, reject) =&gt; {
+    // resolve传入的还是Promise
+    resolve(
+      new Promise((resolve, reject) =&gt; {
+        resolve(2)
+      })
+    )
+  })
+})</code></pre>
+<p>解决这种情况，我们可以采用递归，把调用 resolve 改写成递归执行 resolvePromise，这样直到解析 Promise 成一个普通值才会终止</p>
+<pre><code class="js">// resolvePromise方法内部片段
+if (x !== null &amp;&amp; (typeof x === &quot;object&quot; || typeof x === &quot;function&quot;)) {
+  // 可能是个对象或是函数
+  try {
+    let then = x.then
+    if (typeof then === &quot;function&quot;) {
+      then.call(
+        x,
+        y =&gt; {
+          // 递归调用，传入y若是Promise对象，继续循环
+          resolvePromise(promise2, y, resolve, reject)
+        },
+        r =&gt; {
+          reject(r)
+        }
+      )
+    } else {
+      resolve(x)
+    }
+  } catch (e) {
+    reject(e)
+  }
+} else {
+  // 普通值结束递归
+  resolve(x)
+}</code></pre>
+<p>规范中定义，如果 resolvePromise 和 rejectPromise 都被调用，或者多次调用同一个参数，第一个调用优先，任何进一步的调用都将被忽略，为了让成功和失败只能调用一个，我们接着完善，设定一个 called 来防止多次调用</p>
+<pre><code class="js">// resolvePromise方法内部片段
+let called
+if (x !== null &amp;&amp; (typeof x === &quot;object&quot; || typeof x === &quot;function&quot;)) {
+  // 可能是个对象或是函数
+  try {
+    let then = x.then
+    if (typeof then === &quot;function&quot;) {
+      then.call(
+        x,
+        y =&gt; {
+          if (called) return
+          called = true
+          // 递归调用，传入y若是Promise对象，继续循环
+          resolvePromise(promise2, y, resolve, reject)
+        },
+        r =&gt; {
+          if (called) return
+          called = true
+          reject(r)
+        }
+      )
+    } else {
+      resolve(x)
+    }
+  } catch (e) {
+    if (called) return
+    called = true
+    reject(e)
+  }
+} else {
+  // 普通值结束递归
+  resolve(x)
+}</code></pre>
+<p>到此，我们算是实现好了<code>resolvePromise</code>方法，我们来调用它实现完整的<code>then</code>方法，在原来的原型方法<code>then</code>中我们<code>return</code>了一个 promise2，这个实例处理器函数的三种状态判断中把<code>resolve</code>处替换成<code>resolvePromise</code>方法即可</p>
+<p>那么，此时<code>then</code>方法实现完成了吗？</p>
+<p>当然还没有，我们都知道，Promise 中处理器函数是同步执行，而<code>then</code>方法是异步，但是我们完成这个还是同步</p>
+<p>解决这个问题其实也很简单，仿照市面上大多数 Promise 库的做法，使用 setTimeout 模拟，我们在<code>then</code>方法内执行处的所有地方使用 setTimeout 变为异步即可(只是这样做和浏览器自带的 Promises 唯一的区别就是浏览器的 Promise..then 是微任务，我们用 setTimeout 实现是宏任务)，不过这也是大多数 Promise 库的做法，如下</p>
+<pre><code class="js">setTimeout(() =&gt; {
+  try {
+    let x = onFulfilled(value)
+    resolvePromise(promise2, x, resolve, reject)
+  } catch (e) {
+    reject(e)
+  }
+}, 0)</code></pre>
+<p>现在我们的终极版<code>then</code>方法就大功告成了</p>
+<pre><code class="js">Promise.prototype.then = function(onFulfilled, onRejected) {
+  onFulfilled = typeof onFulfilled === &quot;function&quot; ? onFulfilled : value =&gt; value
+  onRejected =
+    typeof onRejected === &quot;function&quot;
+      ? onRejected
+      : err =&gt; {
+          throw err
+        }
+
+  let promise2 = new Promise((resolve, reject) =&gt; {
+    // 等待态判断，此时异步代码还未走完，回调入数组队列
+    if (this.state === &quot;pending&quot;) {
+      this.onResolvedCallbacks.push(() =&gt; {
+        setTimeout(() =&gt; {
+          try {
+            let x = onFulfilled(this.value)
+            resolvePromise(promise2, x, resolve, reject)
+          } catch (e) {
+            reject(e)
+          }
+        }, 0)
+      })
+
+      this.onRejectedCallbacks.push(() =&gt; {
+        setTimeout(() =&gt; {
+          try {
+            let x = onRejected(this.value)
+            resolvePromise(promise2, x, resolve, reject)
+          } catch (e) {
+            reject(e)
+          }
+        }, 0)
+      })
+    }
+    if (this.state === &quot;resolved&quot;) {
+      setTimeout(() =&gt; {
+        try {
+          let x = onFulfilled(this.value)
+          resolvePromise(promise2, x, resolve, reject)
+        } catch (e) {
+          reject(e)
+        }
+      }, 0)
+    }
+    if (this.state === &quot;rejected&quot;) {
+      setTimeout(() =&gt; {
+        try {
+          let x = onRejected(this.reason)
+          resolvePromise(promise2, x, resolve, reject)
+        } catch (e) {
+          reject(e)
+        }
+      }, 0)
+    }
+  })
+  return promise2
+}</code></pre>
+<h4 id="catch-实现"><a href="#catch-实现" class="headerlink" title="catch 实现"></a>catch 实现</h4><p>实现了最复杂的<code>then</code>方法后，<code>catch</code>实现非常简单，一看就懂了</p>
+<pre><code class="js">Promise.prototype.catch = function(onRejected) {
+  return this.then(null, onRejected)
+}</code></pre>
+<h4 id="代码测试"><a href="#代码测试" class="headerlink" title="代码测试"></a>代码测试</h4><p>开源社区提供了一个包用于测试我们的代码是否符合 Promises/A+规范：<code>promises-aplus-tests</code></p>
+<p>首先我们要为该测试包提供一个<code>deferred</code>钩子，用于测试</p>
+<p>如下，将下面代码防止我们的<code>Promise.js</code>文件末尾即可</p>
+<pre><code class="js">// promises-aplus-tests测试
+Promise.defer = Promise.deferred = function() {
+  let defer = {}
+  defer.promise = new Promise((resolve, reject) =&gt; {
+    defer.resolve = resolve
+    defer.reject = reject
+  })
+  return defer
+}
+try {
+  module.exports = Promise
+} catch (e) {}</code></pre>
+<p>接着，安装这个包</p>
+<pre><code class="js">npm install promises-aplus-tests -D</code></pre>
+<p>执行测试</p>
+<pre><code class="js">npx promises-aplus-tests Promise.js</code></pre>
+<p>静等片刻，如果控制台没有爆红就是成功了，符合规范，如图所示</p>
+<p><img src="../../../../../Documents/image-20200206222942803.png" srcset="/img/loading.gif" alt="image-20200206222942803"></p>
+<h4 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h4><p>篇幅已经很长了，后续还有其他内容，所以就实现了比较核心的 Promise 及 then 和 catch 方法</p>
+<p>其他的 resolve/reject/race/all 等比较简单，不在这里描述了</p>
+<p>给大家贴个我这边 Promise 多个方法实现的地址，大家有兴趣自行看代码吧，注释写的很详细了，也就大概 200 多行代码</p>
+<ul>
+<li>Github：<a href="https://github.com/isboyjc/promise" target="_blank" rel="noopener">https://github.com/isboyjc/promise</a></li>
+</ul>
+<h3 id="Promise-优-缺"><a href="#Promise-优-缺" class="headerlink" title="Promise 优/缺"></a>Promise 优/缺</h3><p><strong>优点</strong></p>
+<p>Promise 用同步的方式写异步的代码，避免了层层嵌套的回调函数</p>
+<p>Promise 对象提供了统一的接口，使得控制异步操作更加容易</p>
+<p>链式操作，可以在 then 中继续写 Promise 对象并返回，然后继续调用 then 来进行回调操作</p>
+<p><strong>缺点</strong></p>
+<p>Promise 对象一旦新建就会立即执行，无法中途取消</p>
+<p>若不设置回调函数，Promise 内部会抛出错误，不会流到外部</p>
+<p>当处于 pending 状态时，无法得知当前处于哪一阶段</p>
+<p>用多了 Promise 后代码一眼看上去都是 promise 的 API，而且链式语法总觉得不好看，不优雅</p>
+<h2 id="Generator"><a href="#Generator" class="headerlink" title="Generator"></a>Generator</h2><p>Generator 是协程在 ES6 的实现，最大的特点就是可以交出函数的执行权</p>
+<p>我们可以通过 yield 关键字，把函数的执行流挂起，为改变执行流程提供了可能，从而为异步编程提供解决方案</p>
+<p>Generator 的英文是生成器</p>
+<p>想要了解生成器(Generator)，还是绕不过迭代器(Iterator)这个概念，我们先来简单介绍下</p>
+<h3 id="迭代器-Iterator"><a href="#迭代器-Iterator" class="headerlink" title="迭代器(Iterator)"></a>迭代器(Iterator)</h3><h4 id="Iterator-简介"><a href="#Iterator-简介" class="headerlink" title="Iterator 简介"></a>Iterator 简介</h4><p>迭代器是一种接口，也可以说是一种规范</p>
+<p>js 中不同的数据类型如(Array/Object/Set)等等遍历方式都各有不同，比如对象遍历我们会使用<code>for..in..</code>，数组可以使用<code>for循环/for..in../forEach</code>等等</p>
+<p>那么有没有统一的方式遍历这些数据呢？这就是迭代器存在的意义，它可以提供统一的遍历数据的方式，只要在想要遍历的数据结构中添加一个支持迭代器的属性即可</p>
+<h4 id="Iterator-语法"><a href="#Iterator-语法" class="headerlink" title="Iterator 语法"></a>Iterator 语法</h4><pre><code class="js">const obj = {
+  [Symbol.iterator]: function() {}
+}</code></pre>
+<p><code>[Symbol.iterator]</code> 属性名是固定的写法，只要拥有了该属性的对象，就能够用迭代器的方式进行遍历</p>
+<p>迭代器的遍历方法是首先获得一个迭代器的指针，初始时该指针指向第一条数据之前</p>
+<p>接着通过调用 <code>next</code> 方法，改变指针的指向，让其指向下一条数据</p>
+<p>每一次的 <code>next</code> 都会返回一个对象，该对象有两个属性</p>
+<ul>
+<li><p>value 代表想要获取的数据</p>
+</li>
+<li><p>done 布尔值，false 表示当前指针指向的数据有值，true 表示遍历已经结束</p>
+</li>
+</ul>
+<h4 id="Iterator-详解"><a href="#Iterator-详解" class="headerlink" title="Iterator 详解"></a>Iterator 详解</h4><p>在 JS 中，<code>Array/Set/Map/String</code>都默认支持迭代器</p>
+<p>由于数组和集合都支持迭代器，所以它们都可以用同一种方式来遍历</p>
+<p>es6 中提供了一种新的循环方法叫做<code>for-of</code>，它实际上就是使用迭代器来进行遍历</p>
+<p>换句话说只有支持了迭代器的数据结构才能使用<code>for-of</code>循环</p>
+<p><strong>数组中使用迭代器遍历</strong></p>
+<pre><code class="js">let arr = [{ num: 1 }, 2, 3]
+let it = arr[Symbol.iterator]() // 获取数组中的迭代器
+console.log(it.next()) // { value: Object { num: 1 }, done: false }
+console.log(it.next()) // { value: 2, done: false }
+console.log(it.next()) // { value: 3, done: false }
+console.log(it.next()) // { value: undefined, done: true }</code></pre>
+<p>数组是支持迭代器遍历的，所以可以直接获取其迭代器，集合也是一样</p>
+<p><strong>集合中使用迭代器遍历</strong></p>
+<pre><code class="js">let list = new Set([1, 3, 2, 3])
+let it = list.entries() // 获取set集合中自带的的迭代器
+console.log(it.next()) // { value: [ 1, 1 ], done: false }
+console.log(it.next()) // { value: [ 3, 3 ], done: false }
+console.log(it.next()) // { value: [ 2, 2 ], done: false }
+console.log(it.next()) // { value: undefined, done: true }</code></pre>
+<p>集合与数组不同的是，我们可以使用 Set 中的<code>entries</code>方法获取迭代器</p>
+<p>Set 集合中每次遍历出来的值是一个数组，里面的第一和第二个元素都是一样的</p>
+<p><strong>自定义对象中使用迭代器遍历</strong></p>
+<p>首先自定义的对象没有迭代器属性，所以不支持迭代器迭代，我们也都知道<code>for..of</code>是无法遍历对象的，原因就在这里，因为<code>for..of</code>是使用迭代器迭代，所以对象不能用<code>for..of</code></p>
+<p>既然知道是因为自定义对象无迭代器属性，那么我们可以为它加上<code>Symbol.iterator</code>这样一个属性，并为它实现一个迭代器方法，如下</p>
+<pre><code class="js">let obj = {
+  name: &quot;tom&quot;,
+  age: 18,
+  gender: &quot;男&quot;,
+  intro: function() {
+    console.log(&quot;my name is &quot; + this.name)
+  },
+  [Symbol.iterator]: function() {
+    let i = 0
+    // 获取当前对象的所有属性并形成一个数组
+    let keys = Object.keys(this)
+    return {
+      next: function() {
+        return {
+          // 外部每次执行next都能得到数组中的第i个元素
+          value: keys[i++],
+          // 如果数组的数据已经遍历完则返回true
+          done: i &gt; keys.length
+        }
+      }
+    }
+  }
+}
+
+for (let attr of obj) {
+  console.log(attr)
+}</code></pre>
+<p>如上所示，加上<code>[Symbol.iterator]</code>这个迭代器属性我们自定义了一个迭代器方法，就可以使用<code>for..of</code>方法了</p>
+<h4 id="Iterator-作用"><a href="#Iterator-作用" class="headerlink" title="Iterator 作用"></a>Iterator 作用</h4><p>Iterator 的作用有三个：</p>
+<ul>
+<li>为各种数据结构，提供一个统一的、简便的访问接口</li>
+<li>使得数据结构的成员能够按某种次序排列</li>
+<li>ES6 创造了一种新的遍历命令<code>for..of</code>循环，Iterator 接口主要供<code>for..of</code>消费</li>
+</ul>
+<p>Iterator 我们就介绍到这里，到这就理解上文 Iterator 参数是什么了吧，就是代表一个有迭代器属性的参数</p>
+<h3 id="初识-Generator"><a href="#初识-Generator" class="headerlink" title="初识 Generator"></a>初识 Generator</h3><p>Generator 其实也是一个函数，只不过是一个特殊的函数</p>
+<p>普通函数，你运行了这个函数，函数内部不会停，直到这个函数结束</p>
+<p>Generator 这个函数特殊之处就是，中间可以停</p>
+<h4 id="Generator-函数特点"><a href="#Generator-函数特点" class="headerlink" title="Generator 函数特点"></a>Generator 函数特点</h4><pre><code class="js">function* generatorFn() {
+  console.log(&quot;a&quot;)
+  yield &quot;1&quot;
+  console.log(&quot;b&quot;)
+  yield &quot;2&quot;
+  console.log(&quot;c&quot;)
+  return &quot;3&quot;
+}
+
+let it = generatorFn()
+it.next()
+it.next()
+it.next()
+it.next()</code></pre>
+<p>上面这个示例就是一个 Generator 函数，首先我们观察它的特点，一个一个进行分析</p>
+<ul>
+<li>不同于普通函数，Generator 函数在<code>function</code>后面，函数名之前有个<code>*</code><ul>
+<li><code>*</code>用来表示函数为 Generator 函数</li>
+<li>写法很多，<code>function* fn()</code>、<code>function*fn()</code>和<code>function *fn()</code>都可以</li>
+</ul>
+</li>
+<li>函数内部有<code>yield</code>字段<ul>
+<li><code>yield</code>用来定义函数内部的状态，并让出执行权</li>
+<li>这个关键字只能出现在生成器函数体内，但是生成器中也可以没有 yield 关键字，函数遇到 yield 的时候会暂停，并把 yield 后面的表达式结果抛出去</li>
+</ul>
+</li>
+<li>调用后其函数返回值使用了<code>next</code>方法<ul>
+<li>调用 Generator 函数和调用普通函数一样，在函数名后面加上()即可</li>
+<li>Generator 函数不会像普通函数一样立即执行，而是返回一个指向内部状态对象的指针</li>
+<li>所以要调用迭代器对象 Iterator 的 <code>next</code> 方法，指针就会从函数头部或者上一次停下来的地方开始执行</li>
+<li><code>next</code> 方法其实就是将代码的控制权交还给生成器函数</li>
+</ul>
+</li>
+</ul>
+<h4 id="分析执行过程"><a href="#分析执行过程" class="headerlink" title="分析执行过程"></a>分析执行过程</h4><p>接着我们来分析它的执行过程，线来看它的打印结果，还是上面那个例子</p>
+<pre><code class="js">let it = generatorFn()
+it.next()
+// a
+// {value: &quot;1&quot;, done: false}
+
+it.next()
+// b
+// {value: &quot;1&quot;, done: false}
+
+it.next()
+// c
+// {value: &quot;1&quot;, done: true}
+
+it.next()
+// {value: undefined, done: true}</code></pre>
+<p>首先，Generator 函数执行，返回了一个指向内部状态对象的指针，此时没有任何输出</p>
+<p>第一次调用<code>next</code>方法，从 Generator 函数的头部开始执行，先是打印了 a ，执行到<code>yield</code>就停下来，并将<code>yield</code>后边表达式的值 ‘1’，作为返回对象的 value 属性值，此时函数还没有执行完， 返回对象的 done 属性值是 false</p>
+<p>第二次调用<code>next</code>方法时，同上步</p>
+<p>第三次调用<code>next</code>方法时，先是打印了 c ，然后执行了函数的返回操作，并将 return 后面的表达式的值，作为返回对象的 value 属性值，此时函数已经结束，所以 done 属性值为 true</p>
+<p>第四次调用<code>next</code>方法时， 此时函数已经执行完了，所以返回 value 属性值是 undefined，done 属性值是 true ，如果执行第三步时，没有 return 语句的话，就直接返回 <code>{value: undefined, done: true}</code></p>
+<p>简单的理解，Generator 函数<code>yield</code>放到哪里它就停到哪里，调用时使用<code>next</code>方法踹一步就走一步</p>
+<h4 id="next-参数传递"><a href="#next-参数传递" class="headerlink" title="next 参数传递"></a>next 参数传递</h4><p><code>yield</code>是有返回值的，<code>next</code>方法直接调用不传入参数的时候，<code>yield</code> 表达式的返回值是 undefined</p>
+<p>当 next 传入参数的时候，该参数会作为<strong>上一步</strong><code>yield</code>的返回值</p>
+<p>我们通过示例来理解</p>
+<pre><code class="js">function* geFn() {
+  cosnole.log(&quot;start&quot;)
+  let a = yield &quot;1&quot;
+
+  console.log(a)
+  let b = yield &quot;2&quot;
+
+  console.log(b)
+  let c = yield &quot;3&quot;
+
+  console.log(c)
+  return 4
+}
+
+let it = geFn()
+it.next()
+// start
+// { value:1, done: false }
+
+it1.next()
+// undefined           未传值，所以a=undefined
+// { value:2, done: false }
+
+it.next(&quot;hahaha&quot;)
+// hahaha                 传值，所以b=hahaha
+// { value:3, done: false }
+
+it.next(&quot;omg&quot;)
+// omg                         传值，所以c=omg
+// {value: 4, done: true}</code></pre>
+<p>由于 <code>next</code> 方法的参数表示上一个 <code>yield</code> 语句的返回值，所以第一次使用 <code>next</code> 方法时，不能带有参数</p>
+<p>V8 引擎会直接忽略第一次使用 <code>next</code> 方法时的参数，只有从第二次使用 <code>next</code> 方法开始，参数才是有效的</p>
+<p>没有接到传值时，<code>yield</code>语句的返回值就是 undefined，正如上面示例输出那样</p>
+<p>通过 <code>next</code> 方法的参数，就有办法在 Generator 函数开始运行之后，继续向函数体内部注入值，这代表了我们可以在 Generator 函数运行的不同阶段，从外部向内部注入不同的值，从而调整函数行为</p>
+<h4 id="再次理解-yield"><a href="#再次理解-yield" class="headerlink" title="再次理解 yield"></a>再次理解 yield</h4><p>我们再来看一段代码，帮助我们理解<code>yield</code></p>
+<pre><code class="js">function* geFn() {
+  console.log(&quot;start&quot;)
+  let a = yield console.log(&quot;1&quot;)
+  console.log(a)
+  let b = yield console.log(&quot;2&quot;)
+  console.log(b)
+  return console.log(&quot;3&quot;)
+}
+
+let it = geFn()
+it.next()
+// start
+// 1
+// {value: 1, done: false}
+
+it.next(&quot;我是a&quot;)
+// 我是a
+// 2
+// {value: 2, done: false}
+
+it.next(&quot;我是b&quot;)
+// 我是b
+// 3
+// {value: 3, done: true}</code></pre>
+<p>通过<code>next</code>调用我们可以看到，第一次调用就输出了<code>start &amp; 1</code> ，意味着<code>yield</code>停止时，后面代码是执行了的</p>
+<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.assets/image-20200207234938429.png" srcset="/img/loading.gif" alt="image-20200207234938429"></p>
+<p>如上图所示，如果将说<code>yield</code>比做一道墙，那么墙右边和上面是一块，墙左边和下面是一块，这样说应该够直白了吧</p>
+<h4 id="for-of-遍历-Generator"><a href="#for-of-遍历-Generator" class="headerlink" title="for..of 遍历 Generator"></a>for..of 遍历 Generator</h4><p>上文我们就知道了<code>for...of</code>内部实现就是在使用迭代器迭代，那么<code>for...of</code>循环直接用在 Generator 遍历器上岂不是完美</p>
+<p>是的，它可以自动遍历 Generator 函数，而且此时不再需要调用 next 方法，一旦 next 方法的返回对象的 done 属性为 true，<code>for...of</code>循环就会中止，且不包含该返回对象</p>
+<pre><code class="js">function* foo() {
+  yield 1
+  yield 2
+  yield 3
+  yield 4
+  yield 5
+  return 6
+}
+for (let v of foo()) {
+  console.log(v)
+}
+// 1 2 3 4 5</code></pre>
+<h4 id="yield-表达式"><a href="#yield-表达式" class="headerlink" title="yield* 表达式"></a>yield* 表达式</h4><p>在<code>yield</code>命令后面加上星号，表明它返回的是一个遍历器，这被称为<code>yield*</code>表达式</p>
+<pre><code class="js">function* foo() {
+  yield &quot;foo1&quot;
+  yield &quot;foo2&quot;
+}
+function* bar() {
+  yield &quot;bar1&quot;
+  yield* foo()
+  yield &quot;bar2&quot;
+}
+for (let val of bar()) {
+  console.log(val)
+}
+
+// bar1 foo1 foo2 bar2</code></pre>
+<p><code>yield</code>命令后面如果不加星号，返回的是整个数组，加了星号就表示返回的是数组的遍历器</p>
+<pre><code class="js">function* gen1() {
+  yield [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
+}
+for (let val of gen1()) {
+  console.log(a)
+}
+// [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
+
+// ------------------- 上下分割
+
+function* gen2() {
+  yield* [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
+}
+for (let val of gen2()) {
+  console.log(a)
+}
+// a b c</code></pre>
+<h4 id="Generator-中的-return"><a href="#Generator-中的-return" class="headerlink" title="Generator 中的 return"></a>Generator 中的 return</h4><p>return 方法返回给定值，并结束遍历 Generator 函数</p>
+<p>当 return 无值时，就返回 undefined，来看例子</p>
+<pre><code class="js">function* foo() {
+  yield 1
+  yield 2
+  yield 3
+}
+
+var f = foo()
+f.next()
+// {value: 1, done: false}
+
+f.return(&quot;hahaha&quot;)
+// 由于调用了return方法，所以遍历已结束，done变true
+// {value: &quot;hahaha&quot;, done: true}
+
+f.next()
+// {value: undefined, done: true}</code></pre>
+<h4 id="Generator-错误处理-throw"><a href="#Generator-错误处理-throw" class="headerlink" title="Generator 错误处理 throw"></a>Generator 错误处理 throw</h4><p><code>throw</code>方法可以再 Generator 函数体外面抛出异常，再函数体内部捕获，听着是很好理解</p>
+<p>这里一不小心还是挺容易入坑的，我们来看几个例子吧</p>
+<pre><code class="js">function* foo() {
+  try {
+    yield &quot;hahaha&quot;
+  } catch (err) {
+    console.log(&quot;inside error: &quot; + err)
+  }
+}
+var f = foo()
+try {
+  it.throw(&quot;this is err&quot;)
+} catch (err) {
+  console.log(&quot;out error: &quot; + err)
+}</code></pre>
+<p>上面代码会输出哪个错误呢？</p>
+<p>其实答案很简单，上述代码会输出<code>out error：this is err</code></p>
+<p>因为调用<code>throw</code>的时候，我们并没有执行<code>next</code>方法，这个时候内部的<code>try{}catch{}</code>代码都还没执行，因此只会被外面捕捉</p>
+<p>所以说，我们只需要在调用<code>throw</code>之前，先调用一遍<code>next</code>，这个时候函数体内部已经执行了<code>try{}catch{}</code>，那么执行到<code>throw</code>时，内外都有错误捕捉，<strong><code>throw</code>方法会先被内部捕捉</strong>，从而打印<code>inside error：this is err</code></p>
+<p>除此，<strong><code>throw</code>方法会附带执行下一个<code>yield</code></strong>，我们来看示例</p>
+<pre><code class="js">var foo = function* foo() {
+  try {
+    yield console.log(&quot;1&quot;)
+    yield console.log(&quot;2&quot;)
+  } catch (e) {
+    console.log(&quot;inside err&quot;)
+  }
+  yield console.log(&quot;3&quot;)
+  yield console.log(&quot;4&quot;)
+}
+var g = foo()
+g.next()
+g.throw()
+g.next()</code></pre>
+<p>我们来看上述代码的执行过程</p>
+<p>首先执行第一个<code>next</code>方法，进入<code>try()catch()</code>，输出 1</p>
+<p>接着，执行<code>throw</code>方法，内部捕捉到，输出<code>inside err</code>，此时<code>try()catch()</code>代码块已经执行了<code>catch</code>，<code>try()catch()</code>代码块已经结束了，所以附带执行一个<code>yield</code>会继续向下找，所以再输出 3</p>
+<p>最后执行<code>next</code>方法，输出 4</p>
+<p>最终输出结果为<code>1 3 4</code></p>
+<h3 id="Generator-扩充"><a href="#Generator-扩充" class="headerlink" title="Generator 扩充"></a>Generator 扩充</h3><p>在 Generator 开头有一句话，不知道大家理解没有</p>
+<ul>
+<li>Generator 是协程在 ES6 的实现，最大的特点就是可以交出函数的执行权</li>
+</ul>
+<h4 id="什么是协程？"><a href="#什么是协程？" class="headerlink" title="什么是协程？"></a>什么是协程？</h4><p>这里使用阮一峰老师的文章参考链接【8】中对协程的解释并略带修改及补充</p>
+<p>进程和线程大家应该都清楚，那么协程是什么呢</p>
+<p>不知道大家知不知道用户空间线程，其实就是一种由程序员自己写程序来管理他的调度的线程，对内核来说不可见</p>
+<p>协程(coroutine)，可以理解就是一种“用户空间线程”，也可理解为多个“线程”相互协作，完成异步任务</p>
+<p>由于线程是操作系统的最小执行单元，因此也可以得出，协程是基于线程实现的，不过它要比线程要轻很多</p>
+<p>协程，有几个特点：</p>
+<ul>
+<li>协同，因为是由程序员自己写的调度策略，其通过协作而不是抢占来进行切换</li>
+<li>在用户态完成创建，切换和销毁</li>
+<li>编程角度上看，协程的思想本质上就是控制流的主动让出(yield)和恢复(resume)机制</li>
+</ul>
+<p>它的运行流程如下</p>
+<ul>
+<li>协程 A 开始执行</li>
+<li>协程 A 执行到一半，暂停执行，执行的权利转交给协程 B。</li>
+<li>一段时间后 B 交还执行权</li>
+<li>协程 A 重得执行权，继续执行</li>
+</ul>
+<p>上面的协程 A 就是一个异步任务，因为在执行过程中执行权被 B 抢了，被迫分成两步完成</p>
+<p>举例来说，读取文件的协程写法如下</p>
+<pre><code class="javascript">function asnycJob() {
+  // ...其他代码
+  var f = yield readFile(fileA);
+  // ...其他代码
+}</code></pre>
+<p>上面代码的函数 asyncJob 是一个协程，其中的 <code>yield</code> 命令，它表示执行到此处，执行权将交给其他协程，也就是说，<code>yield</code>命令是异步两个阶段的分界线</p>
+<p>协程遇到 <code>yield</code> 命令就暂停，等到执行权返回，再从暂停的地方继续往后执行，它的最大优点，就是代码的写法非常像同步操作，只多了一个<code>yield</code>命令</p>
+<h4 id="Generator-与协程"><a href="#Generator-与协程" class="headerlink" title="Generator 与协程"></a>Generator 与协程</h4><p>JS 是单线程的，ES6 中的 Generator 的实现，类似于开了多线程，但是依然同时只能进行一个线程，不过可以切换</p>
+<p>就像汽车在公路上行驶，js 公路只是单行道(主线程)，但是有很多车道(辅助线程)都可以汇入车流(异步任务完成后回调进入主线程的任务队列)</p>
+<p>而 Generator 把 js 公路变成了多车道(协程实现)，但是同一时间只有一个车道上的车能开(所以依然是单线程)，不过可以自由变道(移交控制权)</p>
+<h4 id="Generator-之-Thunk-函数"><a href="#Generator-之-Thunk-函数" class="headerlink" title="Generator 之 Thunk 函数"></a>Generator 之 Thunk 函数</h4><p>thunk 函数的诞生源于一个编译器设计的问题：<code>求值策略</code>，即函数的参数到底应该何时求值</p>
+<pre><code class="js">var x = 1
+function fn(n) {
+  return n * 10
+}
+fn(x + 5)</code></pre>
+<p>如上所示，其中 fn 方法调用时<code>x+5</code>这个表达式应该什么时候求值，有两种思路</p>
+<ul>
+<li><strong>传值调用(call by value)</strong>，先计算<code>x+5</code>的值，再将这个值 <code>6</code> 传入函数 fn，例如 c 语言，这种做法的好处是实现比较简单，但是有可能会造成性能损失(例如一个函数传入了两个参数，第二个参数是一个表达式，但是函数体内没有用到这个参数，那么先计算出值就会损耗性能且无意义)</li>
+<li><strong>传名调用(call by name)</strong>，即直接将表达式<code>x+5</code>传入函数体，只在用到它的时候求值</li>
+</ul>
+<p>Thunk 函数的定义，就是传名调用的一种实现策略，用来替换某个表达式，实现思路其实也很简单</p>
+<p>先将参数放到一个临时函数之中，再将这个临时函数传入函数体，就像下面这样</p>
+<pre><code class="js">function fn(m) {
+  return m * 2
+}
+fn(x + 5)
+
+// thunk实现思路
+var thunk = function() {
+  return x + 5
+}
+
+function fn(thunk) {
+  return thunk() * 2
+}</code></pre>
+<p>JS 是传值调用，它的 Thunck 函数含义有所不同</p>
+<p>在 JS 中，Thunk 函数替换的不是表达式，是对函数珂里化的一种运用，简单来说，就是把是多参数函数替换成一个只接受回调函数作为参数的单参数函数，我们来看下它的简单实现</p>
+<pre><code class="js">fs.readFile(fileName, callback)
+
+const Thunk = function(fn) {
+  return function(...args) {
+    return function(callback) {
+      return fn.call(this, ...args, callback)
+    }
+  }
+}
+
+// 使用上面的Thunk转化器，生成fs.readFile的Thunk函数
+var readFileThunk = Thunk(fs.readFile)
+readFileThunk(fileName)(callback)</code></pre>
+<p>如果在生产环境要使用 Thunk 函数的话，使用 Thunkify 模块就可以，其实它核心源码就是上面我们写的 Thunk，Thunkify 里多了一个检查机制而已，比较简单，可自行百度 Thunkify 模块了解</p>
+<p>Thunk 这东西在 ES6 前其实没有太大用处，但是在 Generator 函数出来后，Thunk 函数就可以派上用场了，它可以用于 Generator 函数的自动流程管理，接收和交换程序的执行权</p>
+<p>我们来实现一个基于 Thunk 函数的 Generator 自动执行器</p>
+<pre><code class="js">// 基于Thunk函数的Genertor函数自动执行器
+function run(fn) {
+  let gen = fn()
+  function next(err, data) {
+    // 将指针移动到Generator函数的下一步
+    let result = gen.next(data)
+    // 判断是否结束
+    if (result.done) return
+    // 递归,把next放进.value中
+    result.value(next)
+  }
+  next()
+}
+
+// 模拟异步方法
+let sleep = function(n, callback) {
+  setTimeout(() =&gt; {
+    console.log(n)
+    callback &amp;&amp; callback(n)
+  }, n)
+}
+
+// 模拟异步方法进行Thunk转换
+let sleepThunk = Thunk(sleep)
+
+// Generator函数
+let gen = function*() {
+  let f1 = yield sleepThunk(1000)
+  let f2 = yield sleepThunk(1500)
+  // ...
+  let fn = yield sleepThunk(2000)
+}
+
+// 调用Genertor函数自动执行器
+run(gen)</code></pre>
+<p>上面代码的 run 函数，就是一个 Generator 函数的自动执行器，内部的 next 函数就是 Thunk 的回调函数</p>
+<p>next 函数先将指针移到 Generator 函数的下一步(gen.next 方法)</p>
+<p>然后判断 Generator 函数是否结束(result.done 属性)</p>
+<p>如果没结束，就将 next 函数再传入 Thunk 函数(result.value 属性)，否则就直接退出</p>
+<p>代码中模拟了一个异步操作<code>sleep</code>方法，并将其转化为了 Thunk 方法(使用上文我们实现的那个简易版 Thunk)</p>
+<p>函数 gen 封装了 n 个异步操作，只要执行 run 函数，这些操作就会自动完成</p>
+<p>这样一来，异步操作不仅可以写得像同步操作，而且一行代码就可以执行，极其方便</p>
+<p>不过相信大家也看到了，这种自动执行器传入的 Generator 函数，<strong>yield 方法后面必须是一个 Thunk 函数</strong></p>
+<p>——–👇——–</p>
+<p>Thunk 就简单介绍到这里了，更多 Thunk 相关推荐看阮一峰文参考链接【9】</p>
+<p>我们只需要明白 Thunk 是什么，它和 Generator 有什么关系就可以</p>
+<h4 id="Generator-之-co-函数库"><a href="#Generator-之-co-函数库" class="headerlink" title="Generator 之 co 函数库"></a>Generator 之 co 函数库</h4><p>co 函数库是著名程序员 TJ Holowaychuk 于 2013 年 6 月发布的一个小工具，用于 Generator 函数的自动执行</p>
+<p><a href="https://github.com/tj/co" target="_blank" rel="noopener">co 函数库传送门</a></p>
+<p>co 函数库其实就是将两种自动执行器(Thunk 函数和 Promise 对象)，包装成一个库，所以说使用 co 的前提条件是，Generator 函数的 yield 命令后面，只能是 Thunk 函数或 Promise 对象</p>
+<p>co 函数会返回一个 Promise，所以我们可以后接<code>then</code>等方法</p>
+<p>基于 Thunk 函数的自动执行器上面介绍了下，那么基于 Promise 的其实也差不多，我们简单实现下</p>
+<pre><code class="js">// 基于Promise函数的Genertor函数自动执行器
+function run(gen) {
+  let g = gen()
+
+  function next(data) {
+    // 将指针移动到Generator函数的下一步
+    let result = g.next(data)
+    // 判断是否结束，结束返回value，value是一个Promise
+    if (result.done) return result.value
+    // 递归
+    result.value.then(data =&gt; {
+      next(data)
+    })
+  }
+  next()
+}
+
+// 模拟异步方法进行Promise转换
+let sleepPromise = function(n) {
+  return new Promise(function(resolve, reject) {
+    setTimeout(() =&gt; {
+      console.log(n)
+      resolve(n)
+    }, n)
+  })
+}
+
+// Generator函数
+let gen = function*() {
+  let f1 = yield sleepPromise(1000)
+  let f2 = yield sleepPromise(1500)
+  // ...
+  let fn = yield sleepPromise(2000)
+}
+
+// 调用Genertor函数自动执行器
+run(gen)</code></pre>
+<p>如上代码，和 Thunk 函数那里区别就是 yield 后面一个跟 Thunk 函数，一个跟 Promise 对象</p>
+<p>如果 Thunk 自执行器你理解了，Promise 使用也 ok 的话，这块代码看看就懂了，也没啥解释的</p>
+<p>接下来我们来看看 co 库的源码</p>
+<p>co 函数库的源码也很简单，只有几十行代码</p>
+<p>首先，co 函数接受 Generator 函数作为参数，返回一个 Promise 对象</p>
+<pre><code class="js">function co(gen) {
+  var ctx = this
+  return new Promise(function(resolve, reject) {})
+}</code></pre>
+<p>在返回的 Promise 对象里面，co 先检查参数 gen 是否为 Generator 函数</p>
+<p>如果是，就执行该函数，得到一个内部指针对象</p>
+<p>如果不是就返回，并将 Promise 对象的状态改为 resolved</p>
+<pre><code class="js">function co(gen) {
+  var ctx = this
+
+  return new Promise(function(resolve, reject) {
+    if (typeof gen === &quot;function&quot;) gen = gen.call(ctx)
+    if (!gen || typeof gen.next !== &quot;function&quot;) return resolve(gen)
+  })
+}</code></pre>
+<p>接着，co 将 Generator 函数的内部指针对象的 next 方法，包装成 onFulefilled 函数</p>
+<p>主要是为了能够捕捉抛出的错误</p>
+<pre><code class="js">function co(gen) {
+  var ctx = this
+
+  return new Promise(function(resolve, reject) {
+    if (typeof gen === &quot;function&quot;) gen = gen.call(ctx)
+    if (!gen || typeof gen.next !== &quot;function&quot;) return resolve(gen)
+
+    onFulfilled()
+    function onFulfilled(res) {
+      var ret
+      try {
+        ret = gen.next(res)
+      } catch (e) {
+        return reject(e)
+      }
+      next(ret)
+    }
+  })
+}</code></pre>
+<p>最后，就是关键的 next 函数，它会反复调用自身</p>
+<pre><code class="js">function next(ret) {
+  if (ret.done) return resolve(ret.value)
+  var value = toPromise.call(ctx, ret.value)
+  if (value &amp;&amp; isPromise(value)) return value.then(onFulfilled, onRejected)
+  return onRejected(new TypeError(&#39;You may only yield a function, promise, generator, array, or object, but the following object was passed: &quot;&#39; + String(ret.value) + &#39;&quot;&#39;))
+    }
+})</code></pre>
+<p><code>next</code>方法中，第一行，检查当前是否为 Generator 函数的最后一步，如果是就返回</p>
+<p>第二行，确保每一步的返回值，是 Promise 对象</p>
+<p>第三行，使用 then 方法，为返回值加上回调函数，然后通过 onFulfilled 函数再次调用 next 函数</p>
+<p>第四行，在参数不符合要求的情况下(参数非 Thunk 函数和 Promise 对象)，将 Promise 对象的状态改为 rejected，从而终止执行</p>
+<p>co 支持并发的异步操作，即允许某些操作同时进行，等到它们全部完成，才进行下一步，我们可以并发的操作放在数组或对象里面，如下</p>
+<pre><code class="js">// 数组的写法
+co(function*() {
+  var res = yield [Promise.resolve(1), Promise.resolve(2)]
+  console.log(res)
+}).catch(onerror)
+
+// 对象的写法
+co(function*() {
+  var res = yield {
+    1: Promise.resolve(1),
+    2: Promise.resolve(2)
+  }
+  console.log(res)
+}).catch(onerror)</code></pre>
+<p>——-👇——-</p>
+<p>以上就是 co 的内容了，这里提及只是为了让大家了解 co 这种函数库，虽然目前用的不多，但是对我们理解 Generator 有帮助，即使这里有些迷糊，也无伤大雅，知道 co 是什么，co 的自动执行原理大概是怎么实现的就行</p>
+<p>这块和 Thunk 一样，也是参考阮一峰老师的文章，所以有兴趣的话可以看下参考链接【10】</p>
+<h3 id="Generator-优-缺"><a href="#Generator-优-缺" class="headerlink" title="Generator 优/缺"></a>Generator 优/缺</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>优雅的流程控制方式，可以让函数可中断执行，在某些特殊需求里还是很实用的</p>
+<p>使用过 React-dva 的同学可能会更有感触一些</p>
+<p>之前 Node 的 koa 框架也用 Generator，不过后来被 async/await 替代了</p>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><p>Generator 函数的执行必须靠执行器，所以才有了 co 函数库，但 co 模块约定，yield 命令后面只能是 Thunk 函数或 Promise 对象，只针对异步处理来说，还是不太方便</p>
+<h2 id="Async-Await"><a href="#Async-Await" class="headerlink" title="Async/Await"></a>Async/Await</h2><h3 id="Async-和-Await-简介"><a href="#Async-和-Await-简介" class="headerlink" title="Async 和 Await 简介"></a>Async 和 Await 简介</h3><p>ES2017 标准引入了 <code>async</code> 函数，使得异步操作变得更加方便</p>
+<p>JS 异步编程解决方案的历程，从经典的回调函数到事件监听，再到 <code>Promise</code> ，再到 <code>Generator</code> ，再到我们要说的 <code>Async/Await</code> ，可谓艰辛</p>
+<p><code>Async/Await</code> 的出现，被很多人认为是 JS 异步操作的最终且最优雅的解决方案</p>
+<p><code>Async/Await</code> 大家都经常使用，也都知道它是 <code>Generator</code> 的语法糖</p>
+<p>其实我觉得 <code>Async/Await = Generator + Promise</code> 这个解释更适合</p>
+<p><code>async</code> 是异步的意思，而 <code>await</code> 是 <code>async wait</code> 的简写，即异步等待</p>
+<p>所以从语义上就很好理解 <code>async</code> 用于声明一个 <code>function</code> 是异步的，<code>await</code> 用于等待一个异步方法执行完成</p>
+<p>另外 <code>await</code> 只能出现在 <code>async</code> 函数中</p>
+<p>闲聊至此，接下来还是简单介绍下使用</p>
+<h3 id="Async-在做什么"><a href="#Async-在做什么" class="headerlink" title="Async 在做什么"></a>Async 在做什么</h3><p>我们来看一个例子理解</p>
+<pre><code class="js">async function test() {
+  return &quot;this is async&quot;
+}
+const res = test()
+console.log(res)
+// Promise {&lt;resolved&gt;: &quot;this is async&quot;}</code></pre>
+<p>可以看到，输出的是一个 Promise 对象</p>
+<p>所以，<code>async</code> 函数返回的是一个 Promise 对象，如果在 <code>async</code> 函数中直接 return 一个直接量，<code>async</code> 会把这个直接量通过 <code>PromIse.resolve()</code> 封装成 Promise 对象返回</p>
+<p>既然 <code>async</code> 返回一个 Promise，那么我们也可以用 <code>then</code> 链来处理这个 Promise 对象，如下</p>
+<pre><code class="js">test().then(res =&gt; {
+  console.log(res)
+})</code></pre>
+<h3 id="Await-在等待什么"><a href="#Await-在等待什么" class="headerlink" title="Await 在等待什么"></a>Await 在等待什么</h3><p>我们常说<code>await</code> 是在等待一个异步完成， 其实按照语法说明， <code>await</code> 等待的是一个表达式，这个表达式的计算结果是 Promise 对象或者其它值(换句话说，就是没有特殊限定，啥都行)</p>
+<ul>
+<li><code>await</code> 后面不是 Promise 对象，直接执行</li>
+<li><code>await</code> 后面是 Promise 对象会阻塞后面的代码，Promise 对象 <code>resolve</code>，然后得到 <code>resolve</code> 的值，作为 <code>await</code> 表达式的运算结果</li>
+<li><code>await</code> 只能在 <code>async</code> 函数中使用</li>
+</ul>
+<p>使用比较简单，大家也经常用就不多说了</p>
+<p>简单说一下为什 <code>await</code> 必须要在 <code>async</code> 函数中使用</p>
+<p>其实很简单， <code>await</code> 会阻塞后面代码，如果允许我们直接使用 <code>await</code> 的话，假如我们使用<code>await</code>等待一个消耗时间比较长的异步请求，那代码直接就阻塞不往下执行了，只能等待 <code>await</code> 拿到结果才会执行下面的代码，那不乱套了</p>
+<p>而 <code>async</code> 函数调用不会造成阻塞，因为它内部所有的阻塞都被封装在一个 Promise 对象中异步执行，所以才规定 <code>await</code> 必须在 <code>async</code> 函数中</p>
+<h3 id="处理异常"><a href="#处理异常" class="headerlink" title="处理异常"></a>处理异常</h3><p>promise 正常 resolve，那么 await 会返回这个结果，但是在 reject 的情况下会抛出一个错误</p>
+<p>所以我们直接把 <code>await</code> 代码块写到 <code>try()catch()</code> 中捕获错误即可</p>
+<pre><code class="js">async function fn() {
+  try {
+    let res = await ajax()
+    console.log(res)
+  } catch (err) {
+    console.log(err)
+  }
+}</code></pre>
+<h3 id="没有对比没有伤害"><a href="#没有对比没有伤害" class="headerlink" title="没有对比没有伤害"></a>没有对比没有伤害</h3><p>我们经常会遇到这种业务，多个请求，每个请求依赖于上一个请求的结果</p>
+<p>我们用 setTimeout 模拟异步操作，用 Promise 和 Async/Await 分别来实现下</p>
+<pre><code class="js">function analogAsync(n) {
+  return new Promise(resolve =&gt; {
+    setTimeout(() =&gt; resolve(n + 500), n)
+  })
+}
+
+function fn1(n) {
+  console.log(`step1 with ${n}`)
+  return analogAsync(n)
+}
+
+function fn2(n) {
+  console.log(`step2 with ${n}`)
+  return analogAsync(n)
+}
+
+function fn3(n) {
+  console.log(`step3 with ${n}`)
+  return analogAsync(n)
+}</code></pre>
+<p>使用 Promise</p>
+<pre><code class="js">function fn() {
+  let time1 = 0
+  fn1(time1)
+    .then(time2 =&gt; fn2(time2))
+    .then(time3 =&gt; fn3(time3))
+    .then(res =&gt; {
+      console.log(`result is ${res}`)
+    })
+}
+
+fn()</code></pre>
+<p>使用 Async/Await</p>
+<pre><code class="js">async function fn() {
+  let time1 = 0
+  let time2 = await fn1(time1)
+  let time3 = await fn2(time2)
+  let res = await fn3(time3)
+  console.log(`result is ${res}`)
+}
+
+fn()</code></pre>
+<p>输出结果和上面用 Promise 实现是一样的，但这个 <code>aaync/await</code> 代码结构看起来清晰得多，几乎跟同步写法一样，十分优雅</p>
+<p>我们再来看下面这个小例子</p>
+<pre><code class="js">// Generator
+function* gen() {
+  let f1 = yield ajax()
+  let f2 = yield ajax()
+}
+gen()
+
+// async/await
+async function asyncAjax() {
+  let f1 = await ajax()
+  let f2 = await ajax()
+}
+asyncAjax()</code></pre>
+<p>这两块代码看着是不是几乎一样</p>
+<p>上面函数为 Generator 函数执行两个 ajax，下面函数为 async/await 执行</p>
+<p>比较可发现，两个函数其实是一样的，<code>async</code> 不过是把 Generator 函数的 <code>*</code> 号换成 <code>async</code>，<code>yield</code> 换成 <code>await</code></p>
+<p>那么这两个函数在调用时，Generator 函数需要手动调用 <code>next</code> 方法或者使用 co 函数库才可执行，而下面的<code>async</code> 函数直接就按顺序执行完成了，使用非常方便</p>
+<p>异步编程追求的是，让它更像同步编程， <code>Async/Await</code> 完美诠释了这一点</p>
+<p>到这里我们其实就不难看出 <code>Async/Await</code> 已经完虐了 <code>Generator</code> 和 <code>Promise</code></p>
+<p>对比来看我们发现，Async 函数自带执行器</p>
+<h3 id="Async-Await-优-缺"><a href="#Async-Await-优-缺" class="headerlink" title="Async/Await 优/缺"></a>Async/Await 优/缺</h3><h4 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h4><p>内置执行器， Generator 函数的执行必须靠执行器，所以才有了 co 函数库，而 <code>async</code> 函数自带执行器，也就是说，<code>async</code> 函数的执行，与普通函数一模一样，只要一行</p>
+<p>更好的语义，<code>async</code> 和 <code>await</code>，比起 <code>*</code> 和 <code>yield</code>，语义更清楚了，<code>async</code> 表示函数里有异步操作，<code>await</code> 表示紧跟在后面的表达式需要等待结果</p>
+<p>更广的适用性，co 函数库约定，<code>yield</code> 命令后面只能是 Thunk 函数或 Promise 对象，而 <code>async</code> 函数的 <code>await</code> 命令后面，可以跟 Promise 对象和原始类型的值(数值、字符串和布尔值，但这时等同于同步操作)</p>
+<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><p>滥用 <code>await</code> 可能会导致性能问题，因为 <code>await</code> 会阻塞代码，也许之后的异步代码并不依赖于前者，但仍然需要等待前者完成，导致代码失去了并发性</p>
+<h2 id="异步解决方案对比"><a href="#异步解决方案对比" class="headerlink" title="异步解决方案对比"></a>异步解决方案对比</h2><p>别看了，我没有总结对比</p>
+<p>其实相对来说已经写的很详细了，能讲出来的才算是自己的，大家可根据每种方案列出的优缺点加上自己的理解做个对比或着说总结，毕竟你都看到这了，也不妄花费这么长时间来阅读这两万字的干帖子，总归要有些收获的</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>水平有限，欢迎指错</p>
+<p>码字不易，大家有收获别忘了点个赞鼓励下</p>
+<p>搜索【不正经的前端】或直接扫码可以关注公众号看到更多的精彩文章，也有一些群友提供的学习视频、资源干货什么的免费拿</p>
+<p>也可以直接加我微信，进交流群学习交流</p>
+<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.assets/%E7%A8%BF%E5%AE%9A%E8%AE%BE%E8%AE%A1%E5%AF%BC%E5%87%BA-20200111-143924.png" srcset="/img/loading.gif" alt="稿定设计导出-20200111-143924"></p>
+<blockquote>
+<p>参考</p>
+<ol>
+<li><a href="[http://www.ruanyifeng.com/blog/2012/12/asynchronous%EF%BC%BFjavascript.html](http://www.ruanyifeng.com/blog/2012/12/asynchronous＿javascript.html)">Javascript 异步编程的 4 种方法-阮一峰</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="noopener">Promise-MDN</a></li>
+<li><a href="https://www.liaoxuefeng.com/wiki/1022910821149312/1023024358748480" target="_blank" rel="noopener">iterable-廖雪峰</a></li>
+<li><a href="http://cryto.net/~joepie91/blog/2016/05/11/what-is-promise-try-and-why-does-it-matter/" target="_blank" rel="noopener">What is Promise.try, and why does it matter?</a></li>
+<li><a href="https://segmentfault.com/a/1190000018586947" target="_blank" rel="noopener">什么是 Promise.try，为什么它这么重要？-参考 4 译</a></li>
+<li><a href="https://promisesaplus.com/" target="_blank" rel="noopener">Promise/A+规范-英原文</a></li>
+<li><a href="http://www.ituring.com.cn/article/66566" target="_blank" rel="noopener">Promise/A+规范-中文译</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2015/04/generator.html" target="_blank" rel="noopener">Generator 函数的含义与用法-阮一峰</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2015/05/thunk.html" target="_blank" rel="noopener">Thunk 函数的含义和用法-阮一峰</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2015/05/co.html" target="_blank" rel="noopener">co 函数库的含义和用法-阮一峰</a></li>
+</ol>
+</blockquote>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/%E7%A1%AC%E6%A0%B8JS%E7%B3%BB%E5%88%97">硬核JS系列</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/JavaScript">JavaScript</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">水平有限，欢迎指错！<br />联系邮箱：214930661@qq.com<br />本站文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" target="_blank" rel="nofollow noopener noopener">CC BY-SA 3.0协议</a> ，商业转载请联系作者获得授权，非商业转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="/img/gongzhonghao.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><div style="text-align: center;">更多精彩，请关注公众号【不正经的前端】</div> <div style="text-align: center;">回复【加群】加入技术交流群，回复【资料】获取精选学习资料</div>
+    </div>
+  </div>
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+      <br><br>
+      
+      
+  <div id="vcomments" style="width: 90%; margin: 0 auto;"></div>
+  <script defer src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var notify = 'false' === true;
+    var verify = 'false' === true;
+    var oldLoad = window.onload;
+    window.onload = function () {
+      new Valine({
+        el: '#vcomments',
+        notify: notify,
+        verify: verify,
+        app_id: "OuIO62anqvXdvjruYtvDefqV-gzGzoHsz",
+        app_key: "G9BfnEel5vlsGHJqmPkr2B1P",
+        placeholder: "说点什么",
+        avatar: "retro",
+        meta: ['nick', 'mail', 'link'],
+        pageSize: "10",
+      });
+      oldLoad && oldLoad();
+    };
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"
+      ><b>Hexo</b></a
+    >
+    <i class="iconfont icon-love"></i>
+    <a
+      href="https://github.com/fluid-dev/hexo-theme-fluid"
+      target="_blank"
+      rel="nofollow noopener"
+    >
+      <b>Fluid</b></a
+    >
+    <br />
+
+    
+  
+    <!-- 不蒜子统计PV -->
+    
+    &nbsp;<span id="busuanzi_container_site_pv">总访问量 
+          <span id="busuanzi_value_site_pv"></span> 次</span>&nbsp;
+  
+  
+    <!-- 不蒜子统计UV -->
+    
+    &nbsp;<span id="busuanzi_container_site_uv">总访客数 
+            <span id="busuanzi_value_site_uv"></span> 人</span>&nbsp;
+  
+  <br>
+
+ 
+
+
+    <!-- cnzz Analytics icon -->
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+<!-- Plugins -->
+
+
+  
+
+  
+
+  
+    <!-- Tencent Analytics -->
+    <script>
+      var _mtac = {};
+      (function () {
+        var mta = document.createElement("script");
+        mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+        mta.setAttribute("name", "MTAH5");
+        mta.setAttribute("sid", "500711128");
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(mta, s);
+      })();
+    </script>
+  
+
+  
+
+  <!-- cnzz Analytics -->
+  
+
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "「硬核JS」深入了解异步解决方案&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
