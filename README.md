@@ -1,3 +1,3 @@
 # isboyjc 的博客
 
-[isboyjc.top](https://isboyjc.top/blog)
+[isboyjc.top/blog](https://isboyjc.top/blog)
