@@ -15,7 +15,7 @@
   
   <meta name="description" content="">
   <meta name="author" content="isboyjc">
-  <meta name="keywords" content="">
+  <meta name="keywords" content="李建超,isboyjc,句末">
   <title>「硬核JS」深入了解异步解决方案 ~ ISBOYJC</title>
 
   <link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css"  >
@@ -107,7 +107,7 @@
 </nav>
 
     <div class="view intro-2" id="background"
-         style="background: url('/img/banner/b037.jpg')no-repeat center center;
+         style="background: url('/blog/img/banner/b037.jpg')no-repeat center center;
            background-size: cover;
            background-attachment: fixed;">
       <div class="full-bg-img">
@@ -686,7 +686,7 @@ Promise.reject(1)
 <p>输出结果先走了<code>catch</code>然后走了最后一个<code>then</code>，第一个<code>then</code>中抛出错误并跳过了第二个<code>then</code></p>
 <p>也就是说如果我们没有处理这个错误(无 catch)的话，就不会往下执行了</p>
 <p>可参考下图</p>
-<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.assets/image-20200201231714043.png" srcset="/img/loading.gif" alt="image-20200201231714043"></p>
+<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.assets/image-20200201231714043.png" srcset="/blog/img/loading.gif" alt="image-20200201231714043"></p>
 <p>promise 的缺点之一就是无法让 promise 中断，利用这个特性可以让 Promise 中断执行，也算一种办法吧</p>
 <h4 id="异步回调中抛错-catch-捕捉不到"><a href="#异步回调中抛错-catch-捕捉不到" class="headerlink" title="异步回调中抛错 catch 捕捉不到"></a>异步回调中抛错 catch 捕捉不到</h4><p>首先我们看在 Promise 对象的处理器函数中直接抛出错误</p>
 <pre><code class="js">const p = new Promise((resolve, reject) =&gt; {
@@ -1264,7 +1264,7 @@ try {
 <p>执行测试</p>
 <pre><code class="js">npx promises-aplus-tests Promise.js</code></pre>
 <p>静等片刻，如果控制台没有爆红就是成功了，符合规范，如图所示</p>
-<p><img src="../../../../../Documents/image-20200206222942803.png" srcset="/img/loading.gif" alt="image-20200206222942803"></p>
+<p><img src="../../../../../Documents/image-20200206222942803.png" srcset="/blog/img/loading.gif" alt="image-20200206222942803"></p>
 <h4 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h4><p>篇幅已经很长了，后续还有其他内容，所以就实现了比较核心的 Promise 及 then 和 catch 方法</p>
 <p>其他的 resolve/reject/race/all 等比较简单，不在这里描述了</p>
 <p>给大家贴个我这边 Promise 多个方法实现的地址，大家有兴趣自行看代码吧，注释写的很详细了，也就大概 200 多行代码</p>
@@ -1481,7 +1481,7 @@ it.next(&quot;我是b&quot;)
 // 3
 // {value: 3, done: true}</code></pre>
 <p>通过<code>next</code>调用我们可以看到，第一次调用就输出了<code>start &amp; 1</code> ，意味着<code>yield</code>停止时，后面代码是执行了的</p>
-<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.assets/image-20200207234938429.png" srcset="/img/loading.gif" alt="image-20200207234938429"></p>
+<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.assets/image-20200207234938429.png" srcset="/blog/img/loading.gif" alt="image-20200207234938429"></p>
 <p>如上图所示，如果将说<code>yield</code>比做一道墙，那么墙右边和上面是一块，墙左边和下面是一块，这样说应该够直白了吧</p>
 <h4 id="for-of-遍历-Generator"><a href="#for-of-遍历-Generator" class="headerlink" title="for..of 遍历 Generator"></a>for..of 遍历 Generator</h4><p>上文我们就知道了<code>for...of</code>内部实现就是在使用迭代器迭代，那么<code>for...of</code>循环直接用在 Generator 遍历器上岂不是完美</p>
 <p>是的，它可以自动遍历 Generator 函数，而且此时不再需要调用 next 方法，一旦 next 方法的返回对象的 done 属性为 true，<code>for...of</code>循环就会中止，且不包含该返回对象</p>
@@ -1946,7 +1946,7 @@ asyncAjax()</code></pre>
 <p>码字不易，大家有收获别忘了点个赞鼓励下</p>
 <p>搜索【不正经的前端】或直接扫码可以关注公众号看到更多的精彩文章，也有一些群友提供的学习视频、资源干货什么的免费拿</p>
 <p>也可以直接加我微信，进交流群学习交流</p>
-<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.assets/%E7%A8%BF%E5%AE%9A%E8%AE%BE%E8%AE%A1%E5%AF%BC%E5%87%BA-20200111-143924.png" srcset="/img/loading.gif" alt="稿定设计导出-20200111-143924"></p>
+<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.assets/%E7%A8%BF%E5%AE%9A%E8%AE%BE%E8%AE%A1%E5%AF%BC%E5%87%BA-20200111-143924.png" srcset="/blog/img/loading.gif" alt="稿定设计导出-20200111-143924"></p>
 <blockquote>
 <p>参考</p>
 <ol>

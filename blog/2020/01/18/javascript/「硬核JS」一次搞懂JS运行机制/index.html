@@ -15,7 +15,7 @@
   
   <meta name="description" content="">
   <meta name="author" content="isboyjc">
-  <meta name="keywords" content="">
+  <meta name="keywords" content="李建超,isboyjc,句末">
   <title>「硬核 JS」一次搞懂 JS 运行机制 ~ ISBOYJC</title>
 
   <link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css"  >
@@ -107,7 +107,7 @@
 </nav>
 
     <div class="view intro-2" id="background"
-         style="background: url('/img/banner/b040.jpg')no-repeat center center;
+         style="background: url('/blog/img/banner/b040.jpg')no-repeat center center;
            background-size: cover;
            background-attachment: fixed;">
       <div class="full-bg-img">
@@ -336,7 +336,7 @@ console.log(&quot;我是同步任务2&quot;)</code></pre>
 <p>事件触发线程只关心异步回调入事件队列</p>
 <p>而我们 JS 引擎线程只会执行执行栈中的事件，执行栈中的代码执行完毕，就会读取事件队列中的事件并添加到执行栈中继续执行，这样反反复复就是我们所谓的<strong>事件循环(Event Loop)</strong></p>
 <p><strong>图解</strong></p>
-<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/Xnip2020-01-14_09-51-28.jpg" srcset="/img/loading.gif" alt="Xnip2020-01-14_09-51-28"></p>
+<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/Xnip2020-01-14_09-51-28.jpg" srcset="/blog/img/loading.gif" alt="Xnip2020-01-14_09-51-28"></p>
 <p>首先，执行栈开始顺序执行</p>
 <p>判断是否为同步，异步则进入异步线程，最终事件回调给事件触发线程的任务队列等待执行，同步继续执行</p>
 <p>执行栈空，询问任务队列中是否有事件回调</p>
@@ -406,11 +406,11 @@ console.log(3)</code></pre>
 </li>
 </ul>
 <p>此时，你可能还很迷惑，没关系，请接着往下看</p>
-<h3 id="图解宏任务和微任务"><a href="#图解宏任务和微任务" class="headerlink" title="图解宏任务和微任务"></a>图解宏任务和微任务</h3><p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/Xnip2020-01-14_00-58-17.jpg" srcset="/img/loading.gif" alt="Xnip2020-01-14_00-58-17"></p>
+<h3 id="图解宏任务和微任务"><a href="#图解宏任务和微任务" class="headerlink" title="图解宏任务和微任务"></a>图解宏任务和微任务</h3><p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/Xnip2020-01-14_00-58-17.jpg" srcset="/blog/img/loading.gif" alt="Xnip2020-01-14_00-58-17"></p>
 <p>首先执行一个宏任务，执行结束后判断是否存在微任务</p>
 <p>有微任务先执行所有的微任务，再渲染，没有微任务则直接渲染</p>
 <p>然后再接着执行下一个宏任务</p>
-<h2 id="图解完整的-Event-Loop"><a href="#图解完整的-Event-Loop" class="headerlink" title="图解完整的 Event Loop"></a>图解完整的 Event Loop</h2><p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/Xnip2020-01-14_17-20-44.jpg" srcset="/img/loading.gif" alt="Xnip2020-01-14_17-20-44"></p>
+<h2 id="图解完整的-Event-Loop"><a href="#图解完整的-Event-Loop" class="headerlink" title="图解完整的 Event Loop"></a>图解完整的 Event Loop</h2><p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/Xnip2020-01-14_17-20-44.jpg" srcset="/blog/img/loading.gif" alt="Xnip2020-01-14_17-20-44"></p>
 <p>首先，整体的 script(作为第一个宏任务)开始执行的时候，会把所有代码分为<code>同步任务</code>、<code>异步任务</code>两部分</p>
 <p>同步任务会直接进入主线程依次执行</p>
 <p>异步任务会再分为宏任务和微任务</p>
@@ -508,7 +508,7 @@ console.log(8)</code></pre>
 <p>虽然 NodeJS 中的 JavaScript 运行环境也是 V8，也是单线程，但是，还是有一些与浏览器中的表现是不一样的</p>
 <p>其实 nodejs 与浏览器的区别，就是 nodejs 的宏任务分好几种类型，而这好几种又有不同的任务队列，而不同的任务队列又有顺序区别，而微任务是穿插在每一种宏任务之间的</p>
 <p>在 node 环境下，process.nextTick 的优先级高于 Promise，可以简单理解为在宏任务结束后会先执行微任务队列中的 nextTickQueue 部分，然后才会执行微任务中的 Promise 部分</p>
-<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/Xnip2020-01-18_14-50-01.jpg" srcset="/img/loading.gif" alt="Xnip2020-01-18_14-50-01"></p>
+<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/Xnip2020-01-18_14-50-01.jpg" srcset="/blog/img/loading.gif" alt="Xnip2020-01-18_14-50-01"></p>
 <p>上图来自 NodeJS 官网</p>
 <p>如上图所示，nodejs 的宏任务分好几种类型，我们只简单介绍大体内容了解，不详细解释，不然又是啰哩啰嗦一大篇</p>
 <p>NodeJS 的 Event Loop 相对比较麻烦</p>
@@ -539,7 +539,7 @@ console.log(8)</code></pre>
 <p>码字不易，看完对你有帮助请点赞，有疑问请评论提出</p>
 <p>最近拾起了一个被冻结的公众号，又重新搞了下</p>
 <p>欢迎大家关注【不正经的前端】，加我，加群，或者拿一些资料都可以的，时不时发一些优质原创</p>
-<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/%E7%A8%BF%E5%AE%9A%E8%AE%BE%E8%AE%A1%E5%AF%BC%E5%87%BA-20200111-143924.png" srcset="/img/loading.gif" alt="稿定设计导出-20200111-143924"></p>
+<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/%E7%A8%BF%E5%AE%9A%E8%AE%BE%E8%AE%A1%E5%AF%BC%E5%87%BA-20200111-143924.png" srcset="/blog/img/loading.gif" alt="稿定设计导出-20200111-143924"></p>
 <blockquote>
 <p>参考</p>
 <ol>

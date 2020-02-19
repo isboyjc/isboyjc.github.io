@@ -15,7 +15,7 @@
   
   <meta name="description" content="">
   <meta name="author" content="isboyjc">
-  <meta name="keywords" content="">
+  <meta name="keywords" content="李建超,isboyjc,句末">
   <title>Vue打包后静态资源路径错误 ~ ISBOYJC</title>
 
   <link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css"  >
@@ -107,7 +107,7 @@
 </nav>
 
     <div class="view intro-2" id="background"
-         style="background: url('/img/banner/b047.jpg')no-repeat center center;
+         style="background: url('/blog/img/banner/b047.jpg')no-repeat center center;
            background-size: cover;
            background-attachment: fixed;">
       <div class="full-bg-img">
@@ -188,14 +188,14 @@
 <p>在配置文件里改，一劳永逸</p>
 <p>找到<code>config/index.js</code> 配置文件，找<code>build</code>打包对象里的<code>assetsPublicPath</code>属性</p>
 <p>默认值为<code>/</code>，更改为<code>./</code>就好了</p>
-<p><img src="/img/blog/old.assets/20190401001.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="/img/blog/old.assets/20190401001.png" srcset="/blog/img/loading.gif" alt=""></p>
 <ul>
 <li>css 中的图片路径错误，找不到图片解决如下</li>
 </ul>
 <p>在 css 里引入图片路径打包的时候路径会错</p>
 <p>打开<code>build/utils.js</code>文件，把打包 css 文件的配置加一个打包路径即可</p>
 <p>加一行代码，如下</p>
-<p><img src="/img/blog/old.assets/20190401002.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="/img/blog/old.assets/20190401002.png" srcset="/blog/img/loading.gif" alt=""></p>
 
             <hr>
           </div>
