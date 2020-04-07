@@ -131,7 +131,7 @@
                   
                   &nbsp;<i class="far fa-chart-bar"></i>
                   <span class="post-count">
-                    8k 字
+                    7.9k 字
                   </span>&nbsp;
                 
 
@@ -305,10 +305,10 @@
 <p>主线程之外，事件触发线程管理着一个<code>任务队列</code>，只要异步任务有了运行结果，就在<code>任务队列</code>之中放一个事件回调</p>
 <p>一旦<code>执行栈</code>中的所有同步任务执行完毕(也就是 JS 引擎线程空闲了)，系统就会读取<code>任务队列</code>，将可运行的异步任务(任务队列中的事件回调，只要任务队列中有事件回调，就说明可以执行)添加到执行栈中，开始执行</p>
 <p>我们来看一段简单的代码</p>
-<pre><code class="js">let setTimeoutCallBack = function() {
+<pre><code class="js">let setTimeoutCallBack = function () {
   console.log(&quot;我是定时器回调&quot;)
 }
-let httpCallback = function() {
+let httpCallback = function () {
   console.log(&quot;我是http请求回调&quot;)
 }
 
@@ -336,7 +336,7 @@ console.log(&quot;我是同步任务2&quot;)</code></pre>
 <p>事件触发线程只关心异步回调入事件队列</p>
 <p>而我们 JS 引擎线程只会执行执行栈中的事件，执行栈中的代码执行完毕，就会读取事件队列中的事件并添加到执行栈中继续执行，这样反反复复就是我们所谓的<strong>事件循环(Event Loop)</strong></p>
 <p><strong>图解</strong></p>
-<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/Xnip2020-01-14_09-51-28.jpg" srcset="/blog/img/loading.gif" alt="Xnip2020-01-14_09-51-28"></p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/Xnip2020-01-14_09-51-281.jpg" srcset="/blog/img/loading.gif" alt="Xnip2020-01-14_09-51-28"></p>
 <p>首先，执行栈开始顺序执行</p>
 <p>判断是否为同步，异步则进入异步线程，最终事件回调给事件触发线程的任务队列等待执行，同步继续执行</p>
 <p>执行栈空，询问任务队列中是否有事件回调</p>
@@ -374,14 +374,14 @@ console.log(&quot;我是同步任务2&quot;)</code></pre>
 document.body.style = &quot;background:red&quot;
 document.body.style = &quot;background:blue&quot;
 document.body.style = &quot;background:pink&quot;</code></pre>
-<p>![Jan-12-2020 01-05-49](「硬核 JS」一次搞懂 JS 运行机制.assets/Jan-12-2020 01-05-49.gif)</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/Jan-12-2020__01-05-49.gif" srcset="/blog/img/loading.gif" alt="Jan-12-2020 01-05-49"></p>
 <p>我们看到上面动图背景直接渲染了粉红色，根据上文里讲浏览器会先执行完一个宏任务，再执行当前执行栈的所有微任务，然后移交 GUI 渲染，上面四行代码均属于同一次宏任务，全部执行完才会执行渲染，渲染时<code>GUI线程</code>会将所有 UI 改动优化合并，所以视觉上，只会看到页面变成粉红色</p>
 <p>再接着看</p>
 <pre><code class="js">document.body.style = &quot;background:blue&quot;
 setTimeout(() =&gt; {
   document.body.style = &quot;background:black&quot;
 }, 200)</code></pre>
-<p>![Jan-12-2020 01-28-41](「硬核 JS」一次搞懂 JS 运行机制.assets/Jan-12-2020 01-28-41.gif)</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/Jan-12-2020__01-28-41.gif" srcset="/blog/img/loading.gif" alt="Jan-12-2020 01-28-41"></p>
 <p>上述代码中，页面会先卡一下蓝色，再变成黑色背景，页面上写的是 200 毫秒，大家可以把它当成 0 毫秒，因为 0 毫秒的话由于浏览器渲染太快，录屏不好捕捉，我又没啥录屏慢放的工具，大家可以自行测试的，结果也是一样，最安全的方法是写一个<code>index.html</code>文件，在这个文件中插入上面的 js 脚本，然后浏览器打开，谷歌下使用控制台中<code>performance</code>功能查看一帧一帧的加载最为恰当，不过这样录屏不好录所以。。。</p>
 <p>回归正题，之所以会卡一下蓝色，是因为以上代码属于两次<code>宏任务</code>，第一次<code>宏任务</code>执行的代码是将背景变成蓝色，然后触发渲染，将页面变成蓝色，再触发第二次宏任务将背景变成黑色</p>
 <p>再来看</p>
@@ -392,7 +392,7 @@ Promise.resolve().then(() =&gt; {
   document.body.style = &quot;background:pink&quot;
 })
 console.log(3)</code></pre>
-<p>![Jan-12-2020 01-31-42](「硬核 JS」一次搞懂 JS 运行机制.assets/Jan-12-2020 01-31-42.gif)</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/Jan-12-202__01-31-42.gif" srcset="/blog/img/loading.gif" alt="Jan-12-2020 01-31-42"></p>
 <p>控制台输出 1 3 2 , 是因为 promise 对象的 then 方法的回调函数是异步执行，所以 2 最后输出</p>
 <p>页面的背景色直接变成粉色，没有经过蓝色的阶段，是因为，我们在宏任务中将背景设置为蓝色，但在进行渲染前执行了微任务， 在微任务中将背景变成了粉色，然后才执行的渲染</p>
 <h3 id="微任务宏任务注意点"><a href="#微任务宏任务注意点" class="headerlink" title="微任务宏任务注意点"></a>微任务宏任务注意点</h3><ul>
@@ -406,11 +406,11 @@ console.log(3)</code></pre>
 </li>
 </ul>
 <p>此时，你可能还很迷惑，没关系，请接着往下看</p>
-<h3 id="图解宏任务和微任务"><a href="#图解宏任务和微任务" class="headerlink" title="图解宏任务和微任务"></a>图解宏任务和微任务</h3><p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/Xnip2020-01-14_00-58-17.jpg" srcset="/blog/img/loading.gif" alt="Xnip2020-01-14_00-58-17"></p>
+<h3 id="图解宏任务和微任务"><a href="#图解宏任务和微任务" class="headerlink" title="图解宏任务和微任务"></a>图解宏任务和微任务</h3><p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/Xnip2020-01-14_00-58-171.jpg" srcset="/blog/img/loading.gif" alt="Xnip2020-01-14_00-58-17"></p>
 <p>首先执行一个宏任务，执行结束后判断是否存在微任务</p>
 <p>有微任务先执行所有的微任务，再渲染，没有微任务则直接渲染</p>
 <p>然后再接着执行下一个宏任务</p>
-<h2 id="图解完整的-Event-Loop"><a href="#图解完整的-Event-Loop" class="headerlink" title="图解完整的 Event Loop"></a>图解完整的 Event Loop</h2><p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/Xnip2020-01-14_17-20-44.jpg" srcset="/blog/img/loading.gif" alt="Xnip2020-01-14_17-20-44"></p>
+<h2 id="图解完整的-Event-Loop"><a href="#图解完整的-Event-Loop" class="headerlink" title="图解完整的 Event Loop"></a>图解完整的 Event Loop</h2><p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/Xnip2020-01-14_17-20-441.jpg" srcset="/blog/img/loading.gif" alt="Xnip2020-01-14_17-20-44"></p>
 <p>首先，整体的 script(作为第一个宏任务)开始执行的时候，会把所有代码分为<code>同步任务</code>、<code>异步任务</code>两部分</p>
 <p>同步任务会直接进入主线程依次执行</p>
 <p>异步任务会再分为宏任务和微任务</p>
@@ -421,7 +421,7 @@ console.log(3)</code></pre>
 <h2 id="关于-Promise"><a href="#关于-Promise" class="headerlink" title="关于 Promise"></a>关于 Promise</h2><p><code>new Promise(() =&gt; {}).then()</code> ，我们来看这样一个 Promise 代码</p>
 <p>前面的 <code>new Promise()</code> 这一部分是一个构造函数，这是一个同步任务</p>
 <p>后面的 <code>.then()</code> 才是一个异步微任务，这一点是非常重要的</p>
-<pre><code class="js">new Promise(resolve =&gt; {
+<pre><code class="js">new Promise((resolve) =&gt; {
   console.log(1)
   resolve()
 }).then(() =&gt; {
@@ -445,14 +445,14 @@ console.log(2)</code></pre>
 <p>上述代码输出<code>1 2 3 4</code></p>
 <p>可以理解为，<code>await</code> 以前的代码，相当于与 <code>new Promise</code> 的同步代码，<code>await</code> 以后的代码相当于 <code>Promise.then</code>的异步</p>
 <h2 id="举栗印证"><a href="#举栗印证" class="headerlink" title="举栗印证"></a>举栗印证</h2><p>首先给大家来一个比较直观的动图</p>
-<p>![Jan-14-2020 00-03-22](「硬核 JS」一次搞懂 JS 运行机制.assets/Jan-14-2020 00-03-22.gif)</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/Jan-14-2020__00-03-22.gif" srcset="/blog/img/loading.gif" alt="Jan-14-2020 00-03-22"></p>
 <p>之所以放这个动图，就是为了向大家推荐这篇好文，动图录屏自参考链接【1】</p>
 <p>极力推荐大家看看这篇帖子，非常 nice，分步动画生动且直观，有时间的话可以自己去体验下</p>
 <p>不过在看这个帖子之前你要先了解下运行机制会更好读懂些</p>
 <p>接下来这个来自网上随意找的一个比较简单的面试题，求输出结果</p>
 <pre><code class="js">function test() {
   console.log(1)
-  setTimeout(function() {
+  setTimeout(function () {
     // timer1
     console.log(2)
   }, 1000)
@@ -460,20 +460,20 @@ console.log(2)</code></pre>
 
 test()
 
-setTimeout(function() {
+setTimeout(function () {
   // timer2
   console.log(3)
 })
 
-new Promise(function(resolve) {
+new Promise(function (resolve) {
   console.log(4)
-  setTimeout(function() {
+  setTimeout(function () {
     // timer3
     console.log(5)
   }, 100)
   resolve()
-}).then(function() {
-  setTimeout(function() {
+}).then(function () {
+  setTimeout(function () {
     // timer4
     console.log(6)
   }, 0)
@@ -508,7 +508,7 @@ console.log(8)</code></pre>
 <p>虽然 NodeJS 中的 JavaScript 运行环境也是 V8，也是单线程，但是，还是有一些与浏览器中的表现是不一样的</p>
 <p>其实 nodejs 与浏览器的区别，就是 nodejs 的宏任务分好几种类型，而这好几种又有不同的任务队列，而不同的任务队列又有顺序区别，而微任务是穿插在每一种宏任务之间的</p>
 <p>在 node 环境下，process.nextTick 的优先级高于 Promise，可以简单理解为在宏任务结束后会先执行微任务队列中的 nextTickQueue 部分，然后才会执行微任务中的 Promise 部分</p>
-<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/Xnip2020-01-18_14-50-01.jpg" srcset="/blog/img/loading.gif" alt="Xnip2020-01-18_14-50-01"></p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/Xnip2020-01-18_14-50-011.jpg" srcset="/blog/img/loading.gif" alt="Xnip2020-01-18_14-50-01"></p>
 <p>上图来自 NodeJS 官网</p>
 <p>如上图所示，nodejs 的宏任务分好几种类型，我们只简单介绍大体内容了解，不详细解释，不然又是啰哩啰嗦一大篇</p>
 <p>NodeJS 的 Event Loop 相对比较麻烦</p>
@@ -539,7 +539,7 @@ console.log(8)</code></pre>
 <p>码字不易，看完对你有帮助请点赞，有疑问请评论提出</p>
 <p>最近拾起了一个被冻结的公众号，又重新搞了下</p>
 <p>欢迎大家关注【不正经的前端】，加我，加群，或者拿一些资料都可以的，时不时发一些优质原创</p>
-<p><img src="/img/blog/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.assets/%E7%A8%BF%E5%AE%9A%E8%AE%BE%E8%AE%A1%E5%AF%BC%E5%87%BA-20200111-143924.png" srcset="/blog/img/loading.gif" alt="稿定设计导出-20200111-143924"></p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/20200111-1439241.png" srcset="/blog/img/loading.gif" alt=""></p>
 <blockquote>
 <p>参考</p>
 <ol>

@@ -173,7 +173,7 @@
         <div class="post-content mx-auto" id="post">
           <div class="markdown-body">
             <h1 id="function-与感叹号"><a href="#function-与感叹号" class="headerlink" title="function 与感叹号"></a>function 与感叹号</h1><p>相信大家都看到过在很多 js 代码中函数前面会有一个感叹号，这是什么意思呢？</p>
-<pre><code class="js">!(function() {
+<pre><code class="js">!(function () {
   alert(&quot;我最帅！&quot;)
 })() // true</code></pre>
 <p>如上所示，这行代码在控制台输出，会执行 alert 语句，并返回 true，这是为什么呢？</p>
@@ -181,10 +181,10 @@
 <pre><code class="js">function(){alert(&#39;无敌了&#39;)}()            // 语法错误</code></pre>
 <p>我们都知道，如上所示的这种写法是不对的</p>
 <p>匿名函数自调一般我们都会采用下面两种写法</p>
-<pre><code class="js">;(function() {
+<pre><code class="js">;(function () {
   alert(&quot;嗯，输出了&quot;)
 })()
-;(function() {
+;(function () {
   alert(&quot;嗯，也输出了&quot;)
 })()</code></pre>
 <p>那为什么上面把括号换成了感叹号的写法也可以执行匿名函数呢？</p>
@@ -200,7 +200,7 @@
 <pre><code class="js">function(){&#39;没错，又是我&#39;}()        // Unexpected token</code></pre>
 <p>那这条代码为什么错误呢？如上</p>
 <p>注意这条代码和上面那条是不一样的，这条代码函数没有名字，众所周知，函数只有在函数表达式中才可以匿名，所以这里的错误是因为函数没有名字，之后的<code>()</code>根本就不会执行</p>
-<pre><code class="js">var fn = function() {
+<pre><code class="js">var fn = function () {
   alert(250)
 }
 fn()</code></pre>
@@ -212,7 +212,7 @@ fn()</code></pre>
 fn()</code></pre>
 <p>这样又是为什么可以执行呢？如上</p>
 <p>是因为<code>fn</code>是函数名，它指向了这个函数，在当前的作用域中当然可以调用了</p>
-<pre><code class="js">;(function() {
+<pre><code class="js">;(function () {
   alert(111)
 })()</code></pre>
 <p>这样为什么又可以执行呢？如上</p>
@@ -221,34 +221,34 @@ fn()</code></pre>
 <p>那么怎样可以把函数变成表达式呢</p>
 <p>当然，括号和文章开头的感叹号都是可以的</p>
 <p>其实有很多种方法都可以把函数变成表达式</p>
-<pre><code class="js">!(function() {
+<pre><code class="js">!(function () {
   alert(1)
 })() + // true
-(function() {
+(function () {
   alert(1)
 })() - // NAN
-  (function() {
+  (function () {
     alert(1)
   })() // NAN
 
-~(function() {
+~(function () {
   alert(1)
 })() // -1
 
-new (function() {
+new (function () {
   alert(1)
 })() // Object
 
-delete (function() {
+delete (function () {
   alert(1)
 })() // true
 
-void (function() {
+void (function () {
   alert(1)
 })()(
   // undefined
 
-  function() {
+  function () {
     alert(1)
   }
 )() // undefined</code></pre>

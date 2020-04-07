@@ -249,8 +249,8 @@
 <h3 id="项目中优雅使用-icon"><a href="#项目中优雅使用-icon" class="headerlink" title="项目中优雅使用 icon"></a>项目中优雅使用 icon</h3><h5 id="搭建环境获取图标"><a href="#搭建环境获取图标" class="headerlink" title="搭建环境获取图标"></a>搭建环境获取图标</h5><p>我们使用 vue-cli3 搭建项目</p>
 <p>怎么样才算优雅，首先我们在 src 目录下新建<code>icons/</code>文件夹，在<code>icons/</code>文件夹下建<code>svg/</code>文件夹，将来我们项目中的 svg 图标都会统一放在这里</p>
 <p>接下来我们在官网搞来一个 svg 图标</p>
-<p><img src="/img/blog/Vue%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BC%98%E9%9B%85%E4%BD%BF%E7%94%A8icon.assets/image-20191116165415085.png" srcset="/blog/img/loading.gif" alt="image-20191116165415085"></p>
-<p><img src="/img/blog/Vue%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BC%98%E9%9B%85%E4%BD%BF%E7%94%A8icon.assets/image-20191116165528974.png" srcset="/blog/img/loading.gif" alt="image-20191116165528974"></p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20191116165415085.png" srcset="/blog/img/loading.gif" alt="image-20191116165415085"></p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20191116165528974.png" srcset="/blog/img/loading.gif" alt="image-20191116165528974"></p>
 <p>点击 svg 下载到<code>icons/svg</code>目录下修改文件名为<code>qq.svg</code>，或者是在<code>icons/svg</code>目录下新建一个<code>qq.svg</code>文件，把复制的 svg 代码放进去也可以</p>
 <p>这样就获取到了一个图标，很 easy</p>
 <h5 id="处理-svg-图标"><a href="#处理-svg-图标" class="headerlink" title="处理 svg 图标"></a>处理 svg 图标</h5><p>vue-cli 对 svg 文件有默认的<code>url-loader</code> 处理，我们要使用 svg 图标需单独进行配置</p>
@@ -271,12 +271,9 @@ function resolve(dir) {
 module.exports = {
   // 一个函数，会接收一个基于 webpack-chain 的 ChainableConfig 实例
   // 允许对内部的 webpack 配置进行更细粒度的修改
-  chainWebpack: config =&gt; {
+  chainWebpack: (config) =&gt; {
     // 配置svg默认规则排除icons目录中svg文件处理
-    config.module
-      .rule(&quot;svg&quot;)
-      .exclude.add(resolve(&quot;src/icons&quot;))
-      .end()
+    config.module.rule(&quot;svg&quot;).exclude.add(resolve(&quot;src/icons&quot;)).end()
 
     // 新增icons规则，设置svg-sprite-loader处理icons目录中svg文件
     config.module
@@ -288,7 +285,7 @@ module.exports = {
       .loader(&quot;svg-sprite-loader&quot;)
       .options({ symbolId: &quot;icon-[name]&quot; })
       .end()
-  }
+  },
 }</code></pre>
 <p>如果我们不清楚 cli 的默认配置，怕改错，可通过 vue inspect 审查 webpack 内部配置，详细请看： <a href="*https://cli.vuejs.org/zh/guide/webpack.html#%E5%AE%A1%E6%9F%A5%E9%A1%B9%E7%9B%AE%E7%9A%84-webpack-%E9%85%8D%E7%BD%AE*">inspect 使用</a></p>
 <p>上面代码中我们使用了 webpack 的链式高级用法来处理 loader，首先排除了默认 svg 的 loader 对我们<code>icons/</code>目录下 svg 文件的处理，然后新增了一个规则让<code>svg-sprite-loader</code>处理我们<code>icons/</code>文件夹下的 svg 文件，最后我们设置了<code>icon-</code>加上经过处理的 svg 文件名作为 symbolId，也就是说我们在使用<code>qq.svg</code>时可以直接在 use 标签使用<code>#icon-qq</code>，关于链式操作不了解的小伙伴可以看: <a href="[https://cli.vuejs.org/zh/guide/webpack.html#%E9%93%BE%E5%BC%8F%E6%93%8D%E4%BD%9C-%E9%AB%98%E7%BA%A7](https://cli.vuejs.org/zh/guide/webpack.html#链式操作-高级)">链式操作(高级)</a></p>
@@ -333,12 +330,12 @@ export default {
   props: {
     iconClass: {
       type: String,
-      required: true
+      required: true,
     },
     className: {
       type: String,
-      default: &quot;&quot;
-    }
+      default: &quot;&quot;,
+    },
   },
   computed: {
     iconName() {
@@ -350,8 +347,8 @@ export default {
       } else {
         return &quot;svg-icon&quot;
       }
-    }
-  }
+    },
+  },
 }
 &lt;/script&gt;
 &lt;style scoped&gt;

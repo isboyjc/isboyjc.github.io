@@ -209,15 +209,15 @@ vue的数据双向绑定 将MVVM作为数据绑定的入口，整合Observer，C
 &lt;script type=&quot;text/javascript&quot;&gt;
   var obj = {}
   Object.defineProperty(obj, &quot;txt&quot;, {
-    get: function() {
+    get: function () {
       return obj
     },
-    set: function(newValue) {
+    set: function (newValue) {
       document.getElementById(&quot;txt&quot;).value = newValue
       document.getElementById(&quot;show&quot;).innerHTML = newValue
-    }
+    },
   })
-  document.addEventListener(&quot;keyup&quot;, function(e) {
+  document.addEventListener(&quot;keyup&quot;, function (e) {
     obj.txt = e.target.value
   })
 &lt;/script&gt;</code></pre>
@@ -361,7 +361,7 @@ Vue：双向数据流，语法--HTML，state对象并不是必须的，数据由
               <span>
                 <i class="iconfont icon-inbox"></i>
                 
-                  <a class="hover-with-bg" href="/categories/%E9%9D%A2%E8%AF%95%E7%B3%BB%E5%88%97">面试系列</a>
+                  <a class="hover-with-bg" href="/categories/Web%E9%9D%A2%E8%AF%95%E6%95%B4%E5%90%88">Web面试整合</a>
                   &nbsp;
                 
               </span>&nbsp;&nbsp;
