@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/avatar.jpeg">
+  <link rel="icon" type="image/png" href="/blog/img/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="李建超,isboyjc,句末">
+  <title>Wechaty|NodeJS基于iPad协议手撸一个简单的微信机器人助手 ~ ISBOYJC</title>
+
+  <link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css"  >
+<link rel="stylesheet" href="/blog/lib/bootstrap/css/bootstrap.min.css"  >
+<link rel="stylesheet" href="/blog/lib/mdbootstrap/css/mdb.min.css"  >
+<link rel="stylesheet" href="/blog/lib/github-markdown/github-markdown.min.css"  >
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+
+  <link rel="stylesheet" href="/blog/lib/prettify/github-v2.min.css"  >
+
+<link rel="stylesheet" href="/blog/css/main.css"  >
+
+
+  <link rel="stylesheet" href="/blog/lib/fancybox/jquery.fancybox.min.css"  >
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/">首页</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/archives/">归档</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/categories/">分类</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('/blog/img/banner/b041.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  星期日, 三月 1日 2020, 8:30 早上
+                </p>
+              
+
+              <p>
+                
+                  
+                  &nbsp;<i class="far fa-chart-bar"></i>
+                  <span class="post-count">
+                    5.7k 字
+                  </span>&nbsp;
+                
+
+                
+                  
+                  &nbsp;<i class="far fa-clock"></i>
+                  <span class="post-count">
+                      21 分钟
+                  </span>&nbsp;
+                
+
+                
+                  <!-- 不蒜子统计文章PV -->
+                  
+                  &nbsp;<i class="far fa-eye" aria-hidden="true"></i>&nbsp;
+                  <span id="busuanzi_container_page_pv">
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>&nbsp;
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <h1 id="Wechaty-NodeJS-基于-iPad-协议手撸一个简单的微信机器人助手"><a href="#Wechaty-NodeJS-基于-iPad-协议手撸一个简单的微信机器人助手" class="headerlink" title="Wechaty|NodeJS 基于 iPad 协议手撸一个简单的微信机器人助手"></a>Wechaty|NodeJS 基于 iPad 协议手撸一个简单的微信机器人助手</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>我是一名前端，平时也喜欢写技术博客和交朋友，为此我也创建了微信技术交流群和微信公众号，一般我都会在文章下面贴出公众号和我的个人二维码，给有兴趣的小伙伴们添加微信然后我再拉他们进群这些，但是不停的同意微信好友验证，再发送群邀请真的是太痛苦了，相信很多做公众号的小伙伴都和我一样，作为一名开发，这种重复劳动是绝对不能忍受的</p>
+<p>我知道也见过有些博主的微信小号是机器人，很方便，如果我也能有一个机器人小号，只是自动通过好友验证，然后关键字回复直接发送群邀请就已经非常实用了，嗯～，想想还有些兴奋</p>
+<p>SO，大概在 19 年 10 月吧，就陆陆续续开始了我的微信机器人之旅</p>
+<p><del>首先，我找了几个微信机器人平台，奈何价格实在不美丽</del></p>
+<p>笑话，咱可是一名正八经的开发，这种非技术手段我会用？( 其实是没得钱噻！😅 )</p>
+<p>说干就干，不过要从 0 到 1 的开发不太现实，所以就开始 Github 上寻找开源作品</p>
+<p>对比了几个比较知名的几个开源微信机器人项目</p>
+<ul>
+<li>itchat<ul>
+<li><code>itchat</code>是一个开源的微信个人号接口，基于 python 调用微信</li>
+<li>使用不到三十行的代码，你就可以完成一个能够处理所有信息的微信机器人</li>
+</ul>
+</li>
+<li>wechaty<ul>
+<li><code>Wechaty</code>是适用于微信个人的 Bot SDK ，可以使用 6 行 js 创建一个机器人</li>
+<li>具有包括<code>linux</code>，<code>Windows</code>，<code>MacOS</code>和 <code>Docker</code> 在内的跨平台支持，基于 Node.js</li>
+</ul>
+</li>
+<li>Vbot<ul>
+<li>是基于微信 web 版的接口，使用<code>http</code>协议以及轮询方式实现</li>
+<li><code>Vbot</code>的亮点在于通过匿名函数，能够实现多种有趣的玩法</li>
+<li>通过 API，更方便的打造属于自己的网页版微信，基于 PHP</li>
+</ul>
+</li>
+</ul>
+<p>上面这些都是项目官方的简述，直接 <code>copy</code> 来的，刚看到这三款作品时，想都没想，果断选择<code>wechaty</code></p>
+<p>为什么？单论第一印象</p>
+<ul>
+<li>对于一名前端来说，Node.js 的亲和力自然不用多说</li>
+<li><code>itchat</code>官方说不到三十行代码实现，<code>Vbot</code>就没说多少行，<code>Wechaty</code>抛开 JS ，官方说只用 6 行</li>
+</ul>
+<p>没错，就是因此，我开始了 <code>wechaty</code> 的第一次亲密接触</p>
+<h2 id="第一次接触-wechaty"><a href="#第一次接触-wechaty" class="headerlink" title="第一次接触 wechaty"></a>第一次接触 wechaty</h2><p>Wechaty 是基于<code>NodeJS+TS</code>实现</p>
+<p>当然开发时我们不一定非要使用 TS，js 也可以的，这也是我个人很喜欢<code>Wechaty</code>团队的一点，因为官方给的示例都是基于 js 的而不是 ts，不习惯 ts 的小伙伴有福了</p>
+<p>开发前，肯定是要先查看 wechaty 文档的，一看还别说，感觉还真挺容易上手的</p>
+<ul>
+<li><a href="https://github.com/wechaty/wechaty" target="_blank" rel="noopener">wechaty-Github</a></li>
+</ul>
+<p>简单的看了一下文档后，我开始下载官方给的示例项目 <a href="https://github.com/wechaty/wechaty-getting-started" target="_blank" rel="noopener">wechaty/wechaty-getting-started</a></p>
+<p>下载完之后就是安装依赖运行</p>
+<p>首次运行很慢的，还有可能不成功，因为中间要安装运行<code>Puppeteer</code>，有人可能要试好多次</p>
+<p>然而这些我都没遇到，运行很成功，一切都很顺利，完全没有意外发生，哈哈哈</p>
+<p>运行成功后如下图，就可以扫码登录了</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other//image-20200226180859522.png" srcset="/blog/img/loading.gif" alt="image-20200226180859522"></p>
+<p>然后，意外就发生了 😬</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other//image-20200226181313773.png" srcset="/blog/img/loading.gif" alt="image-20200226181313773"></p>
+<p>登录不成功，真是尴尬</p>
+<pre><code class="js">&quot;为了你的帐号安全，此微信号不能登录网页微信。你可以使用Windows微信或Mac微信在电脑端登录。Windows微信下载地址：https://pc.weixin.qq.com  Mac微信下载地址：https://mac.weixin.qq.com&quot;</code></pre>
+<h2 id="网页版微信登录不成功"><a href="#网页版微信登录不成功" class="headerlink" title="网页版微信登录不成功"></a>网页版微信登录不成功</h2><p>当初其实卡在这里很久，我重复试了好多次都不行</p>
+<p>原因是因为目前我们使用的是基于 web 端的微信 API 接口，可能是 web 端接口什么的都不太安全吧</p>
+<p>微信官方在慢慢收缩 web 端微信的使用，官方对网页版微信进行了动态安全策略调整</p>
+<p>如登录网页版微信收到安全提示，则不支持登录网页版微信</p>
+<p>2017 年之后注册的微信号都无法登录网页版微信，而 2017 年之前注册得微信账号也有很大几率登录不上</p>
+<p>我赶紧试了试我的所有微信号，都是很早就注册的那种，可是依旧是登录不上，跑起来了登不上，这岂不是凉了</p>
+<p>到了最后终于使用我一个朋友的微信号登上了，但是那是朋友的大号，人家要用的</p>
+<p>后来我就到处找这个东西的解决办法，连带上花钱收可以登录网页版微信的号，拖了好些天依旧无果</p>
+<p>检验你的微信号只不支持 web 端微信，尝试登录一下网页版微信就好了</p>
+<ul>
+<li><a href="https://wx.qq.com/" target="_blank" rel="noopener">https://wx.qq.com/</a></li>
+</ul>
+<p>就这个链接，PC 端进入然后手机扫码登录，可以登上就是可用 web 微信</p>
+<p>早期其实 <code>Vbot</code> 和 <code>itchat</code> 这两个项目都挺火的，但是它们都是基于网页版微信实现的</p>
+<p>特别是<code>itchat</code> 项目的<code>Github issuse</code>中第一个就写着</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other//image-20200226191429357.png" srcset="/blog/img/loading.gif" alt="image-20200226191429357"></p>
+<p>登录不上去的在这里劝大家一句，不要在这个问题上纠结太久</p>
+<p>有渠道的小伙伴可以尝试收一个可以登录网页版微信的号，不过亲测很难</p>
+<p>没有号的小伙伴就不要纠结了，没什么用又浪费时间，亲身经历(某人曾明知道官方限制，还依旧偏执的找解决方案找了好多天 😭)</p>
+<p>看到这里你可能会说：看了这么多了你跟我说不行？</p>
+<p>不要着急，如果你使用<code>Vbot</code>和<code>itchat</code>，没有可登录的微信号确实是往下进行不了</p>
+<p>但是我们现在使用的是<code>wechaty</code>，接下来就可以体现<code>wechaty</code>的过人之处了</p>
+<p>当然如果你可以登录，那就可以看着官方文档或示例开发了，很省事</p>
+<p>你也可以继续看看下文我写的一个小 demo，虽然协议不同，不过 API 和思路都是一致的</p>
+<p>如果你登录不上，那就更要看下解决办法了</p>
+<h2 id="wechaty-puppet-padplus"><a href="#wechaty-puppet-padplus" class="headerlink" title="wechaty-puppet-padplus"></a>wechaty-puppet-padplus</h2><p>网页版微信登录不上？收可登录微信号又收不到？</p>
+<p>不要着急</p>
+<p><code>wechaty-puppet-padplus</code>同是<code>wechaty</code>团队开发，不同于上文基于微信 web 端，它是基于 iPad 协议</p>
+<ul>
+<li><a href="https://github.com/wechaty/wechaty-puppet-padplus" target="_blank" rel="noopener">wechaty-puppet-padplus</a></li>
+</ul>
+<p>使用这个包是需要 <code>Token</code> 令牌的，官方说</p>
+<blockquote>
+<p>Our Mission: Make it easy to build a WeChat Chatbot for developers.</p>
+<p>We provide a <strong>free</strong> access using <a href="https://github.com/wechaty/wechaty-puppet-padplus" target="_blank" rel="noopener">iPad protocol</a> for the developers who have a strong will and ability to build a valuable chatbot for users.</p>
+<p>Any developers can add JuziBOT Inc’s staff ( <strong>Wechat number : botorange_yeah</strong> ) as a Wechat friend. You will receive a review form after adding. If you pass the review and willing to write a blog in Wechaty , you can use our iPad protocol for free！</p>
+<p>我们的使命：轻松为开发人员构建微信聊天机器人</p>
+<p>我们为有强烈意愿和能力为用户构建有价值的聊天机器人的开发人员提供了使用<a href="https://github.com/wechaty/wechaty-puppet-padplus" target="_blank" rel="noopener">iPad 协议</a>的<strong>免费</strong>访问权限</p>
+<p>任何开发人员都可以将 JuziBOT Inc 的工作人员（<strong>微信编号：botorange_yeah</strong>）添加为微信好友。添加后，您将收到一份审查表。如果您通过审查并愿意在 Wechaty 中写博客，则可以免费使用我们的 iPad 协议！</p>
+</blockquote>
+<p>大概意思就是我们提交审查表后，会获得为期 15 天的免费 Token</p>
+<p>想要获取长期有效的免费 token，那就参加所谓的开源激励计划，就是在 15 天后，需要提交一个 MVP(最小可行化产品)的 Github 仓库，Wechaty 会将其 fork 到社区中的同时，会提供一个长期免费 Token</p>
+<p>反之，就需要继续协商讨论后续的合作形式，我觉得是很良心了</p>
+<p>没错，这篇帖子就是我申请的 15 天免费 token 下的一个输出</p>
+<p>当然，我是有时间就会写一些，毕竟时间不多，所以开发出来的东西功能也不多，后期慢慢改进吧</p>
+<p>讲了这么多，接下来才是正经的分享，比较简单，算是入门级，供大家参考吧</p>
+<h2 id="基于-ipad-协议的微信机器人"><a href="#基于-ipad-协议的微信机器人" class="headerlink" title="基于 ipad 协议的微信机器人"></a>基于 ipad 协议的微信机器人</h2><h3 id="明确需求"><a href="#明确需求" class="headerlink" title="明确需求"></a>明确需求</h3><p>开发之前，我们要先明确下需求，就是我需要机器人来做什么</p>
+<ul>
+<li>自动通过好友验证<ul>
+<li>当有人添加机器人时，判断验证消息关键字后通过或直接通过</li>
+<li>通过验证后自动回复并介绍机器人功能</li>
+</ul>
+</li>
+<li>私聊关键字回复<ul>
+<li>例如回复 <code>加群</code> 推送群聊邀请</li>
+<li>例如回复 <code>作者微信</code> 推送作者微信名片</li>
+</ul>
+</li>
+<li>自动聊天<ul>
+<li>群聊中通过 <code>@[机器人]xxx</code> 可以和机器人聊天</li>
+<li>私聊发送消息即可聊天</li>
+</ul>
+</li>
+<li>加入群聊自动欢迎<ul>
+<li>当新的小伙伴加入群聊后自动 <code>@[新的小伙伴]</code> 发一个文字欢迎</li>
+</ul>
+</li>
+</ul>
+<p>OK，先实现这几个简单的功能吧，还是比较有用的，后期再说后期的事嘛</p>
+<h3 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h3><p>功能比较简单，分多个就是为了不让所有代码都在一个文件，简单分开下</p>
+<pre><code class="js">|-- src/
+|---- index.js                # 入口文件
+|---- config.js              # 配置文件
+|---- onScan.js                # 机器人需要扫描二维码时监听回调
+|---- onRoomJoin.js     # 进入房间监听回调
+|---- onMessage.js        # 消息监听回调
+|---- onFriendShip.js    # 好友添加监听回调
+|-- package.json</code></pre>
+<h3 id="初期准备"><a href="#初期准备" class="headerlink" title="初期准备"></a>初期准备</h3><p>首先新建文件夹，初始化</p>
+<pre><code class="js">npm init -y</code></pre>
+<p>接着我们安装比较重要的核心包</p>
+<pre><code class="js">// Wechaty核心包
+npm install --save wechaty
+
+// padplus协议包
+npm install --save wechaty-puppet-padplus</code></pre>
+<p>我们在开发过程中，还需要用到<code>qrcode-terminal</code>这个包，作用就是将二维码输出在终端来供我们扫码登录</p>
+<pre><code class="js">npm install --save qrcode-terminal</code></pre>
+<p>然后就可以愉快的开发了，没错就是这么简单</p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>所谓的配置文件，就是那个 <code>config.js</code> ，只是把我们需要用到的一些可配置参数拿出来</p>
+<pre><code class="js">module.exports = {
+  // puppet_padplus Token
+  token: &quot;你自己申请的ipad协议token&quot;,
+  // 你的机器人名字
+  name: &quot;圈子&quot;,
+  // 房间/群聊
+  room: {
+    // 管理群组列表
+    roomList: {
+      // 群名字(用于发送群名字加群):群id，后面会介绍到
+      Web圈: &quot;*****@chatroom&quot;,
+      男神群: &quot;*****@chatroom&quot;,
+    },
+    // 加入房间回复
+    roomJoinReply: `你好，欢迎加入`,
+  },
+  // 私人
+  personal: {
+    // 好友验证自动通过关键字
+    addFriendKeywords: [&quot;加群&quot;, &quot;前端&quot;],
+    // 是否开启加群
+    addRoom: true,
+  },
+}</code></pre>
+<h3 id="入口文件"><a href="#入口文件" class="headerlink" title="入口文件"></a>入口文件</h3><p>入口文件，也就是我们 <code>src</code> 目录下的 <code>index.js</code> 文件</p>
+<p>这里做的很简单，没有逻辑</p>
+<p>首先引入我们包</p>
+<pre><code class="js">const { Wechaty } = require(&quot;wechaty&quot;) // Wechaty核心包
+const { PuppetPadplus } = require(&quot;wechaty-puppet-padplus&quot;) // padplus协议包
+const config = require(&quot;./config&quot;) // 配置文件</code></pre>
+<p>接着初始化我们的 bot</p>
+<pre><code class="js">// 初始化
+const bot = new Wechaty({
+  puppet: new PuppetPadplus({
+    token: config.token,
+  }),
+  name: config.name,
+})</code></pre>
+<p>接下来一段链式调用，监听，启动，完事</p>
+<pre><code class="js">const onScan = require(&quot;./onScan&quot;)
+const onRoomJoin = require(&quot;./onRoomJoin&quot;)
+const onMessage = require(&quot;./onMessage&quot;)
+const onFriendShip = require(&quot;./onFriendShip&quot;)
+
+bot
+  .on(&quot;scan&quot;, onScan) // 机器人需要扫描二维码时监听
+  .on(&quot;room-join&quot;, onRoomJoin) // 加入房间监听
+  .on(&quot;message&quot;, onMessage(bot)) // 消息监听
+  .on(&quot;friendship&quot;, onFriendShip) // 好友添加监听
+  .start()</code></pre>
+<p>上面代码都有注释，<code>scan, room-join, message, friendship</code> 这些都是我们各个阶段的事件监听</p>
+<ul>
+<li>scan 机器人需要扫描二维码时监听</li>
+<li>room-join 加入房间监听</li>
+<li>message 消息监听</li>
+<li>friendship 好友添加监听</li>
+</ul>
+<p>这些事件监听我只做简单解释，因为没啥说的，api 文档都有</p>
+<p>不由的想起尤大的那个表情包：请仔细阅读我们的文档！！！</p>
+<p>这些个监听后面的回调，我这里只不过把他们单独拿出去了，也就是上文目录结构中的那几个文件</p>
+<p>这里的<code>onMessage</code>是做了一个方法调用，其实还是返回一个回调函数，只不过我们在消息监听中用到了<code>bot</code>实例，所以用这种方式传值而已</p>
+<p>接下来我们按顺序来解释下这几个文件做了什么</p>
+<h3 id="onScan"><a href="#onScan" class="headerlink" title="onScan"></a>onScan</h3><p><code>onScan</code> 文件是我们在机器人需要扫描二维码时的监听回调</p>
+<p>这里面的代码超级简单</p>
+<pre><code class="js">const Qrterminal = require(&quot;qrcode-terminal&quot;)
+
+module.exports = function onScan(qrcode, status) {
+  Qrterminal.generate(qrcode, { small: true })
+}</code></pre>
+<p>首先引入 <code>qrcode-terminal</code> 包</p>
+<p>这个回调中其实做的很简单，回调接收了两个参数</p>
+<ul>
+<li>qrcode qr 码</li>
+<li>status 状态</li>
+</ul>
+<p>我们借助<code>Qrterminal.generate</code>这个 API 将 qr 码输出到终端而已，后面那个<code>small</code>参数是因为<code>qrcode-terminal</code> 这个包默认输出的二维码太大了，给它变小一些</p>
+<h3 id="onFriendShip"><a href="#onFriendShip" class="headerlink" title="onFriendShip"></a>onFriendShip</h3><p>onFriendShip 是 friendship 事件监听的回调，好友添加监听</p>
+<pre><code class="js">const { Friendship } = require(&quot;wechaty&quot;)
+// 配置文件
+const config = require(&quot;./config&quot;)
+// 好友添加验证消息自动同意关键字数组
+const addFriendKeywords = config.personal.addFriendKeywords
+
+// 好友添加监听回调
+module.exports = async function onFriendShip(friendship) {
+  let logMsg
+  try {
+    logMsg = &quot;添加好友&quot; + friendship.contact().name()
+    console.log(logMsg)
+    switch (friendship.type()) {
+      /**
+       * 1. 新的好友请求
+       * 设置请求后，我们可以从request.hello中获得验证消息,
+       * 并通过`request.accept（）`接受此请求
+       */
+      case Friendship.Type.Receive:
+        // 判断配置信息中是否存在该验证消息
+        if (addFriendKeywords.some((v) =&gt; v == friendship.hello())) {
+          logMsg = `自动通过验证，因为验证消息是&quot;${friendship.hello()}&quot;`
+          // 通过验证
+          await friendship.accept()
+        } else {
+          logMsg = &quot;不自动通过，因为验证消息是: &quot; + friendship.hello()
+        }
+        break
+
+      /**
+       * 2. 友谊确认
+       */
+      case Friendship.Type.Confirm:
+        logMsg = &quot;friend ship confirmed with &quot; + friendship.contact().name()
+        break
+    }
+    console.log(logMsg)
+  } catch (e) {
+    logMsg = e.message
+  }
+}</code></pre>
+<p>如上所示，我们想加好友时，验证消息填写我们指定的文字可以自动通过</p>
+<p>So，我们从配置文件中拿到这个参数，在新的好友请求过来时做一个判断即可</p>
+<h3 id="onRoomJoin"><a href="#onRoomJoin" class="headerlink" title="onRoomJoin"></a>onRoomJoin</h3><p>onRoomJoin，也就是进入房间监听回调</p>
+<pre><code class="js">// 配置文件
+const config = require(&quot;./config&quot;)
+// 加入房间回复
+const roomJoinReply = config.room.roomJoinReply
+// 管理群组列表
+const roomList = config.room.roomList
+
+// 进入房间监听回调 room-群聊 inviteeList-受邀者名单 inviter-邀请者
+module.exports = async function onRoomJoin(room, inviteeList, inviter) {
+  // 判断配置项群组id数组中是否存在该群聊id
+  if (Object.values(roomList).some((v) =&gt; v == room.id)) {
+    // let roomTopic = await room.topic()
+    inviteeList.map((c) =&gt; {
+      // 发送消息并@
+      room.say(roomJoinReply, c)
+    })
+  }
+}</code></pre>
+<p>需求是在我们需要管理的群聊中，只要有新人加入，我们就发一个欢迎词并@他下</p>
+<p>当然这些东西还是在 config 中配置好的，在这里拿到就可以</p>
+<p>此回调接收三个参数</p>
+<ul>
+<li>room 群聊实例</li>
+<li>inviteeList 受邀者名单</li>
+<li>inviter 邀请者</li>
+</ul>
+<p>有了房间，受邀者，邀请者，那么这里也就非常 easy 了</p>
+<p>做一下判断就可以了，这里的<code>room.id</code>就是我们配置的管理群组列表对象的 value 值</p>
+<p>为什么要有管理群组列表对象呢？因为我们在登录了一个微信号时，群组进入监听是针对微信号中所有群组的</p>
+<p>我的需求是要管理我的群组，所以事先跑了下程序，输出了<code>room</code>，然后群里发个消息，就拿到了我想管理的群组所有信息，id 自然也在里面，然后写到了配置里</p>
+<p>接下来就是，监听到新加入，把受邀者列表遍历一下，使用<code>room.say</code>方法发送群消息即可，受邀者列表里存的就是加入的微信号实例，<code>say</code> 方法第一个参数就是要发送的消息，第二个参数就是为了@此人一下。。。感觉我的叙述毫无营养，还是那句话，这里只是说它是什么意思，具体 API 阅读文档吧，文档都有，也很简单</p>
+<h3 id="message"><a href="#message" class="headerlink" title="message"></a>message</h3><p>最后就是 message 回调了，这个是代码最多的一个地方了，消息监听回调嘛</p>
+<p>这也是代码中稍微有些逻辑的地方，因为要有各种判断</p>
+<p>先不说程序逻辑，机器人嘛，总得能聊天不是，所以网上找了个免费的机器人聊天接口对接了一下</p>
+<p>该接口详细请看</p>
+<ul>
+<li><a href="https://drea.cc/mm.php" target="_blank" rel="noopener">https://drea.cc/mm.php</a></li>
+</ul>
+<p>其实就是一个 API，我们做一下封装，调用传入消息，返回消息，仅此而已</p>
+<p>因为有请求，所以这块用了一个请求包，一个参数解码包，所以还要安装并引入下</p>
+<pre><code class="js">npm install --save request
+npm install --save urlencode</code></pre>
+<p>把接口封装下，因为是免费机器人，所以肯定不是太好，不过个人用足够了，如下</p>
+<pre><code class="js">// node-request请求模块包
+const request = require(&quot;request&quot;)
+// 请求参数解码
+const urlencode = require(&quot;urlencode&quot;)
+
+/**
+ * @description 机器人请求接口 处理函数
+ * @param {String} info 发送文字
+ * @return {Promise} 相应内容
+ */
+function requestRobot(info) {
+  return new Promise((resolve, reject) =&gt; {
+    let url = `https://open.drea.cc/bbsapi/chat/get?keyWord=${urlencode(info)}`
+    request(url, (error, response, body) =&gt; {
+      if (!error &amp;&amp; response.statusCode == 200) {
+        let res = JSON.parse(body)
+        if (res.isSuccess) {
+          let send = res.data.reply
+          // 免费的接口，所以需要把机器人名字替换成为自己设置的机器人名字
+          send = send.replace(/Smile/g, name)
+          resolve(send)
+        } else {
+          if (res.code == 1010) {
+            resolve(&quot;没事别老艾特我，我还以为爱情来了&quot;)
+          } else {
+            resolve(&quot;你在说什么，我听不懂&quot;)
+          }
+        }
+      } else {
+        resolve(&quot;你在说什么，我脑子有点短路诶！&quot;)
+      }
+    })
+  })
+}</code></pre>
+<p>接着就可以写消息监听回调的逻辑了，这里就不文字叙述了，太费劲了，注释都是按行写的，哈哈</p>
+<pre><code class="js">const { Message } = require(&quot;wechaty&quot;)
+// 配置文件
+const config = require(&quot;./config&quot;)
+// 机器人名字
+const name = config.name
+// 管理群组列表
+const roomList = config.room.roomList
+
+// 消息监听回调
+module.exports = (bot) =&gt; {
+  return async function onMessage(msg) {
+    // 判断消息来自自己，直接return
+    if (msg.self()) return
+
+    // 判断此消息类型是否为文本
+    if (msg.type() == Message.Type.Text) {
+      // 判断消息类型来自群聊
+      if (msg.room()) {
+        // 获取群聊
+        const room = await msg.room()
+
+        // 收到消息，提到自己
+        if (await msg.mentionSelf()) {
+          // 获取提到自己的名字
+          let self = await msg.to()
+          self = &quot;@&quot; + self.name()
+          // 获取消息内容，拿到整个消息文本，去掉 @+名字
+          let sendText = msg.text().replace(self, &quot;&quot;)
+          // 请求机器人接口回复
+          let res = await requestRobot(sendText)
+          // 返回消息，并@来自人
+          room.say(res, msg.from())
+          return
+        }
+
+        // 收到消息，没有提到自己  忽略
+      } else {
+        // 回复信息是关键字 “加群”
+        if (await isAddRoom(msg)) return
+        // 回复信息是所管理的群聊名
+        if (await isRoomName(bot, msg)) return
+        // 请求机器人聊天接口
+        let res = await requestRobot(msg.text())
+        // 返回聊天接口内容
+        await msg.say(res)
+      }
+    } else {
+      console.log(&quot;消息不是文本！&quot;)
+    }
+  }
+}
+
+/**
+ * @description 回复信息是关键字 “加群” 处理函数
+ * @param {Object} msg 消息对象
+ * @return {Promise} true-是 false-不是
+ */
+async function isAddRoom(msg) {
+  // 关键字 加群 处理
+  if (msg.text() == &quot;加群&quot;) {
+    let roomListName = Object.keys(roomList)
+    let info = `${name}当前管理群聊有${roomListName.length}个，回复群聊名即可加入哦\n\n`
+    roomListName.map((v) =&gt; {
+      info += &quot;【&quot; + v + &quot;】&quot; + &quot;\n&quot;
+    })
+    msg.say(info)
+    return true
+  }
+  return false
+}
+
+/**
+ * @description 回复信息是所管理的群聊名 处理函数
+ * @param {Object} bot 实例对象
+ * @param {Object} msg 消息对象
+ * @return {Promise} true-是群聊 false-不是群聊
+ */
+async function isRoomName(bot, msg) {
+  // 回复信息为管理的群聊名
+  if (Object.keys(roomList).some((v) =&gt; v == msg.text())) {
+    // 通过群聊id获取到该群聊实例
+    const room = await bot.Room.find({ id: roomList[msg.text()] })
+
+    // 判断是否在房间中 在-提示并结束
+    if (await room.has(msg.from())) {
+      await msg.say(&quot;您已经在房间中了&quot;)
+      return true
+    }
+
+    // 发送群邀请
+    await room.add(msg.from())
+    await msg.say(&quot;已发送群邀请&quot;)
+    return true
+  }
+  return false
+}</code></pre>
+<p>然后就可以本地启动试试了</p>
+<p>就到这了，也希望对你能有些帮助，给点鼓励可以点个赞噻</p>
+<p>看着文件和代码都不少，其实就只是一些逻辑判断而已</p>
+<p>看一眼 API 文档，怎么发挥就看你自己了，消息监听这里的判断也只做了文本消息的判断而已</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>你如果想用我这些东西，拉下代码<code>config.js</code>里换下 token 和一些配置信息就可以，当然我在不停更新，功能会越来越多，所以仓库中代码和文中会有些不一样，使用时简单看下代码，都写了详细注释，也很简单</p>
+<ul>
+<li><a href="https://github.com/isboyjc/wechaty-Robot" target="_blank" rel="noopener">https://github.com/isboyjc/wechaty-Robot</a></li>
+</ul>
+<p>目前实现的都是一些基础的小功能，登出和容错等一些处理也没有，因为这几天太忙了，后期慢慢加吧，这里就是为了给有想做但还不知道的小伙伴简单介绍下 wechaty，简单好用，快去试试吧，我这边介绍的只是冰山一角，喜欢 Python 的同学，wechat 团队也维护了一个 Python 版本，也可以尝试的 😄</p>
+<p>还可以实现更多好玩的功能(我想到的功能只是针对我个人需求，只是为了和公众号、我的群聊等实现下无缝对接，你当然也可以做其他的嘛，例如做一个定时任务给女友定时发信息啥的)，我现在能想到的后期要加的功能如下</p>
+<ul>
+<li>推送<ul>
+<li>例如每日早 8 点，拉取当日 <code>IT界新闻/掘金热门文章</code>发送至群聊</li>
+<li>群聊中可通过 <code>@[机器人]关键字</code> 查看新闻及文章等</li>
+<li>可设置定时任务，定时给自己/群聊发送消息</li>
+</ul>
+</li>
+<li>群聊功能消息管理<ul>
+<li>监听群聊中消息，有不正当言论时或不文明用语对其警告</li>
+<li>记录同一人警告次数，每月清空记录，当月达到一定警告次数后自动将其移出群聊</li>
+</ul>
+</li>
+<li>群聊投票功能<ul>
+<li>可通过机器人发起对某件事的群投票</li>
+</ul>
+</li>
+<li>群聊游戏<ul>
+<li>猜字迷</li>
+<li>等等</li>
+</ul>
+</li>
+<li>后台管理系统(可视化配置及群聊数据统计)<ul>
+<li>可视化配置机器人的已实现功能，包括登录等所有功能在 web 端可视化操作处理</li>
+<li>统计群聊中的成员活跃度/人员加入情况/警告等系列数据</li>
+</ul>
+</li>
+</ul>
+<p>来吧，生命在于折腾，好玩的东西总要试一试，毕竟费不了多少时间，你也可以加下我的小助手【圈子】微信体验下呦，验证消息写【前端】可以直接通过，和他聊聊天，或者回复【加群】加技术交流群我们一块玩耍都可以的</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other//WechatIMG127.jpeg" srcset="/blog/img/loading.gif" alt="WechatIMG127"></p>
+<p>如果你加小助手微信遇到了问题，也可以通过以下方式联系我或加群</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other//image-20200407143156331.png" srcset="/blog/img/loading.gif" alt="image-20200407143156331"></p>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/Web%E7%9B%B8%E5%85%B3">Web相关</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/Wechaty">Wechaty</a>
+                
+                  <a class="hover-with-bg" href="/tags/NodeJS">NodeJS</a>
+                
+                  <a class="hover-with-bg" href="/tags/%E5%BE%AE%E4%BF%A1%E6%9C%BA%E5%99%A8%E4%BA%BA">微信机器人</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">水平有限，欢迎指错！<br />联系邮箱：214930661@qq.com<br />本站文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" target="_blank" rel="nofollow noopener noopener">CC BY-SA 3.0协议</a> ，商业转载请联系作者获得授权，非商业转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="/blog/img/gongzhonghao.jpg" srcset="/blog/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><div style="text-align: center;">更多精彩，请关注公众号【不正经的前端】</div> <div style="text-align: center;">回复【加群】加入技术交流群，回复【资料】获取精选学习资料</div>
+    </div>
+  </div>
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+      <br><br>
+      
+      
+  <div id="vcomments" style="width: 90%; margin: 0 auto;"></div>
+  <script defer src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var notify = 'false' === true;
+    var verify = 'false' === true;
+    var oldLoad = window.onload;
+    window.onload = function () {
+      new Valine({
+        el: '#vcomments',
+        notify: notify,
+        verify: verify,
+        app_id: "OuIO62anqvXdvjruYtvDefqV-gzGzoHsz",
+        app_key: "G9BfnEel5vlsGHJqmPkr2B1P",
+        placeholder: "说点什么",
+        avatar: "retro",
+        meta: ['nick', 'mail', 'link'],
+        pageSize: "10",
+      });
+      oldLoad && oldLoad();
+    };
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"
+      ><b>Hexo</b></a
+    >
+    <i class="iconfont icon-love"></i>
+    <a
+      href="https://github.com/fluid-dev/hexo-theme-fluid"
+      target="_blank"
+      rel="nofollow noopener"
+    >
+      <b>Fluid</b></a
+    >
+    <br />
+
+    
+  
+    <!-- 不蒜子统计PV -->
+    
+    &nbsp;<span id="busuanzi_container_site_pv">总访问量 
+          <span id="busuanzi_value_site_pv"></span> 次</span>&nbsp;
+  
+  
+    <!-- 不蒜子统计UV -->
+    
+    &nbsp;<span id="busuanzi_container_site_uv">总访客数 
+            <span id="busuanzi_value_site_uv"></span> 人</span>&nbsp;
+  
+  <br>
+
+ 
+
+
+    <!-- cnzz Analytics icon -->
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/blog/lib/jquery/jquery.min.js" ></script>
+<script src="/blog/lib/popper/popper.min.js" ></script>
+<script src="/blog/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/blog/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/blog/js/main.js" ></script>
+
+
+  <script src="/blog/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/blog/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/blog/js/post.js" ></script>
+
+
+
+  <script src="/blog/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+<!-- Plugins -->
+
+
+  
+
+  
+
+  
+    <!-- Tencent Analytics -->
+    <script>
+      var _mtac = {};
+      (function () {
+        var mta = document.createElement("script");
+        mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+        mta.setAttribute("name", "MTAH5");
+        mta.setAttribute("sid", "500711128");
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(mta, s);
+      })();
+    </script>
+  
+
+  
+
+  <!-- cnzz Analytics -->
+  
+
+
+
+  <script src="/blog/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/blog/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Wechaty|NodeJS基于iPad协议手撸一个简单的微信机器人助手&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/blog/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/blog/js/local-search.js" ></script>
+  <script>
+    var path = "/blog/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/blog/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
