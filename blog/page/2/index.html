@@ -145,6 +145,52 @@
     
     
       <div class="col-12 col-md-4 m-auto">
+        <a href="/blog/2019/11/16/vue/Vue%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BC%98%E9%9B%85%E4%BD%BF%E7%94%A8icon/" target="_self">
+          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/vue01.jpg" srcset="/blog/img/loading.gif" alt="Vue 项目中优雅使用 icon" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/blog/2019/11/16/vue/Vue%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BC%98%E9%9B%85%E4%BD%BF%E7%94%A8icon/">
+        <p class="h4 index-header">Vue 项目中优雅使用 icon</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">Vue 项目中优雅使用 icon前言icon 在我们前端日常开发中是很常用的，它有很多种使用方式，时至今日，它的使用方式经过了很多种演变，本文会为大家介绍 icon 的一些历史演变，分析一下这几种使用方式的优劣，我们将采用svg sprites这种方式使用 icon，演示代码使用 vue+vue-cli3+，看完之后，你会发现这种使用方式完全称得上优雅二字
+追溯历史Img 标签引入最早我们使用图标时只是单纯 img 标签引入图片，个人感觉也还好
+但是这样网页上会有很多 img 图标的资源请求，这是它最大的缺点
+雪碧图(css sprites)后来我们为了优化资源请求开始使用 CSS 雪碧图(css sprites)
+CSS Sprites 在国内很多人叫 css 精灵/css 雪碧图(啥都行)，是一种网页图片应用处理方式。它允许你将一个页面涉及到的所有零星图片都包含到一张大图中去，这样一来，当访问该页面时，载入的图片就不会像以前那样一幅一幅地慢慢显示出来了。加速的关键，不是降低质量，而是减少个数
+CSS Sprites 其实就是把网页中一些背景图片整合到一张图片文件中，再利用 CSS </div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-11-16&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Vue%E7%9B%B8%E5%85%B3">Vue相关</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Vue">Vue</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
         <a href="/blog/2019/06/10/vue/Vue%E5%9F%BA%E7%A1%80%E9%9D%A2%E8%AF%95%E9%A2%98/" target="_self">
           <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/vue01.jpg" srcset="/blog/img/loading.gif" alt="Vue 基础面试题" class="img-fluid rounded z-depth-3 index-thumbnails">
         </a>
@@ -658,61 +704,6 @@ css 中的图片路径错误，找不到图片解决如下
       <div>
         
           <i class="iconfont icon-riqi2"></i>&nbsp;2018-09-01&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/Vue%E7%9B%B8%E5%85%B3">Vue相关</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/Vue">Vue</a>&nbsp;
-          
-            <a href="/tags/Bug">Bug</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-      <div class="col-12 col-md-4 m-auto">
-        <a href="/blog/2018/08/26/vue/Vue%E6%89%93%E5%8C%85%E5%90%8Eindex.html%E4%B8%AD%E6%97%A0%E5%BC%95%E5%8F%B7/" target="_self">
-          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/vue01.jpg" srcset="/blog/img/loading.gif" alt="Vue打包后index.html中无引号" class="img-fluid rounded z-depth-3 index-thumbnails">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/blog/2018/08/26/vue/Vue%E6%89%93%E5%8C%85%E5%90%8Eindex.html%E4%B8%AD%E6%97%A0%E5%BC%95%E5%8F%B7/">
-        <p class="h4 index-header">Vue打包后index.html中无引号</p>
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">Vue 打包后 index.html 中无引号嗯，历经了千山万水，踩过了无数个坑，终于打包成功了
-点击index.html，报错了，打开代码一看，index.html中路径都不带引号，如下。。。
-&lt;link href=/static/css/app.262f48fe370f0ecbe3bd043450d7d62e.css rel=stylesheet&gt;
-手动加吧，可行，但是一次又一次打包都手动有点浪费时间
-嗯，聪明人有办法
-找打包配置吧，在build目录下有一个webpack.prod.conf.js文件
-这个文件中搜索minify，这个对象是压缩配置
-在这个对象中有一个叫removeAttributeQuotes的属性，就是删除属性引用的意思
-它的值默认为true，那就直接把他改成false就好了
-现在可以再次build一下试试看了
-如果index.html中还是没有引号，就把minify对象都注释再build
-完美解决，perfect！！！
-</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2018-08-26&nbsp;&nbsp;
         
         
           <i class="iconfont icon-inbox"></i>

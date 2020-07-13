@@ -175,6 +175,7 @@
             <h1 id="你真的了解跨域吗"><a href="#你真的了解跨域吗" class="headerlink" title="你真的了解跨域吗"></a>你真的了解跨域吗</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>相信每个前端对于跨域这两个字都不会陌生，在实际项目中应用也很多，但跨域方法的多种多样让人目不暇接，前段时间公司同事出现了跨域问题，又一时找不到问题所在，所以在此总结下跨域知识，一篇由浅入深的万字Web基操文</p>
 <p>其实很早就开始写了，只不过刚开始写的时候理解不够深刻，后来慢慢就写其他觉得较高大尚较内涵的了，然后就又是觉得不够完美不够深刻又写一半，就此陷入强迫症患者明知不可为而为的死循环，SO，产出少，周期长（不过大家能看到的文章都是准备良久又反复斟酌后自认为还不错的）。。。</p>
 <p>总之又是一篇由于各种原因半途而废的积压文，这里终于收尾了，长出一口气，哎，还是太年轻，吐槽结束，进入正文</p>
+<p>文章收录地址： <a href="https://github.com/isboyjc/blog/issues/18" target="_blank" rel="noopener">isboyjc/blog 传送门</a> </p>
 <h2 id="什么是跨域"><a href="#什么是跨域" class="headerlink" title="什么是跨域"></a>什么是跨域</h2><p>简单来说跨域是指一个域下的文档或脚本想要去去请求另一个域下的资源</p>
 <p>其实一些像A链接、重定向、表单提交的资源跳转，像 <code>&lt;link&gt;、&lt;script&gt;、&lt;img&gt;、&lt;frame&gt;</code> 等dom标签，还有样式中 <code>background:url()、@font-face()</code> 等嵌入的文件外链，又比如一些像  js 发起的ajax请求、dom 和 js 对象的跨域操作等等都是跨域</p>
 <p>我们通常所说的跨域，大多是由浏览器同源策略限制引起的一类请求场景，这里你可能注意到了同源策略，那么浏览器的同源策略是什么呢？</p>
@@ -353,7 +354,7 @@ console.log(cookieA)</code></pre>
 <p>通过上面这个例子，我们可以很直观的看到，a 页面载入2s后，跳转到 b 页面，b 会在控制台输出 <code>我是a</code></p>
 <p>不过 <code>window.name</code> 的值只能是字符串的形式，最大允许2M左右，具体取决于不同的浏览器，但是一般是够用了</p>
 <p>那么我们就可以利用它这一特性来实现跨域，看标题就知道是使用 <code>window.name</code> 和 <code>iframe</code> ，那么你能想到要如何投机取巧，哦不，是巧妙的规避跨域而不留痕迹吗？</p>
-<p>经历过上文的璀璨我们知道，不同域情况下的 a 页面和 b 页面，使用 <code>iframe</code> 嵌入一个页面，数据也是互通不了的，因为会跨域，这里我们要使用 <code>window.name</code> + <code>iframe</code> 来实现跨域数据互通，显然我们不能直接在 a 页面中通过改变 <code>window.location</code> 来载入b 页面，因为我们现在需要实现的是 a 页面不跳转，但是也能够获取到 b 中的数据</p>
+<p>经历过上文的摧残我们知道，不同域情况下的 a 页面和 b 页面，使用 <code>iframe</code> 嵌入一个页面，数据也是互通不了的，因为会跨域，这里我们要使用 <code>window.name</code> + <code>iframe</code> 来实现跨域数据互通，显然我们不能直接在 a 页面中通过改变 <code>window.location</code> 来载入b 页面，因为我们现在需要实现的是 a 页面不跳转，但是也能够获取到 b 中的数据</p>
 <blockquote>
 <p>究竟要怎么实现呢？其实还是要靠一个中间人页面 c </p>
 <p>首先中间人 c 要和 a 是同域</p>
@@ -843,7 +844,7 @@ io.on(&#39;connection&#39;, (socket) =&gt; {
 })</code></pre>
 <p>如上所示，使用了 <code>Socket.io</code> 之后的 <code>websocket</code> 连接是不是超级简单呢，跟着文档自己动手试试吧</p>
 <h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>欢迎大家关注公众号「不正经的前端」，时不时发一篇文章，也没有花里胡哨的推广和广告，希望可以让大家随意点开一篇文章，都可以看到满满的干货，也可以直接加机器人好友备注「加群 | 前端 | 后端 | 全栈」自动通过，通过后回复「加群」加入Web圈交流群，闲聊、吐槽、解决问题、交朋友都可以，当然技术为主</p>
-<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200512231111406.png" srcset="/blog/img/loading.gif" alt=""></p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200713004935853.png" srcset="/blog/img/loading.gif" alt=""></p>
 <p>按照时间线贴下了总结的比较全的几个帖子，还有其他的琐碎的文章，比较多就不贴了，这些文章都写的差不多，可能之间有互相抄袭，有互相借鉴，这些都是避免不了的，此文写的时候也借鉴了这些文章，只不过我手敲了一遍例子，又用我自己的理解码下来了，为此花了1周的业余时间，内容上与下面作者写的有些许雷同，那实属无奈，可以说是知识点就那么多，大家的总结稍有不同的地方就剩表达的语法，我也难受，还特意找了工具鉴别了下相似度，以免被误会，毕竟我也特别反感搬运工，嗯，又是一个深夜，终于收工了，睡觉喽</p>
 <blockquote>
 <p>参考文章</p>

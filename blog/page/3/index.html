@@ -145,6 +145,61 @@
     
     
       <div class="col-12 col-md-4 m-auto">
+        <a href="/blog/2018/08/26/vue/Vue%E6%89%93%E5%8C%85%E5%90%8Eindex.html%E4%B8%AD%E6%97%A0%E5%BC%95%E5%8F%B7/" target="_self">
+          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/vue01.jpg" srcset="/blog/img/loading.gif" alt="Vue打包后index.html中无引号" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/blog/2018/08/26/vue/Vue%E6%89%93%E5%8C%85%E5%90%8Eindex.html%E4%B8%AD%E6%97%A0%E5%BC%95%E5%8F%B7/">
+        <p class="h4 index-header">Vue打包后index.html中无引号</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">Vue 打包后 index.html 中无引号嗯，历经了千山万水，踩过了无数个坑，终于打包成功了
+点击index.html，报错了，打开代码一看，index.html中路径都不带引号，如下。。。
+&lt;link href=/static/css/app.262f48fe370f0ecbe3bd043450d7d62e.css rel=stylesheet&gt;
+手动加吧，可行，但是一次又一次打包都手动有点浪费时间
+嗯，聪明人有办法
+找打包配置吧，在build目录下有一个webpack.prod.conf.js文件
+这个文件中搜索minify，这个对象是压缩配置
+在这个对象中有一个叫removeAttributeQuotes的属性，就是删除属性引用的意思
+它的值默认为true，那就直接把他改成false就好了
+现在可以再次build一下试试看了
+如果index.html中还是没有引号，就把minify对象都注释再build
+完美解决，perfect！！！
+</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2018-08-26&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Vue%E7%9B%B8%E5%85%B3">Vue相关</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Vue">Vue</a>&nbsp;
+          
+            <a href="/tags/Bug">Bug</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
         <a href="/blog/2018/06/25/javascript/function&!/" target="_self">
           <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/js.jpg" srcset="/blog/img/loading.gif" alt="function与感叹号" class="img-fluid rounded z-depth-3 index-thumbnails">
         </a>
