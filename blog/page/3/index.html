@@ -145,6 +145,73 @@
     
     
       <div class="col-12 col-md-4 m-auto">
+        <a href="/blog/2018/09/01/vue/Vue%E6%89%93%E5%8C%85%E5%90%8E%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E8%B7%AF%E5%BE%84%E9%94%99%E8%AF%AF/" target="_self">
+          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/vue01.jpg" srcset="/blog/img/loading.gif" alt="Vue打包后静态资源路径错误" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/blog/2018/09/01/vue/Vue%E6%89%93%E5%8C%85%E5%90%8E%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E8%B7%AF%E5%BE%84%E9%94%99%E8%AF%AF/">
+        <p class="h4 index-header">Vue打包后静态资源路径错误</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">Vue 打包后静态资源路径错误vue 项目打包完了，dist 文件也生成了，运行一下，又报错了
+错误还不少，报了好多资源路径找不到的错误，大概有两种
+
+一种是 js 或 css 文件引入路径错误，找不到文件
+一种是 css 中的图片路径错误，找不到图片
+
+#############################################
+
+js 或 css 文件引入路径错误解决办法如下：
+
+不知道大家发现没有，所有的路径错误都是少了个点，例如：
+src=/static/js/app.5d7099352641a1a9dd32.js
+知道原因了就找解决办法，手动加也行，不过为了每次打包完即用
+在配置文件里改，一劳永逸
+找到config/index.js 配置文件，找build打包对象里的assetsPublicPath属性
+默认值为/，更改为./就好了
+
+
+css 中的图片路径错误，找不到图片解决如下
+
+在 css 里引入图片路径打包的时候路径会错
+打开build/utils.js文件，把打包 css 文件的配置加一个打包路径即可
+加一行代码，如下
+
+</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2018-09-01&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Vue%E7%9B%B8%E5%85%B3">Vue相关</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Vue">Vue</a>&nbsp;
+          
+            <a href="/tags/Bug">Bug</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
         <a href="/blog/2018/08/26/vue/Vue%E6%89%93%E5%8C%85%E5%90%8Eindex.html%E4%B8%AD%E6%97%A0%E5%BC%95%E5%8F%B7/" target="_self">
           <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/vue01.jpg" srcset="/blog/img/loading.gif" alt="Vue打包后index.html中无引号" class="img-fluid rounded z-depth-3 index-thumbnails">
         </a>
