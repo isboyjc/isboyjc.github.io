@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/avatar.jpeg">
+  <link rel="icon" type="image/png" href="/blog/img/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="李建超,isboyjc,句末">
+  <title>让GIS三维可视化变得简单-初识Cesium ~ ISBOYJC</title>
+
+  <link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css"  >
+<link rel="stylesheet" href="/blog/lib/bootstrap/css/bootstrap.min.css"  >
+<link rel="stylesheet" href="/blog/lib/mdbootstrap/css/mdb.min.css"  >
+<link rel="stylesheet" href="/blog/lib/github-markdown/github-markdown.min.css"  >
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+
+  <link rel="stylesheet" href="/blog/lib/prettify/github-v2.min.css"  >
+
+<link rel="stylesheet" href="/blog/css/main.css"  >
+
+
+  <link rel="stylesheet" href="/blog/lib/fancybox/jquery.fancybox.min.css"  >
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/">首页</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/archives/">归档</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/categories/">分类</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('/blog/img/banner/b024.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  星期一, 七月 27日 2020, 1:15 凌晨
+                </p>
+              
+
+              <p>
+                
+                  
+                  &nbsp;<i class="far fa-chart-bar"></i>
+                  <span class="post-count">
+                    3.5k 字
+                  </span>&nbsp;
+                
+
+                
+                  
+                  &nbsp;<i class="far fa-clock"></i>
+                  <span class="post-count">
+                      12 分钟
+                  </span>&nbsp;
+                
+
+                
+                  <!-- 不蒜子统计文章PV -->
+                  
+                  &nbsp;<i class="far fa-eye" aria-hidden="true"></i>&nbsp;
+                  <span id="busuanzi_container_page_pv">
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>&nbsp;
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <h1 id="让GIS三维可视化变得简单-初识Cesium"><a href="#让GIS三维可视化变得简单-初识Cesium" class="headerlink" title="让GIS三维可视化变得简单-初识Cesium"></a>让GIS三维可视化变得简单-初识Cesium</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200715235121472.png" srcset="/blog/img/loading.gif" alt=""></p>
+<p>从去年开始无脑接触 <code>Cesium</code> 三维 GIS 可视化，入坑之后一直到到现在，其实已经写了多个项目了，中间也遇到了很多坑点，很早就想分享其中所获了，只是觉得不太专业而且没有太多时间，拖到现在，从开始接触 <code>Cesium</code> ，加了一个QQ交流群，从刚开始的 200 人，到现在的 3000 人，好像使用 Cesium 做可视化方向的人越来越多了，并且其中很多人都是如我一样，从前端半路入坑</p>
+<p>记得好像是公众号「Cesium中文网」曾发过一篇文章名叫「Cesium只剩可视化了吗」个人觉得写的很棒，虽然 Cesium 不止是可以做可视化这么简单，但是目前大部分选择投入其中的人是奔着可视化这个方向的，这点从 300 到 3000 足以证明</p>
+<p>个人写作习惯篇幅很长，文章产出总是很慢，之所以还想要写这个系列的文章，大概有三点</p>
+<ul>
+<li>Cesium 毕竟是一个世界级 <code>JavaScript</code> 开源产品，做 CS 还好，但是做 BS，特别是可视化产品是需要扎实的前端基础的，相比较下专业的 GIS 对前端一些框架了解好像不太多，并不能很好的把自己丰富的 GIS 知识或者说一些很强大的功能在前端炫酷的展现出来，毕竟功能再强大，不经过雕琢和装饰总归还是不能被人推崇的</li>
+<li>近两年前端同学半路入坑 Cesium 的人太多了，但是由于没有扎实的 GIS 基础，涉及深入一点的 GIS 核心的效果实现并不容易，一路上的磕磕绊绊实在是太多了，这个是亲身经历，且十分惨痛</li>
+<li>关于 Cesium，一直是自己在摸索，项目也写不少了，但是肯定有很多地方在更为专业的人看来是闹着玩一样，所以水水文章看看进自己脑子的知识有哪些是炸弹，回顾一遍排排雷，查漏补缺</li>
+</ul>
+<p>其实我个人对 CS 方面完全没有经验，BS 做可视化有些项目经验，但是说实话，只懂皮毛，不过在前进的道路上爬了太多的坑，所以可以与大家分享些爬坑经验，也充实下自己，涉入 GIS 不会很深，不过一般的还是可以的，算带大家入入门吧，也希望可以和大家一起查漏补缺，正所谓山中无老虎，猴子称大王，没错，我就是那只猴子，谁让现在Cesium相关的技术帖辣么少呢</p>
+<p>写的帖子目前想法是除了入门之外会更倾向于各种好玩炫酷的效果制作，所以它也会更倾向于实战系列，你也可以把它当作入门级教程，这个系列我尽量每文简短些，控制在5000字以内，让大家看着舒服 😄</p>
+<p><strong>PS：</strong> </p>
+<ul>
+<li><p><strong>CS</strong> 指 <code>Client/Server</code>，客户端/服务器模式，桌面级应用，响应速度快，安全性强，个性化能力强，响应数据较快，兼容性差，不跨平台，开发成本高</p>
+</li>
+<li><p><strong>BS</strong> 指 <code>Browser/Server</code>，浏览器/服务器模式，Web应用，可以实现跨平台，客户端零维护，共享性强，但是个性化能力稍低，响应速度稍慢</p>
+</li>
+</ul>
+<h2 id="得瑟一下"><a href="#得瑟一下" class="headerlink" title="得瑟一下"></a>得瑟一下</h2><p>看到这篇文章时，可能大家对 Cesium 有所了解，也可能一无所知，甚至不知道它能干什么，先给大家看一个我这边刚入坑时做的第一个基于 Cesium 的可视化产品，现在看其实挺一般的，不过当时刚做出来时确实是挺开心挺有成就感的，也让大家对 Cesium 加深下了解，当然这个项目中只是简单的运用了 Cesium，它远不止于此</p>
+<ul>
+<li><p><a href="http://villageapi.sdzhujialin.com/zjl_3d/index.html" target="_blank" rel="noopener">线上预览</a>  电脑配置低的话还是查看GIF吧</p>
+</li>
+<li><p><a href="https://gitee.com/IsboyJC/PictureBed/raw/master/other/20190929_175200.2020-07-2723_56_55.gif" target="_blank" rel="noopener">GIF预览</a>    压缩的比较厉害，高清预览视频可以到公众号「不正经的前端」查看</p>
+</li>
+</ul>
+<p>那么接下来话不多说，赶紧来认识下 Cesium 吧</p>
+<h2 id="Cesium简介"><a href="#Cesium简介" class="headerlink" title="Cesium简介"></a>Cesium简介</h2><h3 id="什么是Cesium"><a href="#什么是Cesium" class="headerlink" title="什么是Cesium"></a>什么是Cesium</h3><p>Cesium 是一款面向三维地球和地图的，世界级的 <code>JavaScript</code> 开源产品，它提供了基于 <code>JavaScript</code> 语言的开发包，方便用户快速搭建一款零插件的虚拟地球 Web 应用，并在性能，精度，渲染质量以及多平台，易用性上都有高质量的保证</p>
+<p>Cesium是基于 <code>Apache2.0</code> 许可的开源程序，它可以免费的用于商业和非商业用途，它隶属于 AGI（Analytical Graphics Incorporation）公司，三位创始人曾在通用公司宇航部的供职工程师，提供 STK（System/Satellite Toolkit Kit）和 Cesium两款产品，该公司是航天分析软件的领导者，而 STK 则是该公司的旗舰产品，比如 <code>马航MH370</code> 搜救过程就采用了 STK 软件，经过多年来在时空数据的积累，AGI 公司逐渐掌握了大量 3D 可视化技术，也感受到各行各业对海量 3D 数据的强烈需求，因此于2011年创建了 CesiumJS 开源项目，围绕 Cesium 生态圈打造了一套安全可靠易扩展且平台独立的企业级解决方案</p>
+<p>而 Chrome 也是在2011年2月份推出了支持 WebGL 的第一个版本，在这点上，Cesium算是第一个敢吃螃蟹的人，Cesium 原意是化学元素铯，铯是制造原子钟的关键元素，通过命名强调了 Cesium 产品专注于基于时空数据的实时可视化应用</p>
+<p>至今，CesiumJS 的下载量超过 <code>1,000,000</code>，是一个为数百万用户提供了强大的应用程序</p>
+<p>作为前端程序员，只是单纯做可视化，其实在我看来， Cesium 与 <code>Leaflet</code> 以及 <code>OpenLayer</code> 等没有本质的区别，只是Cesium支持三维场景等等，做的更漂亮</p>
+<h3 id="Cesium可以做什么"><a href="#Cesium可以做什么" class="headerlink" title="Cesium可以做什么"></a>Cesium可以做什么</h3><p>支持全球级别的高精度的地形和影像服务</p>
+<p>支持 <code>2D、2.5D、3D</code> 形式的地图展示，真正的二三维一体化</p>
+<p>支持矢量、海量模型数据（倾斜，BIM，点云等）</p>
+<p>支持基于时间轴的动态数据可视化展示</p>
+<h3 id="Cesium的浏览器兼容性"><a href="#Cesium的浏览器兼容性" class="headerlink" title="Cesium的浏览器兼容性"></a>Cesium的浏览器兼容性</h3><p>学习和使用 Cesium 前，首先要检查一下你的浏览器是否支持 <code>WebGL</code>，目前，大多数平台和浏览器都支持WebGL，在这些环境下运行 Cesium 并没有太大的问题，但效果和性能是否能够满足不同的需求，就需要考虑很多细节和额外因素</p>
+<p>大多数平台和浏览器都支持 <code>WebGL1.0</code> 标准，也就是 <code>OpenGL ES2.0</code> 规范，2017年年初，<code>Chrome</code> 新版本低调的支持 <code>WebGL2.0</code>，随着各硬件厂商 GPU 性能的提升和 <code>WebGL2.0</code> 规范的成熟，<code>WebGL</code> 技术会有更大的提升潜力，不过无论是 PC 还是移动端，<code>Chrome</code> 都是 <code>WebGL</code> 开发和应用的最佳平台，所以，如果没有特殊的硬性要求，建议大家使用 <code>Chrome</code> 学习和开发 Cesium</p>
+<p>你可以在浏览器中访问 <a href="https://webglreport.com/" target="_blank" rel="noopener">WebGL Report</a> 来查看你的浏览器支持情况</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200715000329348.png" srcset="/blog/img/loading.gif" alt=""></p>
+<p>如上图红框中显示，这个浏览器支持 <code>WebGL 1</code>，你也可以点击 <code>WebGL 2</code> 查看自己的浏览器支持情况</p>
+<p>清单中除了显示了你的浏览器是否支持 <code>WebGL</code> 标准，还有很多，比如</p>
+<ul>
+<li>是否支持深度纹理</li>
+<li>顶点着色器的最大属性数</li>
+<li>是否支持ANGLE 扩展</li>
+<li>等等</li>
+</ul>
+<h2 id="一个HelloWorld程序"><a href="#一个HelloWorld程序" class="headerlink" title="一个HelloWorld程序"></a>一个HelloWorld程序</h2><p>其实上面的都是废话，但是你又必须要知道，其实对我们写程序是没有一点帮助的，只是提供数据为了给大家了解下 Cesium 的强大</p>
+<p>有的人可能认为学习 Cesium 之前应该学习学习 GIS 基础架构、坐标系、投影、存储类型等等等等，其实我觉得如果你有这些常识，那自然是极好的，但是如果没这些知识储备，在刚开始学习 Cesium 的时候，学习这些乱七八糟的，完全没必要</p>
+<p>因为这些基础知识学起来很容易打磨积极性，还不如先写几个 demo 程序来的实在，毕竟总得先体会下它的魅力，就像你走在路上，你看到前面有个坑，那肯定会绕过去，但是如果坑上有些草，还有些漂亮的花，那就不一样了</p>
+<p>SO，我们先搞个地球出来，后面哪里有需要再穿插说一些常识</p>
+<h3 id="编译器选择"><a href="#编译器选择" class="headerlink" title="编译器选择"></a>编译器选择</h3><p>实力推荐 <code>VS Code</code> 一把梭，当然实在用不习惯其他编译器也都行，看个人习惯，实力强用记事本都没得关系</p>
+<h3 id="下载Cesium包"><a href="#下载Cesium包" class="headerlink" title="下载Cesium包"></a>下载Cesium包</h3><p>首先，我们要下载 Cesium 包，官网下载即可，Cesium 每个月都会更新一个版本，一直在迭代，这点就足以证明它的活跃性以及未来，地址如下 👇</p>
+<ul>
+<li><a href="https://cesium.com/cesiumjs/" target="_blank" rel="noopener">Cesium Download</a></li>
+</ul>
+<p>下载下来解压后你会发现有很多文件，如下图</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200723003350308.png" srcset="/blog/img/loading.gif" alt=""></p>
+<p>我们下载这个包里包括 Cesium API 源代码 Source 文件夹，以及编译后的 Build 文件夹，还有Demo、API文档、沙盒等等，这些都不用管</p>
+<p>我们只需要 <code>Build</code> 文件夹下面的 <code>Cesium</code> 这个文件夹，它是编译后 Cesium 包的正式版本，开发的话只需要这个就完了</p>
+<h3 id="初始化地球"><a href="#初始化地球" class="headerlink" title="初始化地球"></a>初始化地球</h3><p>首先，我们找地方新建一个目录，这里目录名为 <code>demo</code> ，我们把上面说的 Cesium 这个文件夹拖进来</p>
+<p>接着，我们在 demo 目录下新建一个 <code>index.html</code> 文件，初始化一个地球，只需四步</p>
+<p><strong>No.1</strong> 引入 <code>cesium.js</code>，该文件定义了 Cesium 对象，它包含了我们需要的一切</p>
+<pre><code class="html">&lt;script src=&quot;./Cesium/Cesium.js&quot;&gt;&lt;/script&gt;</code></pre>
+<p><strong>No.2</strong> 引入 <code>widgets.css</code>，为了能使用Cesium 各个可视化控件 </p>
+<pre><code class="css">@import url(./Cesium/Widgets/widgets.css)</code></pre>
+<p><strong>No.3</strong> 在 <code>HTML</code> 的 <code>body</code> 中我们创建一个 <code>div</code>，用来作为三维地球的容器</p>
+<pre><code class="html">&lt;div id=&quot;cesiumContainer&quot;&gt;&lt;/div&gt;</code></pre>
+<p><strong>No.4</strong> 在 JS 中初始化 <code>CesiumViewer</code> 实例</p>
+<pre><code class="js">let viewer = new Cesium.Viewer(&#39;cesiumContainer&#39;)</code></pre>
+<p>完整代码如下</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;script src=&quot;./Cesium/Cesium.js&quot;&gt;&lt;/script&gt;
+    &lt;style&gt;
+      @import url(./Cesium/Widgets/widgets.css);
+      html,body,#cesiumContainer {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id=&quot;cesiumContainer&quot;&gt;&lt;/div&gt;
+    &lt;script&gt;
+      window.onload = function () {
+        let viewer = new Cesium.Viewer(&quot;cesiumContainer&quot;)
+      }
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h3 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h3><p>平常我们写一个页面，浏览器打开 <code>html</code> 文件即可，在写 Cesium 程序的时候，不要本地双击浏览器运行，因为在实际工作中，它是需要运行在Web服务器上的</p>
+<p>这里我们使用Node来搭建这个服务，首先你要在电脑装Node，这个不过多赘述，不了解自行百度安装即可</p>
+<p>官网包括一般的教程里这个时候就要手写代码用 <code>express</code> 或者 <code>Koa</code> 简单的搭一个Web服务了，但是这也是没有必要的，这里我们只是写个 demo，没必要再去写后端代码什么的，太麻烦，我们装一个 <code>live-server</code> 就行了</p>
+<p><code>live-server</code> 是一个具有实时加载功能的小型服务器，简单说，你装了它，直接在当前目录命令行运行命令这个服务就起来了</p>
+<p>安装 <code>live-server</code> 命令如下</p>
+<pre><code class="js">npm install -g live-server</code></pre>
+<p>再次强调，这只是一个小 demo，一般来说正常项目开发中 <code>Vue+Cesium</code> 我觉得是最佳实践了，而使用 Vue 来开发的话  <code>Vue-CLI</code> 本身就是一个本地服务，我们如果要原生开发的话 <code>live-server</code> 就行了，虽然写个Web服务不难，但终归是浪费时间</p>
+<p>当我们 Node 安装好了，也装上了 <code>live-server</code> 后，我们在终端  <code>cd</code> 到项目根目录下 ，执行下面命令</p>
+<pre><code class="js">live-server</code></pre>
+<p>默认启动的是8080端口，如下图</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200723230404008.png" srcset="/blog/img/loading.gif" alt=""></p>
+<p>紧接着，直接在浏览器输入 <code>http://127.0.0.1:8080</code> ，你的第一个 Cesium 程序就 👌 了</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/2020-07-27-cesiuminit-gif.gif" srcset="/blog/img/loading.gif" alt=""></p>
+<p>如上所示，页面上就会呈现一个 3D 的地球了，是不是很简单，有没有勾起你入手的欲望呢？</p>
+<p>这次就到这里，下次我们来说一说 Vue 里面使用 Cesium 开发以及一些注意事项，一步一步来，心急吃不了热豆腐，每篇文末会给大家列出我一些相关的学习地址</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>初识 Cesium 一定要知道的几个网站</p>
+<ul>
+<li><p><a href="https://cesium.com/docs/" target="_blank" rel="noopener">Cesium 官方教程</a> Cesium出的官方教程，英文的，可以翻译着看看</p>
+</li>
+<li><p><a href="https://cesium.com/docs/cesiumjs-ref-doc/" target="_blank" rel="noopener">Cesium API英文官方文档</a>  Cesium的API太多了，不过有遇到不知道API可以查一查，不过也是英文的</p>
+</li>
+<li><p><a href="http://cesium.xin/cesium/cn/Documentation1.62/" target="_blank" rel="noopener">Cesium API中文文档</a> Cesium中文网翻译的API文档，不太全，不过初步肯定是够用的</p>
+</li>
+<li><p><a href="https://sandcastle.cesium.com/" target="_blank" rel="noopener">Cesium Sandcastle 沙盒示例</a> Cesium官方的一些示例程序，没事可以多逛逛</p>
+</li>
+<li><p><a href="http://cesium.xin/" target="_blank" rel="noopener">Cesium 中文网</a> Cesium中文网，里面有系列教程，部分是免费的，可以学习很多知识</p>
+</li>
+</ul>
+<p>如果是刚接触Cesium，这些网站无论如何都要点进去看一看，先简单过一遍即可，后期会用上的</p>
+<p>文章收录在 GitHub，更多精彩请看 <a href="https://github.com/isboyjc/blog/issues" target="_blank" rel="noopener">isboyjc/blog/issues</a> </p>
+<p>是前端，又不只是前端，所以不正经，认真分享干货，公众号「不正经的前端」，欢迎关注</p>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/Cesium%E7%B3%BB%E5%88%97">Cesium系列</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/Cesium">Cesium</a>
+                
+                  <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96">数据可视化</a>
+                
+                  <a class="hover-with-bg" href="/tags/WebGIS">WebGIS</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">水平有限，欢迎指错！<br />联系邮箱：214930661@qq.com<br />本站文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" target="_blank" rel="nofollow noopener noopener">CC BY-SA 3.0协议</a> ，商业转载请联系作者获得授权，非商业转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="/blog/img/gongzhonghao.jpg" srcset="/blog/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><div style="text-align: center;">更多精彩，请关注公众号【不正经的前端】</div> <div style="text-align: center;">回复【加群】加入技术交流群，回复【资料】获取精选学习资料</div>
+    </div>
+  </div>
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+      <br><br>
+      
+      
+  <div id="vcomments" style="width: 90%; margin: 0 auto;"></div>
+  <script defer src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var notify = 'false' === true;
+    var verify = 'false' === true;
+    var oldLoad = window.onload;
+    window.onload = function () {
+      new Valine({
+        el: '#vcomments',
+        notify: notify,
+        verify: verify,
+        app_id: "OuIO62anqvXdvjruYtvDefqV-gzGzoHsz",
+        app_key: "G9BfnEel5vlsGHJqmPkr2B1P",
+        placeholder: "说点什么",
+        avatar: "retro",
+        meta: ['nick', 'mail', 'link'],
+        pageSize: "10",
+      });
+      oldLoad && oldLoad();
+    };
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"
+      ><b>Hexo</b></a
+    >
+    <i class="iconfont icon-love"></i>
+    <a
+      href="https://github.com/fluid-dev/hexo-theme-fluid"
+      target="_blank"
+      rel="nofollow noopener"
+    >
+      <b>Fluid</b></a
+    >
+    <br />
+
+    
+  
+    <!-- 不蒜子统计PV -->
+    
+    &nbsp;<span id="busuanzi_container_site_pv">总访问量 
+          <span id="busuanzi_value_site_pv"></span> 次</span>&nbsp;
+  
+  
+    <!-- 不蒜子统计UV -->
+    
+    &nbsp;<span id="busuanzi_container_site_uv">总访客数 
+            <span id="busuanzi_value_site_uv"></span> 人</span>&nbsp;
+  
+  <br>
+
+ 
+
+
+    <!-- cnzz Analytics icon -->
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/blog/lib/jquery/jquery.min.js" ></script>
+<script src="/blog/lib/popper/popper.min.js" ></script>
+<script src="/blog/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/blog/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/blog/js/main.js" ></script>
+
+
+  <script src="/blog/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/blog/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/blog/js/post.js" ></script>
+
+
+
+  <script src="/blog/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+<!-- Plugins -->
+
+
+  
+
+  
+
+  
+    <!-- Tencent Analytics -->
+    <script>
+      var _mtac = {};
+      (function () {
+        var mta = document.createElement("script");
+        mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+        mta.setAttribute("name", "MTAH5");
+        mta.setAttribute("sid", "500711128");
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(mta, s);
+      })();
+    </script>
+  
+
+  
+
+  <!-- cnzz Analytics -->
+  
+
+
+
+  <script src="/blog/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/blog/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "让GIS三维可视化变得简单-初识Cesium&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/blog/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/blog/js/local-search.js" ></script>
+  <script>
+    var path = "/blog/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/blog/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

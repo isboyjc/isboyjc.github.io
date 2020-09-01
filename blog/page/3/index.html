@@ -145,6 +145,197 @@
     
     
       <div class="col-12 col-md-4 m-auto">
+        <a href="/blog/2018/09/11/vue/Error%20in%20parsing%20SVG%20Unquoted%20attribute%20value/" target="_self">
+          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/vue01.jpg" srcset="/blog/img/loading.gif" alt="Vue中npm run build报“Error in parsing SVG Unquoted attribute value”" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/blog/2018/09/11/vue/Error%20in%20parsing%20SVG%20Unquoted%20attribute%20value/">
+        <p class="h4 index-header">Vue中npm run build报“Error in parsing SVG Unquoted attribute value”</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">Vue 中 npm run build 报“Error in parsing SVG: Unquoted attribute value”自己做的一个 Vue 项目，在打包时老是报这个错误
+# Error in parsing SVG: Unquoted attribute value
+查了查网上说的，都说报错原因是压缩和抽离 CSS 的插件中只允许 SVG 使用双引号
+就是项目中外部引入的 CSS 文件里的 SVG 只能是双引号
+我找了好久，这可把我坑坏了。。。
+想想那段时间真是难受。。。
+后来找到了，分享一下，让大家快点脱坑。。。
+首先，如果你项目中使用了 mui 的话应该在这里改
+找到 mui 文件下的 iconfont.css 文件
+# mui/css/iconfont.css
+
+不要以为完了，还有
+找到 mui 文件下的 mui.css 文件
+# mui/css/mui.css
+
+以上两个文件修改了再次 build
+如果还报 SVG 的错误，请查看你所有引入的外部 CSS 文件吧
+如果你确定你引入的 CSS 文件中确实没有 SVG 或者是 SVG 确实是双引号，那就没办法了老</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2018-09-11&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Vue%E7%9B%B8%E5%85%B3">Vue相关</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Vue">Vue</a>&nbsp;
+          
+            <a href="/tags/Bug">Bug</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/blog/2018/09/09/vue/Vue%E4%B8%8D%E6%98%AF%E5%86%85%E9%83%A8%E6%88%96%E5%A4%96%E9%83%A8%E5%91%BD%E4%BB%A4%EF%BC%8C%E4%B9%9F%E4%B8%8D%E6%98%AF%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%9A%84%E7%A8%8B%E5%BA%8F%E6%88%96%E6%89%B9%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6/" target="_self">
+          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/vue01.jpg" srcset="/blog/img/loading.gif" alt="Vue不是内部或外部命令，也不是可执行的程序或批处理文件" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/blog/2018/09/09/vue/Vue%E4%B8%8D%E6%98%AF%E5%86%85%E9%83%A8%E6%88%96%E5%A4%96%E9%83%A8%E5%91%BD%E4%BB%A4%EF%BC%8C%E4%B9%9F%E4%B8%8D%E6%98%AF%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%9A%84%E7%A8%8B%E5%BA%8F%E6%88%96%E6%89%B9%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6/">
+        <p class="h4 index-header">Vue不是内部或外部命令，也不是可执行的程序或批处理文件</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">vue 不是内部或外部命令，也不是可执行的程序或批处理文件平常我们搭个脚手架，可能分分钟就完事了，但是容易忽略一些细节，比如搭脚手架时 cmd 查 vue 版本号报vue不是内部或外部命令，也不是可执行的程序或批处理文件这种错误，明明 vue 下载了，脚手架下载完了怎么也初始化不了，你遇到过吗？
+如果你确实已经在全局状态下安装了 vue 和 vue-cli，cmdvue -V或vue init还是报这个错，嗯，有必要往下看看！
+解决办法：
+配置 vue 的环境变量
+
+搜索 vue.cmd 文件，复制该文件地址，待用
+注：如果搜索不到，请再下载一遍 vue。。
+
+
+
+windows 下进入控制面板\系统和安全\系统点击更改设置
+
+
+
+点击高级–环境变量
+
+
+
+新建一个系统变量
+
+
+
+输入变量名为 Path，变量值为刚复制的 vue.cmd 文件路径
+
+
+
+保存重新运行 cmd 输入vue -V即可
+
+完美结束！！！
+</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2018-09-09&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Vue%E7%9B%B8%E5%85%B3">Vue相关</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Vue">Vue</a>&nbsp;
+          
+            <a href="/tags/Bug">Bug</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/blog/2018/09/06/other/GitHub%E5%85%8D%E8%B4%B9%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99/" target="_self">
+          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/github01.jpg" srcset="/blog/img/loading.gif" alt="GitHub 免费搭建个人网站" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/blog/2018/09/06/other/GitHub%E5%85%8D%E8%B4%B9%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99/">
+        <p class="h4 index-header">GitHub 免费搭建个人网站</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">GitHub 免费搭建个人网站学习前端的人应该知道，开始学习前端时，心里想的肯定是我一定要给自己做一个的非常棒的网站，学完之后网站做好了，但是要怎么上线呢？？？
+作为一个前端，拥有有自己的个人网站，算是迈出了前端道路的第一步！
+本文目的通过GitHub Pages免费快速的搭建个人网站，文章随长，其实非常简单，写的详细是为了能够让多数人都能够看得懂
+目录建站常识首先了解常识，建站三部曲：
+
+网站项目
+服务器
+域名
+
+简单来说，就是我们要有一个域名，然后绑定服务器，再把网站上传到服务器上，这样就可以通过域名访问我们的网站了
+网站项目就是你写的网站文件，这个如果不会的话请去学习前端 w3school 传送门
+服务器就是网络中为用户提供服务的专用设备。分为访问、文件、数据库、通信等不同功能的服务器。那么要怎样拥有一个服务器呢，(用钱就好了！！！)，正规途径是在网上买一个服务器，看图
+
+刚开始玩的话买一个空间小的相对便宜的就行，当然有钱请随意！！！
+域名就是访问网站的网址，怎样获取域名，没错还是用钱，看图
+
+我的域名是在阿里云注册的，域名也是有区别的，后缀不一，长短不一，相对价钱就不一，如我的</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2018-09-06&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Web%E7%9B%B8%E5%85%B3">Web相关</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/GitHub">GitHub</a>&nbsp;
+          
+            <a href="/tags/%E5%BB%BA%E7%AB%99">建站</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
         <a href="/blog/2018/09/01/vue/Vue%E6%89%93%E5%8C%85%E5%90%8E%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E8%B7%AF%E5%BE%84%E9%94%99%E8%AF%AF/" target="_self">
           <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/vue01.jpg" srcset="/blog/img/loading.gif" alt="Vue打包后静态资源路径错误" class="img-fluid rounded z-depth-3 index-thumbnails">
         </a>

@@ -145,6 +145,163 @@
     
     
       <div class="col-12 col-md-4 m-auto">
+        <a href="/blog/2020/08/31/cesium/%E8%AE%A9GIS%E4%B8%89%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96%E5%8F%98%E5%BE%97%E7%AE%80%E5%8D%95-Cesium%E5%9C%B0%E7%90%83%E5%88%9D%E5%A7%8B%E5%8C%96/" target="_self">
+          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200715235121472.png" srcset="/blog/img/loading.gif" alt="让GIS三维可视化变得简单-Cesium地球初始化" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/blog/2020/08/31/cesium/%E8%AE%A9GIS%E4%B8%89%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96%E5%8F%98%E5%BE%97%E7%AE%80%E5%8D%95-Cesium%E5%9C%B0%E7%90%83%E5%88%9D%E5%A7%8B%E5%8C%96/">
+        <p class="h4 index-header">让GIS三维可视化变得简单-Cesium地球初始化</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">让GIS三维可视化变得简单-Cesium地球初始化前言开发中我们通常会需要一个干净的三维地球实例，本文将介绍 Cesium 如何初始化一个地球，包括地图控件的显示隐藏以及一些常用影像和标注的加载
+预览Demo 
+Cesium 是一款面向三维地球和地图的，世界级的 JavaScript 开源产品，它提供了基于 JavaScript 语言的开发包，方便用户快速搭建一款零插件的虚拟地球 Web 应用，并在性能，精度，渲染质量以及多平台，易用性上都有高质量的保证
+想了解更多 Cesium 的介绍请看 👉 让GIS三维可视化变得简单-初识Cesium 
+环境搭建本文及后续文章启动环境皆是基于 Vue-CLI3.X+ 
+使用我自己写的 CLI 插件 vue-cli-plugin-cesium 零配置搭建 Cesium 环境
+具体环境搭建可看 👉 让GIS三维可视化变得简单-Vue项目中集成Cesium 
+地球初始化申请Token在正式开发之前，我们首先需要去注册一个免费的 Cesium ion 账户
+步骤如下
+首先，打开 https://cesium.com/ion/ 然后注册一个新的账户
+
+</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-08-31&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Cesium%E7%B3%BB%E5%88%97">Cesium系列</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Cesium">Cesium</a>&nbsp;
+          
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96">数据可视化</a>&nbsp;
+          
+            <a href="/tags/WebGIS">WebGIS</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/blog/2020/07/29/cesium/%E8%AE%A9GIS%E4%B8%89%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96%E5%8F%98%E5%BE%97%E7%AE%80%E5%8D%95-Vue%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Cesium/" target="_self">
+          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200715235121472.png" srcset="/blog/img/loading.gif" alt="让GIS三维可视化变得简单-Vue项目中集成Cesium" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/blog/2020/07/29/cesium/%E8%AE%A9GIS%E4%B8%89%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96%E5%8F%98%E5%BE%97%E7%AE%80%E5%8D%95-Vue%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Cesium/">
+        <p class="h4 index-header">让GIS三维可视化变得简单-Vue项目中集成Cesium</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">让GIS三维可视化变得简单-Vue项目中集成Cesium前言市面上的前端框架中，Vue+Cesium 可谓是最佳搭档，一般做 Cesium B 端产品的公司都会使用 Vue，所以后续内容都将基于 Vue
+通常情况下，我们要在 Vue 中使用 Cesium，首先要安装 Cesium，然后要在 vue-cli 的 webpack 配置很多东西，对一些有经验的人来说只不过麻烦些，但是对 Cesium 的初学者来说会很痛苦，因为没有使用过，也不知到要怎么配置，只能搜索网上的教程，一步一步踩坑
+其实不管是有经验或是初学者，每次写项目重复配置这些东西都很麻烦
+vue-cli-plugin-cesium 就是为了解决这个问题
+介绍vue-cli-plugin-cesium 是一款针对 Cesium 的 VueCLI 扩展插件，使用它将会让我们在 VueCLI 中零配置使用 Cesium，基于 VueCLI3.0+ 
+其实就是我开始做 Cesium 的时候，觉得每次配置太麻烦，就写了个插件免配置从而节约开发时间，后来就发到几个 Cesium 开发群里给大家体验了一波，效果还不错
+它会在我们已经创建好的</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-07-29&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Cesium%E7%B3%BB%E5%88%97">Cesium系列</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Cesium">Cesium</a>&nbsp;
+          
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96">数据可视化</a>&nbsp;
+          
+            <a href="/tags/WebGIS">WebGIS</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
+        <a href="/blog/2020/07/27/cesium/%E8%AE%A9GIS%E4%B8%89%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96%E5%8F%98%E5%BE%97%E7%AE%80%E5%8D%95-%E5%88%9D%E8%AF%86Cesium/" target="_self">
+          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200715235121472.png" srcset="/blog/img/loading.gif" alt="让GIS三维可视化变得简单-初识Cesium" class="img-fluid rounded z-depth-3 index-thumbnails">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 m-auto">
+      <a href="/blog/2020/07/27/cesium/%E8%AE%A9GIS%E4%B8%89%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96%E5%8F%98%E5%BE%97%E7%AE%80%E5%8D%95-%E5%88%9D%E8%AF%86Cesium/">
+        <p class="h4 index-header">让GIS三维可视化变得简单-初识Cesium</p>
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">让GIS三维可视化变得简单-初识Cesium前言
+从去年开始无脑接触 Cesium 三维 GIS 可视化，入坑之后一直到到现在，其实已经写了多个项目了，中间也遇到了很多坑点，很早就想分享其中所获了，只是觉得不太专业而且没有太多时间，拖到现在，从开始接触 Cesium ，加了一个QQ交流群，从刚开始的 200 人，到现在的 3000 人，好像使用 Cesium 做可视化方向的人越来越多了，并且其中很多人都是如我一样，从前端半路入坑
+记得好像是公众号「Cesium中文网」曾发过一篇文章名叫「Cesium只剩可视化了吗」个人觉得写的很棒，虽然 Cesium 不止是可以做可视化这么简单，但是目前大部分选择投入其中的人是奔着可视化这个方向的，这点从 300 到 3000 足以证明
+个人写作习惯篇幅很长，文章产出总是很慢，之所以还想要写这个系列的文章，大概有三点
+
+Cesium 毕竟是一个世界级 JavaScript 开源产品，做 CS 还好，但是做 BS，特别是可视化产品是需要扎实的前端基础的，相比较下专业的 GIS 对前端一些框架了解好像不太多，并不能很好的把自己丰富的 GIS 知识或者说一些</div>
+        </div>
+      </a>
+
+      <div>
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-07-27&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Cesium%E7%B3%BB%E5%88%97">Cesium系列</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Cesium">Cesium</a>&nbsp;
+          
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96">数据可视化</a>&nbsp;
+          
+            <a href="/tags/WebGIS">WebGIS</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4 mx-auto">
+    
+    
+      <div class="col-12 col-md-4 m-auto">
         <a href="/blog/2020/07/26/else/%E5%8A%AA%E5%8A%9B%E3%80%81%E5%A5%8B%E6%96%97%EF%BC%8C%E5%86%99%E7%BB%99%E8%87%AA%E5%B7%B1%E3%80%81%E8%AE%B2%E7%BB%99%E4%BD%A0%E5%90%AC/" target="_self">
           <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/WechatIMG111.jpeg" srcset="/blog/img/loading.gif" alt="努力、奋斗，写给自己、讲给你听" class="img-fluid rounded z-depth-3 index-thumbnails">
         </a>
@@ -179,7 +336,9 @@
         
           <i class="iconfont icon-tag"></i>
           
-            <a href="/tags/%E5%8A%B1%E5%BF%97%EF%BC%8C%E5%8A%AA%E5%8A%9B">励志，努力</a>&nbsp;
+            <a href="/tags/%E5%8A%B1%E5%BF%97">励志</a>&nbsp;
+          
+            <a href="/tags/%E5%8A%AA%E5%8A%9B">努力</a>&nbsp;
           
         
       </div>
@@ -499,167 +658,6 @@ SO，大家看的都差不多，回答也差不多，怎么突出 我们不一�
             <a href="/tags/%E9%9D%A2%E8%AF%95">面试</a>&nbsp;
           
             <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F">小程序</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-      <div class="col-12 col-md-4 m-auto">
-        <a href="/blog/2020/03/01/other/Wechaty%7CNodeJS%E5%9F%BA%E4%BA%8EiPad%E5%8D%8F%E8%AE%AE%E6%89%8B%E6%92%B8%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%BE%AE%E4%BF%A1%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%8A%A9%E6%89%8B/" target="_self">
-          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/wechaty.png" srcset="/blog/img/loading.gif" alt="Wechaty|NodeJS基于iPad协议手撸一个简单的微信机器人助手" class="img-fluid rounded z-depth-3 index-thumbnails">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/blog/2020/03/01/other/Wechaty%7CNodeJS%E5%9F%BA%E4%BA%8EiPad%E5%8D%8F%E8%AE%AE%E6%89%8B%E6%92%B8%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%BE%AE%E4%BF%A1%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%8A%A9%E6%89%8B/">
-        <p class="h4 index-header">Wechaty|NodeJS基于iPad协议手撸一个简单的微信机器人助手</p>
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">Wechaty|NodeJS 基于 iPad 协议手撸一个简单的微信机器人助手背景我是一名前端，平时也喜欢写技术博客和交朋友，为此我也创建了微信技术交流群和微信公众号，一般我都会在文章下面贴出公众号和我的个人二维码，给有兴趣的小伙伴们添加微信然后我再拉他们进群这些，但是不停的同意微信好友验证，再发送群邀请真的是太痛苦了，相信很多做公众号的小伙伴都和我一样，作为一名开发，这种重复劳动是绝对不能忍受的
-我知道也见过有些博主的微信小号是机器人，很方便，如果我也能有一个机器人小号，只是自动通过好友验证，然后关键字回复直接发送群邀请就已经非常实用了，嗯～，想想还有些兴奋
-SO，大概在 19 年 10 月吧，就陆陆续续开始了我的微信机器人之旅
-首先，我找了几个微信机器人平台，奈何价格实在不美丽
-笑话，咱可是一名正八经的开发，这种非技术手段我会用？( 其实是没得钱噻！😅 )
-说干就干，不过要从 0 到 1 的开发不太现实，所以就开始 Github 上寻找开源作品
-对比了几个比较知名的几个开源微信机器人项目
-
-itchat
-itchat是一个开源的微信个人号接口，基于 python 调用微信
-使用不</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-01&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/Web%E7%9B%B8%E5%85%B3">Web相关</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/Wechaty">Wechaty</a>&nbsp;
-          
-            <a href="/tags/NodeJS">NodeJS</a>&nbsp;
-          
-            <a href="/tags/%E5%BE%AE%E4%BF%A1%E6%9C%BA%E5%99%A8%E4%BA%BA">微信机器人</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-      <div class="col-12 col-md-4 m-auto">
-        <a href="/blog/2020/02/14/javascript/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" target="_self">
-          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/js.jpg" srcset="/blog/img/loading.gif" alt="「硬核JS」深入了解异步解决方案" class="img-fluid rounded z-depth-3 index-thumbnails">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/blog/2020/02/14/javascript/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E5%BC%82%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
-        <p class="h4 index-header">「硬核JS」深入了解异步解决方案</p>
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">
-
-「硬核 JS」深入了解异步解决方案前言Javascript 语言的执行环境是单线程(single thread，指一次只能完成一件任务，如果有多个任务，就必须排队，前面一个任务完成，再执行后面一个任务，以此类推)
-这种模式的好处是实现起来比较简单，执行环境相对单纯，坏处是只要有一个任务耗时很长，后面的任务都必须排队等着，会拖延整个程序的执行，常见的浏览器无响应(假死)，往往就是因为某一段 Javascript 代码长时间运行(比如死循环)，导致整个页面卡在这个地方，其他任务无法执行
-为了解决这个问题，Javascript 将任务的执行模式分成两种：同步(Synchronous)和异步(Asynchronous)
-同步模式 就是后一个任务等待前一个任务结束，然后再执行，程序的执行顺序与任务的排列顺序是一致的、同步的
-异步模式则完全不同，每一个任务有一个或多个回调函数(callback)，前一个任务结束后，不是执行后一个任务，而是执行回调函数，后一个任务则是不等前一个任务结束就执行，所以程序的执行顺序与任务的排列顺序是不一致的、异步的，在浏览器端，耗时很长的操作都应该异步执行，避免浏览</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-02-14&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E7%A1%AC%E6%A0%B8JS%E7%B3%BB%E5%88%97">硬核JS系列</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/JavaScript">JavaScript</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4 mx-auto">
-    
-    
-      <div class="col-12 col-md-4 m-auto">
-        <a href="/blog/2020/01/18/javascript/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6/" target="_self">
-          <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/js.jpg" srcset="/blog/img/loading.gif" alt="「硬核 JS」一次搞懂 JS 运行机制" class="img-fluid rounded z-depth-3 index-thumbnails">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 m-auto">
-      <a href="/blog/2020/01/18/javascript/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%B8%80%E6%AC%A1%E6%90%9E%E6%87%82JS%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6/">
-        <p class="h4 index-header">「硬核 JS」一次搞懂 JS 运行机制</p>
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">
-
-「硬核 JS」一次搞懂 JS 运行机制前言从开始做前端到目前为止，陆续看了很多帖子讲 JS 运行机制，看过不久就忘了，还是自己理一遍好些
-通过码字使自己对 JS 运行机制相关内容更加深刻(自己用心写过的贴子，内容也会牢记于心)
-顺道给大家看看(我太难了，深夜码字，反复修改，说这么多就是想请你点个赞在看)
-参考了很多资料(帖子)，取其精华，去其糟糠，都在文末，可自行了解
-是时候搞一波我大 js 了
-从零到一百再到一，从多方面了解 JS 的运行机制，体会更深刻，请认真读下去
-本文大致分为以下这样的步骤来帮助我们由广入深更加清晰的了解 JS 运行机制
-
-首先我们要了解进程和线程的概念
-其次我们要知道浏览器的进程线程常识
-再然后通过 Event Loop、宏任务(macrotask)微任务(microtask)来看浏览器的几个线程间是怎样配合的
-再然后通过例子来印证我们的猜想
-最后提下 NodeJS 的运行机制
-
-灵魂一问JS 运行机制在平常前端面试时不管是笔试题还是面试题命中率都极高
-说到 JS 运行机制，你知道多少
-看到这大家可能会说：JS 运行机制嘛，很简单，事件循环、宏微任务那点东</div>
-        </div>
-      </a>
-
-      <div>
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-01-18&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E7%A1%AC%E6%A0%B8JS%E7%B3%BB%E5%88%97">硬核JS系列</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/JavaScript">JavaScript</a>&nbsp;
           
         
       </div>

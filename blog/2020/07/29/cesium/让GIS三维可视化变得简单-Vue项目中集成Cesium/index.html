@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/avatar.jpeg">
+  <link rel="icon" type="image/png" href="/blog/img/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="李建超,isboyjc,句末">
+  <title>让GIS三维可视化变得简单-Vue项目中集成Cesium ~ ISBOYJC</title>
+
+  <link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css"  >
+<link rel="stylesheet" href="/blog/lib/bootstrap/css/bootstrap.min.css"  >
+<link rel="stylesheet" href="/blog/lib/mdbootstrap/css/mdb.min.css"  >
+<link rel="stylesheet" href="/blog/lib/github-markdown/github-markdown.min.css"  >
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+
+  <link rel="stylesheet" href="/blog/lib/prettify/github-v2.min.css"  >
+
+<link rel="stylesheet" href="/blog/css/main.css"  >
+
+
+  <link rel="stylesheet" href="/blog/lib/fancybox/jquery.fancybox.min.css"  >
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/">首页</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/archives/">归档</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/categories/">分类</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('/blog/img/banner/b023.jpg')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <br>
+              
+                <p class="mt-3">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp;
+                  星期三, 七月 29日 2020, 10:15 上午
+                </p>
+              
+
+              <p>
+                
+                  
+                  &nbsp;<i class="far fa-chart-bar"></i>
+                  <span class="post-count">
+                    1.8k 字
+                  </span>&nbsp;
+                
+
+                
+                  
+                  &nbsp;<i class="far fa-clock"></i>
+                  <span class="post-count">
+                      6 分钟
+                  </span>&nbsp;
+                
+
+                
+                  <!-- 不蒜子统计文章PV -->
+                  
+                  &nbsp;<i class="far fa-eye" aria-hidden="true"></i>&nbsp;
+                  <span id="busuanzi_container_page_pv">
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>&nbsp;
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <h1 id="让GIS三维可视化变得简单-Vue项目中集成Cesium"><a href="#让GIS三维可视化变得简单-Vue项目中集成Cesium" class="headerlink" title="让GIS三维可视化变得简单-Vue项目中集成Cesium"></a>让GIS三维可视化变得简单-Vue项目中集成Cesium</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>市面上的前端框架中，Vue+Cesium 可谓是最佳搭档，一般做 Cesium B 端产品的公司都会使用 Vue，所以后续内容都将基于 Vue</p>
+<p>通常情况下，我们要在 Vue 中使用 Cesium，首先要安装 Cesium，然后要在 vue-cli 的 webpack 配置很多东西，对一些有经验的人来说只不过麻烦些，但是对 Cesium 的初学者来说会很痛苦，因为没有使用过，也不知到要怎么配置，只能搜索网上的教程，一步一步踩坑</p>
+<p>其实不管是有经验或是初学者，每次写项目重复配置这些东西都很麻烦</p>
+<p><code>vue-cli-plugin-cesium</code> 就是为了解决这个问题</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><code>vue-cli-plugin-cesium</code> 是一款针对 Cesium 的 VueCLI 扩展插件，使用它将会让我们在 VueCLI 中零配置使用 Cesium，基于 VueCLI3.0+ </p>
+<p>其实就是我开始做 Cesium 的时候，觉得每次配置太麻烦，就写了个插件免配置从而节约开发时间，后来就发到几个 Cesium 开发群里给大家体验了一波，效果还不错</p>
+<p>它会在我们已经创建好的 VueCLI 项目中做基于 Cesium 的扩展，截止目前它的功能也可以说它解决的问题如下</p>
+<ul>
+<li><p>自动安装 Cesium 并追加至 <code>package.json</code> 依赖项(可自选版本)</p>
+</li>
+<li><p>自动扩展 VueCLI 中 Cesium 相关的 webpack 配置</p>
+<ul>
+<li>添加一个 <code>cesium</code> 别名，以便我们在项目中轻松的引入 Cesium 文件资源</li>
+<li>使 Cesium 对象实例可在每个 Vue 模块中使用而无须 import 引入</li>
+<li>使 webpack 可正常打包 Cesium</li>
+<li>允许 webpack 友好地在 Cesium 中使用 require，解决 require 引入警告</li>
+<li>开发环境生成 sourcemap，生产环境取消 sourcemap</li>
+<li>生产环境抽取公共模块执行压缩</li>
+<li>生产环境 loader 切换到优化模式</li>
+</ul>
+</li>
+<li><p>自动在全局 main.js 中引入<code>Widgets.css</code>，可选</p>
+</li>
+<li><p>自动在 <code>components/</code> 文件夹下生成示例文件，可选</p>
+</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><code>vue-cli-plugin-cesium</code> 是基于 VueCLI 的扩展插件，所以在使用前要先使用 VueCLI 创建一个 Vue 项目</p>
+<p>如果您不了解 VueCLI 的使用，请移步 <a href="https://cli.vuejs.org/zh/guide/" target="_blank" rel="noopener">VueCLI-官网</a></p>
+<p>当前插件只支持 <code>VueCLI3.0+</code> 版本哦</p>
+<p>创建好一个 Vue 项目后就可以按照以下步骤使用该插件了，同所有 VueCLI 插件一样，它有两种使用方式，推荐使用方式一</p>
+<h3 id="使用方式一"><a href="#使用方式一" class="headerlink" title="使用方式一"></a>使用方式一</h3><p>推荐使用 <code>vue add</code> 这种方式安装，一步到位，简单便捷</p>
+<pre><code class="js">vue add vue-cli-plugin-cesium
+
+// 非全局安装的vue-cli可以
+npx vue add vue-cli-plugin-cesium</code></pre>
+<h3 id="使用方式二"><a href="#使用方式二" class="headerlink" title="使用方式二"></a>使用方式二</h3><p>首先安装 <code>vue-cli-plugin-cesium</code> 插件，推荐使用 yarn 安装，因为它更简洁</p>
+<pre><code class="js">// npm
+npm install --save-dev vue-cli-plugin-cesium
+
+// yarn
+yarn add vue-cli-plugin-cesium</code></pre>
+<p>安装完成后我们要使用 <code>vue invoke</code> 来初始化这个插件</p>
+<pre><code class="js">vue invoke vue-cli-plugin-cesium
+
+// 非全局安装的vue-cli可以
+npx vue invoke vue-cli-plugin-cesium</code></pre>
+<h3 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h3><p>在 <code>vue invoke</code> 或 <code>vue add</code> 的过程中会有三个询问</p>
+<p><strong>询问一</strong> </p>
+<pre><code class="txt">Please choose a version of &#39;cesium&#39; from this list
+请在列表中选择 cesium 的版本</code></pre>
+<p>在此选择想使用的 <code>Cesium</code> 版本</p>
+<p><strong>询问二</strong> </p>
+<pre><code class="txt">Whether to import styles globally. 
+This operation will automatically import widgets.css in main.js
+是否全局引入样式,该操作将自动在main.js引入widgets.css？</code></pre>
+<p>此项默认为 yes，该操作将自动在 main.js 引入 widgets.css，即全局引入 Cesium 的 css 样式</p>
+<p>如果此项设置为 no，那么开发时我们要手动引入<code>widgets.css</code>样式文件，引入命令如下</p>
+<pre><code class="txt">import &quot;cesium/Widgets/widgets.css&quot;</code></pre>
+<p><strong>询问三</strong> </p>
+<pre><code class="txt">Whether to add sample components to the project components directory
+是否添加示例组件到项目components目录?</code></pre>
+<p>此选项默认为 yes，该操作会自动在 <code>src/components</code> 文件夹下生成 <code>CesiumExample</code> 文件夹，此文件夹中包含一些 Cesium 的使用示例供参考</p>
+<p>如果此项设置为 no，则不生成示例文件</p>
+<p>生成的示例中每个文件为一个模块，可直接模块引入至项目中查看，欢迎大家PR示例模块</p>
+<h3 id="GUI-安装"><a href="#GUI-安装" class="headerlink" title="GUI 安装"></a>GUI 安装</h3><p>如果我们使用 <code>vue ui</code> 创建项目，也可以直接在项目创建后的插件选项里搜索 <code>vue-cli-plugin-cesium</code> 并安装</p>
+<p>如下所示：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/gui005.png" srcset="/blog/img/loading.gif" alt=""></p>
+<p>选中插件点击安装</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/gui002.png" srcset="/blog/img/loading.gif" alt=""></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>开发时如下，直接在模块中使用 Cesium 对象即可</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/code01.png" srcset="/blog/img/loading.gif" alt=""></p>
+<p>查看示例组件，模块引入即可，如下</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/code02.png" srcset="/blog/img/loading.gif" alt=""></p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>当你顺顺利利安装好了插件后开始开发，使用 Cesium 对象时，可能会遇到下面这种错误</p>
+<pre><code class="js">Error：Cesium is no-undef</code></pre>
+<p>前端小伙伴都应该知道，这好像是 Eslint 语法错误，没错，这是因为插件内部使用了 Webpack 的内置模块 <code>ProvidePlugin</code> 来做到使用 Cesium 对象时将不再需要 <code>import</code> 或 <code>require</code> 引入，而一般我们在使用 VueCLI 创建项目时会默认带上 Eslint，Eslint 语法检验会认为 Cesium 是一个未声明的变量，于是抛出了错误</p>
+<p><strong>解决办法一</strong> </p>
+<p><code>package.json</code> 中配置 Eslint 规则允许 <code>no-undef</code> ，如下所示，在 <code>package.json</code> 中 <code>eslintConfig</code> 字段下的 <code>rules</code> 配置 <code>&quot;no-undef&quot;: 0</code> ，在不关掉 Eslint 的情况下单独配置允许未声明的变量</p>
+<pre><code class="js">{
+  &quot;dependencies&quot;: {},
+  &quot;devDependencies&quot;: {},
+  &quot;eslintConfig&quot;: {
+    &quot;root&quot;: true,
+    &quot;env&quot;: {
+      &quot;node&quot;: true
+    },
+    &quot;extends&quot;: [
+      &quot;plugin:vue/essential&quot;,
+      &quot;eslint:recommended&quot;
+    ],
+    &quot;parserOptions&quot;: {
+      &quot;parser&quot;: &quot;babel-eslint&quot;
+    },
+    &quot;rules&quot;: {
+      &quot;no-undef&quot;: 0
+    }
+  }
+}
+</code></pre>
+<p><strong>解决办法二</strong> </p>
+<p>我们可以通过在 <code>package.json</code> 中直接删除 <code>eslintConfig</code> 对象来直接关掉 Eslint</p>
+<p>也可以在 <code>vue.config.js</code> 中配置关掉 Eslint，如下</p>
+<pre><code class="js">module.exports = {
+  lintOnSave: false
+}</code></pre>
+<p>修改之后重启服务即可，推荐使用第一种办法，Eslint 语法校验是一个极好的约束开发的工具，可以让我们同一个团队内的语法风格统一，最好还是不要关掉</p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>安装完成后，就可以在 vue 项目中任意模块中使用 Cesium 了，你可以在每个 Vue 模块中直接使用 Cesium 对象实例而无须 import 引入，如果你想引入 cesium 包下的文件，我们为 Cesium 包的目录设置了别名，就叫 <code>cesium</code>，所以在引入 <code>Widgets.css</code> 时引入路径为 <code>cesium/Widgets/widgets.css</code> ，如果对您有所帮助，那么这将是我的荣幸</p>
+<p>目前使用 VueCLI2.0 的应该很少了，当然如果你使用的脚手架 <code>&gt; VueCLI3.0</code> ，那么就不能使用这个插件了，不过不用担心，VueCLI2.0的配置也是有的，只不过需要你自己手动配置了，详情可以看 👉 <a href="https://mp.weixin.qq.com/s/DLnMMQqb8meMRXyKiUqUqA" target="_blank" rel="noopener">VueCLI2.0集成Cesium</a> </p>
+<p>后期也会慢慢完善此插件，并不停迭代，也欢迎大家提出建议，欢迎 PR</p>
+<p>插件地址 👉 <a href="https://github.com/isboyjc/vue-cli-plugin-cesium" target="_blank" rel="noopener">isboyjc/vue-cli-plugin-cesium</a> </p>
+<p>文章收录在 GitHub，更多精彩请看 👉 <a href="https://github.com/isboyjc/blog/issues" target="_blank" rel="noopener">isboyjc/blog/issues</a> </p>
+<p>是前端，又不只是前端，所以不正经，认真分享干货，公众号「不正经的前端」，欢迎关注</p>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            <p>
+            
+              <span>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/Cesium%E7%B3%BB%E5%88%97">Cesium系列</a>
+                  &nbsp;
+                
+              </span>&nbsp;&nbsp;
+            
+            
+              <span>
+                <i class="iconfont icon-tag"></i>
+                
+                  <a class="hover-with-bg" href="/tags/Cesium">Cesium</a>
+                
+                  <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96">数据可视化</a>
+                
+                  <a class="hover-with-bg" href="/tags/WebGIS">WebGIS</a>
+                
+              </span>
+            
+            </p>
+            
+              <p class="note note-warning">水平有限，欢迎指错！<br />联系邮箱：214930661@qq.com<br />本站文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" target="_blank" rel="nofollow noopener noopener">CC BY-SA 3.0协议</a> ，商业转载请联系作者获得授权，非商业转载请注明出处！</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="/blog/img/gongzhonghao.jpg" srcset="/blog/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;"><div style="text-align: center;">更多精彩，请关注公众号【不正经的前端】</div> <div style="text-align: center;">回复【加群】加入技术交流群，回复【资料】获取精选学习资料</div>
+    </div>
+  </div>
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+      <br><br>
+      
+      
+  <div id="vcomments" style="width: 90%; margin: 0 auto;"></div>
+  <script defer src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+  <script>
+    var notify = 'false' === true;
+    var verify = 'false' === true;
+    var oldLoad = window.onload;
+    window.onload = function () {
+      new Valine({
+        el: '#vcomments',
+        notify: notify,
+        verify: verify,
+        app_id: "OuIO62anqvXdvjruYtvDefqV-gzGzoHsz",
+        app_key: "G9BfnEel5vlsGHJqmPkr2B1P",
+        placeholder: "说点什么",
+        avatar: "retro",
+        meta: ['nick', 'mail', 'link'],
+        pageSize: "10",
+      });
+      oldLoad && oldLoad();
+    };
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"
+      ><b>Hexo</b></a
+    >
+    <i class="iconfont icon-love"></i>
+    <a
+      href="https://github.com/fluid-dev/hexo-theme-fluid"
+      target="_blank"
+      rel="nofollow noopener"
+    >
+      <b>Fluid</b></a
+    >
+    <br />
+
+    
+  
+    <!-- 不蒜子统计PV -->
+    
+    &nbsp;<span id="busuanzi_container_site_pv">总访问量 
+          <span id="busuanzi_value_site_pv"></span> 次</span>&nbsp;
+  
+  
+    <!-- 不蒜子统计UV -->
+    
+    &nbsp;<span id="busuanzi_container_site_uv">总访客数 
+            <span id="busuanzi_value_site_uv"></span> 人</span>&nbsp;
+  
+  <br>
+
+ 
+
+
+    <!-- cnzz Analytics icon -->
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/blog/lib/jquery/jquery.min.js" ></script>
+<script src="/blog/lib/popper/popper.min.js" ></script>
+<script src="/blog/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/blog/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/blog/js/main.js" ></script>
+
+
+  <script src="/blog/js/lazyload.js" ></script>
+
+
+
+  
+    <script src="/blog/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/blog/js/post.js" ></script>
+
+
+
+  <script src="/blog/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+<!-- Plugins -->
+
+
+  
+
+  
+
+  
+    <!-- Tencent Analytics -->
+    <script>
+      var _mtac = {};
+      (function () {
+        var mta = document.createElement("script");
+        mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+        mta.setAttribute("name", "MTAH5");
+        mta.setAttribute("sid", "500711128");
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(mta, s);
+      })();
+    </script>
+  
+
+  
+
+  <!-- cnzz Analytics -->
+  
+
+
+
+  <script src="/blog/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script src="/blog/lib/typed/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "让GIS三维可视化变得简单-Vue项目中集成Cesium&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="/blog/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/blog/js/local-search.js" ></script>
+  <script>
+    var path = "/blog/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/blog/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
