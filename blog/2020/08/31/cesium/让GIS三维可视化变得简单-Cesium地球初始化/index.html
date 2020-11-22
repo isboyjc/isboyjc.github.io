@@ -131,7 +131,7 @@
                   
                   &nbsp;<i class="far fa-chart-bar"></i>
                   <span class="post-count">
-                    3.4k 字
+                    3.9k 字
                   </span>&nbsp;
                 
 
@@ -139,7 +139,7 @@
                   
                   &nbsp;<i class="far fa-clock"></i>
                   <span class="post-count">
-                      13 分钟
+                      15 分钟
                   </span>&nbsp;
                 
 
@@ -331,7 +331,7 @@ viewer.cesiumWidget.creditContainer.style.display = &quot;none&quot;</code></pre
 <h4 id="Cesium-ImageryLayerCollection类"><a href="#Cesium-ImageryLayerCollection类" class="headerlink" title="Cesium.ImageryLayerCollection类"></a>Cesium.ImageryLayerCollection类</h4><p><code>Cesium.ImageryLayerCollection</code> 类是 <code>ImageryLayer</code> 实例的容器，它可以装载、放置多个 <code>ImageryLayer</code> 实例，而且它内部放置的 <code>ImageryLayer</code> 实例是有序的</p>
 <p><code>Cesium.Viewer</code> 类对象中包含的 <code>imageryLayers</code> 属性就是 <code>ImageryLayerCollection</code> 类的实例，它包含了当前 <code>Cesium</code> 应用程序所有的 <code>ImageryLayer</code> 类对象，即当前地球上加载的所有影像图层</p>
 <p>知道了影像图层基础的体系结构，那么影像加载就简单了，上面我们也可以看到 <code>ImageryProvider</code> 类种类非常多，列举出来是为了给大家展示下它可以加载什么影像，但是一一演示不现实，所以接下来我们就来看几个常见影像加载</p>
-<h4 id="加载天地图影像"><a href="#加载天地图影像" class="headerlink" title="加载天地图影像"></a>加载天地图影像</h4><p>按照上述所说，首先我们要加载影像图层的数据源，Cesium地球默认加载的是 <code>bing</code> 地图影像，所以我们要先从容器中删除这个默认影像</p>
+<h4 id="加载影像示例"><a href="#加载影像示例" class="headerlink" title="加载影像示例"></a>加载影像示例</h4><h5 id="加载天地图影像"><a href="#加载天地图影像" class="headerlink" title="加载天地图影像"></a>加载天地图影像</h5><p>按照上述所说，首先我们要加载影像图层的数据源，Cesium地球默认加载的是 <code>bing</code> 地图影像，所以我们要先从容器中删除这个默认影像</p>
 <pre><code class="js">viewer.imageryLayers.remove(viewer.imageryLayers.get(0))</code></pre>
 <p>然后，我们加载影像图层的数据源</p>
 <pre><code class="js">let tianditu = new Cesium.WebMapTileServiceImageryProvider({
@@ -352,7 +352,7 @@ viewer.cesiumWidget.creditContainer.style.display = &quot;none&quot;</code></pre
 <pre><code class="js">let imagery = viewer.imageryLayers.addImageryProvider(tianditu)</code></pre>
 <p>天地图影像预览如下</p>
 <p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/tianditu.jpeg" srcset="/blog/img/loading.gif" alt=""></p>
-<h4 id="加载谷歌影像"><a href="#加载谷歌影像" class="headerlink" title="加载谷歌影像"></a>加载谷歌影像</h4><p>上面步骤已经知悉，我们就不一一叙说了，下面直接看代码就好</p>
+<h5 id="加载谷歌影像"><a href="#加载谷歌影像" class="headerlink" title="加载谷歌影像"></a>加载谷歌影像</h5><p>上面步骤已经知悉，我们就不一一叙说了，下面直接看代码就好</p>
 <pre><code class="js">viewer.imageryLayers.remove(viewer.imageryLayers.get(0))
 let imagery = viewer.imageryLayers.addImageryProvider(
   new Cesium.UrlTemplateImageryProvider({
@@ -362,7 +362,7 @@ let imagery = viewer.imageryLayers.addImageryProvider(
 )</code></pre>
 <p>谷歌影像预览如下</p>
 <p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/guge.jpeg" srcset="/blog/img/loading.gif" alt=""></p>
-<h4 id="加载ArcGIS影像"><a href="#加载ArcGIS影像" class="headerlink" title="加载ArcGIS影像"></a>加载ArcGIS影像</h4><pre><code class="js">viewer.imageryLayers.remove(viewer.imageryLayers.get(0))
+<h5 id="加载ArcGIS影像"><a href="#加载ArcGIS影像" class="headerlink" title="加载ArcGIS影像"></a>加载ArcGIS影像</h5><pre><code class="js">viewer.imageryLayers.remove(viewer.imageryLayers.get(0))
 let imagery = viewer.imageryLayers.addImageryProvider(
   new Cesium.ArcGisMapServerImageryProvider({
     url:&#39;https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer&#39;,
@@ -371,7 +371,7 @@ let imagery = viewer.imageryLayers.addImageryProvider(
 )</code></pre>
 <p>ArcGIS影像预览如下</p>
 <p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/arcgis.jpeg" srcset="/blog/img/loading.gif" alt=""></p>
-<h4 id="加载高德影像"><a href="#加载高德影像" class="headerlink" title="加载高德影像"></a>加载高德影像</h4><pre><code class="js">viewer.imageryLayers.remove(viewer.imageryLayers.get(0))
+<h5 id="加载高德影像"><a href="#加载高德影像" class="headerlink" title="加载高德影像"></a>加载高德影像</h5><pre><code class="js">viewer.imageryLayers.remove(viewer.imageryLayers.get(0))
 let imagery = viewer.imageryLayers.addImageryProvider(
   new Cesium.UrlTemplateImageryProvider({
     maximumLevel:18,//最大缩放级别
@@ -383,7 +383,7 @@ let imagery = viewer.imageryLayers.addImageryProvider(
 )</code></pre>
 <p>高德影像预览如下</p>
 <p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/gaode.jpeg" srcset="/blog/img/loading.gif" alt=""></p>
-<h4 id="加载天地图标注"><a href="#加载天地图标注" class="headerlink" title="加载天地图标注"></a>加载天地图标注</h4><p>上述影像的加载，可以看到，地图上是没有标注的，我们需要额外加载标柱，同样的，它也是图层</p>
+<h5 id="加载天地图标注"><a href="#加载天地图标注" class="headerlink" title="加载天地图标注"></a>加载天地图标注</h5><p>上述影像的加载，可以看到，地图上是没有标注的，我们需要额外加载标柱，同样的，它也是图层</p>
 <pre><code class="js">let label = viewer.imageryLayers.addImageryProvider(
   new Cesium.WebMapTileServiceImageryProvider({
     url: &quot;http://t0.tianditu.com/cia_w/wmts?service=wmts&amp;request=GetTile&amp;version=1.0.0&amp;LAYER=cia&amp;tileMatrixSet=w&amp;TileMatrix={TileMatrix}&amp;TileRow={TileRow}&amp;TileCol={TileCol}&amp;style=default.jpg&quot;+&quot;&amp;tk=&quot;+&quot;19b72f6cde5c8b49cf21ea2bb4c5b21e&quot;,
@@ -398,9 +398,16 @@ let imagery = viewer.imageryLayers.addImageryProvider(
 <p>同样的，和天地图影像一样，不要忘了替换 <code>tk</code> 哦</p>
 <p>天地图标注预览如下</p>
 <p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/tianditubiaozhu.jpeg" srcset="/blog/img/loading.gif" alt=""></p>
-<h4 id="影像亮度调整"><a href="#影像亮度调整" class="headerlink" title="影像亮度调整"></a>影像亮度调整</h4><p>我们加载影像拿到影像实例 <code>imagery</code> 后，可以通过其 <code>brightness</code> 属性调节亮度，取值 <code>0～1</code> ，默认为1</p>
+<h5 id="影像亮度调整"><a href="#影像亮度调整" class="headerlink" title="影像亮度调整"></a>影像亮度调整</h5><p>我们加载影像拿到影像实例 <code>imagery</code> 后，可以通过其 <code>brightness</code> 属性调节亮度，取值 <code>0～1</code> ，默认为1</p>
 <pre><code class="js">imagery.brightness = 0.9</code></pre>
-<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>这次就到这了，其实不止是做Cesium开发的人群，做前端的同学学一学这些还是有些用处的，可以为你的页面或项目增色不少，后续内容请看暂定目录</p>
+<h4 id="影像小结"><a href="#影像小结" class="headerlink" title="影像小结"></a>影像小结</h4><p>上文中我们列举的 <code>ImageryProvider</code> 类支持的子类非常多，而上面的示例中</p>
+<p>在加载高德影像服务时，我们使用的指定 <code>url</code> 的 <code>format</code> 模版来实现自己的 <code>Provider</code>，所以使用了 <code>UrlTemplateImageryProvider</code> 类来加载数据源</p>
+<p>在加载 <code>ArcGIS</code> 影像用到了 <code>ArcGIS Server</code> 的相关服务所以使用了 <code>ArcGisMapServerImageryProvider</code> 类来加载数据源</p>
+<p>在加载标柱影像时，因为我们加载的是一个Web Map Tile Service也就是 <code>WMTS</code> 服务，所以我们使用的是 <code>WebMapTileServiceImageryProvider</code> 类</p>
+<p>这几个简单的小例子是为了告诉我们我们使用什么样的数据源，就使用对应的 <code>ImageryProvider</code> 来加载即可</p>
+<p>影像加载这块由于本文重点描述的是初始化，所以只有怎样加载，并没有对应的数据服务相关知识，Get一个新的技能，首先是用起来，下一个阶段是扣一些细节然后用熟它，再接着是扩展，最后是学其原理，后续通过一些使用再来慢慢扩展概念性的东西</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>回顾本文，Cesium实例初始化，围绕着加载一个干净的三维地球实例展开，文中我们主要介绍了 Cesium 控件的现实隐藏以及影像的加载，一般来说为了界面美化，我们都是自己写控件或者直接隐藏掉，当然如果 Cesium 的初始化控件中恰巧有你需要的，但是又觉得默认的空间样式不太好看，其实我们是可以自己改样式的，因为控件只是普通元素节点，完全可以直接在控制台中选中元素，通过类名来修改对应控件的样式来达到自己想要的效果，相信这对于一个前端来说不是什么难事</p>
+<p>到此其实就只做了加载出来地球和加载下影像，对于 Cesium 来说它仅仅一个开始，更多好玩的还在后面，其实不止是做Cesium开发的人群，做前端的同学学一学这些还是有些用处的，可以为你的页面或项目增色不少，后续内容请看暂定目录</p>
 <ul>
 <li><p><a href="https://juejin.im/post/6854573221191090189" target="_blank" rel="noopener">让GIS三维可视化变得简单-初识Cesium</a> </p>
 </li>
@@ -424,7 +431,7 @@ let imagery = viewer.imageryLayers.addImageryProvider(
 </li>
 <li><p>暂定 - 让GIS三维可视化变得简单-Cesium流动线绘制</p>
 </li>
-<li><p>暂定让GIS三维可视化变得简单-Cesium气泡弹窗</p>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium气泡弹窗</p>
 </li>
 <li><p>暂定 - 让GIS三维可视化变得简单-Cesium粒子系统(火灾、雪花、喷水)</p>
 </li>
