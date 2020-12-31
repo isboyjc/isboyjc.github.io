@@ -1,0 +1,1 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0c5b2c"],{"3fcf":function(n,e,c){"use strict";c.r(e);var t=function(){var n=this,e=n.$createElement,c=n._self._c||e;return c("div",[n._v("登录")])},a=[],u={name:"login-page",data:function(){return{}}},r=u,i=c("2877"),o=Object(i["a"])(r,t,a,!1,null,"5cbe977f",null);e["default"]=o.exports}}]);
