@@ -1,0 +1,878 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/images/avatar.jpeg">
+  <link rel="icon" href="/blog/images/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="李建超,isboyjc,句末,不正经的前端">
+  
+  <title>「一道面试题」输入URL到渲染全面梳理中-页面渲染篇 - ISBOYJC</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"isboyjc.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":500711128,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/images/b011.jpeg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="「一道面试题」输入URL到渲染全面梳理中-页面渲染篇">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      isboyjc
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-04-22 22:30" pubdate>
+        2020年4月22日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.7k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      92
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">「一道面试题」输入URL到渲染全面梳理中-页面渲染篇</h1>
+            
+            <div class="markdown-body">
+              <h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>此文是一道面试题，又不仅仅是一道面试题，不同的是这道题分了三篇来说，嗯。。可想而知</p>
+<p>接上文，上文我们讲了网络通信的部分，那么该说说页面渲染的流程了，也就是当输入一个 URL 拿到了页面后，浏览器怎么解析，怎么呈现</p>
+<p>首先要了解这块内容，需要对下面这些知识点有一个简单认知</p>
+<ul>
+<li>线程/进程概念及区别</li>
+<li>多线程/多进程概念</li>
+<li>浏览器的主要进程</li>
+<li>浏览器为什么是多进程</li>
+<li>渲染进程 Renderer 的主要线程<ul>
+<li>GUI 渲染线程</li>
+<li>JS 引擎线程</li>
+<li>事件触发线程</li>
+<li>定时触发线程</li>
+<li>异步 http 请求线程</li>
+</ul>
+</li>
+<li>渲染进程的各个线程之间关系及配合</li>
+</ul>
+<p>之前写的一篇帖子 <a target="_blank" rel="noopener" href="https://juejin.im/post/5e22b391f265da3e204d8c14">「硬核 JS」一次搞懂 JS 运行机制 - 传送门</a> 里有介绍到，下面我们还是重新来一遍吧，花不了多长时间，全当复习一遍，大家也可以自行去看下来了解了解，当然如果你都清楚的话可以直接去看渲染过程</p>
+<h3 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h3><h4 id="什么是进程"><a href="#什么是进程" class="headerlink" title="什么是进程"></a>什么是进程</h4><p>我们都知道，<code>CPU</code>是计算机的核心，承担所有的计算任务</p>
+<p>官方说法，<code>进程</code>是<code>CPU</code>资源分配的最小单位</p>
+<p>字面意思就是进行中的程序，我将它理解为一个可以独立运行且拥有自己的资源空间的任务程序</p>
+<p><code>进程</code>包括运行中的程序和程序所使用到的内存和系统资源</p>
+<p><code>CPU</code> 可以有很多进程，我们的电脑每打开一个软件就会产生一个或多个 <code>进程</code> ，为什么电脑运行的软件多就会卡，是因为 <code>CPU</code> 给每个 <code>进程</code> 分配资源空间，但是一个 <code>CPU</code> 一共就那么多资源，分出去越多，越卡，每个<code>进程</code>之间是相互独立的， <code>CPU</code> 在运行一个 <code>进程</code> 时，其他的进程处于非运行状态，<code>CPU</code> 使用 <a href="%5Bhttps://baike.baidu.com/item/%E6%97%B6%E9%97%B4%E7%89%87%E8%BD%AE%E8%BD%AC%E8%B0%83%E5%BA%A6%5D(https://baike.baidu.com/item/%E6%97%B6%E9%97%B4%E7%89%87%E8%BD%AE%E8%BD%AC%E8%B0%83%E5%BA%A6)">时间片轮转调度算法</a> 来实现同时运行多个进程</p>
+<h4 id="什么是线程"><a href="#什么是线程" class="headerlink" title="什么是线程"></a>什么是线程</h4><p><code>线程</code> 是 <code>CPU</code> 调度的最小单位</p>
+<p><code>线程</code> 是建立在 <code>进程</code> 的基础上的一次程序运行单位，通俗点解释 <code>线程</code> 就是程序中的一个执行流，一个 <code>进程</code> 可以有多个 <code>线程</code></p>
+<p>一个 <code>进程</code> 中只有一个执行流称作 <code>单线程</code> ，即程序执行时，所走的程序路径按照连续顺序排下来，前面的必须处理好，后面的才会执行</p>
+<p>一个 <code>进程</code> 中有多个执行流称作 <code>多线程</code>，即在一个程序中可以同时运行多个不同的 <code>线程</code> 来执行不同的任务， 也就是说允许单个程序创建多个并行执行的 <code>线程</code> 来完成各自的任务</p>
+<h4 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h4><p>进程是操作系统分配资源的最小单位，线程是程序执行的最小单位</p>
+<p>一个 <code>进程</code> 由一个或多个 <code>线程</code> 组成，<code>线程</code> 可以理解为是一个进程中代码的不同执行路线</p>
+<p><code>进程</code> 之间相互独立，但同一进程下的各个 <code>线程</code> 间共享程序的内存空间 (包括代码段、数据集、堆等) 及一些进程级的资源 (如打开文件和信号)</p>
+<p>调度和切换：线程上下文切换比进程上下文切换要快得多</p>
+<h4 id="多进程和多线程"><a href="#多进程和多线程" class="headerlink" title="多进程和多线程"></a>多进程和多线程</h4><p><strong>多进程：</strong> 多进程指的是在同一个时间里，同一个计算机系统中如果允许两个或两个以上的进程处于运行状态。多进程带来的好处是明显的，比如大家可以在网易云听歌的同时打开编辑器敲代码，编辑器和网易云的进程之间不会相互干扰</p>
+<p><strong>多线程：</strong> 多线程是指程序中包含多个执行流，即在一个程序中可以同时运行多个不同的线程来执行不同的任务，也就是说允许单个程序创建多个并行执行的线程来完成各自的任务</p>
+<h3 id="JS-为什么是单线程"><a href="#JS-为什么是单线程" class="headerlink" title="JS 为什么是单线程"></a>JS 为什么是单线程</h3><p>JS 的单线程，与它的用途有关，作为浏览器脚本语言，JavaScript 的主要用途是与用户互动，以及操作 DOM，这决定了它只能是单线程，否则会带来很复杂的同步问题</p>
+<p>比如，假定 <code>JavaScript</code> 同时有两个线程，一个线程在某个 DOM 节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准？</p>
+<p>还有人说 <code>js</code> 还有 <code>Worker</code> 线程，对的，为了利用多核 CPU 的计算能力，HTML5 提出 Web Worker 标准，允许 <code>JavaScript</code> 脚本创建多个线程，但是子线程是完 全受主线程控制的，而且不得操作 DOM</p>
+<p>所以，这个标准并没有改变 JavaScript 是单线程的本质</p>
+<p>了解了进程和线程之后，接下来看看浏览器解析，浏览器之间也是有些许差距的，不过大致是差不多的，下文我们皆用市场占有比例最大的 Chrome 为例</p>
+<h3 id="浏览器相关"><a href="#浏览器相关" class="headerlink" title="浏览器相关"></a>浏览器相关</h3><h4 id="浏览器是多进程的"><a href="#浏览器是多进程的" class="headerlink" title="浏览器是多进程的"></a>浏览器是多进程的</h4><p>作为前端，免不了和浏览器打交道，浏览器是多进程的，拿 <code>Chrome</code> 来说，我们每打开一个 Tab 页就会产生一个进程，我们使用 <code>Chrome</code> 打开很多标签页不关，电脑会越来越卡，不说其他，首先就很耗 CPU</p>
+<h4 id="浏览器包含哪些进程"><a href="#浏览器包含哪些进程" class="headerlink" title="浏览器包含哪些进程"></a>浏览器包含哪些进程</h4><ul>
+<li>Browser 进程<ul>
+<li>浏览器的主进程(负责协调、主控)，该进程只有一个</li>
+<li>负责浏览器界面显示，与用户交互。如前进，后退等</li>
+<li>负责各个页面的管理，创建和销毁其他进程</li>
+<li>将渲染(Renderer)进程得到的内存中的 Bitmap(位图)，绘制到用户界面上</li>
+<li>网络资源的管理，下载等</li>
+</ul>
+</li>
+<li>第三方插件进程<ul>
+<li>每种类型的插件对应一个进程，当使用该插件时才创建</li>
+</ul>
+</li>
+<li>GPU 进程<ul>
+<li>该进程也只有一个，用于 3D/动画绘制等等</li>
+</ul>
+</li>
+<li>渲染进程(重)<ul>
+<li>即通常所说的浏览器内核(Renderer 进程，内部是多线程)</li>
+<li>每个 Tab 页面都有一个渲染进程，互不影响</li>
+<li>主要作用为页面渲染，脚本执行，事件处理等</li>
+</ul>
+</li>
+</ul>
+<h4 id="为什么浏览器要多进程"><a href="#为什么浏览器要多进程" class="headerlink" title="为什么浏览器要多进程"></a>为什么浏览器要多进程</h4><p>我们假设浏览器是单进程，那么某个 Tab 页崩溃了，就影响了整个浏览器，体验有多差</p>
+<p>同理如果插件崩溃了也会影响整个浏览器</p>
+<p>当然多进程还有其它的诸多优势，不过多阐述</p>
+<p>浏览器进程有很多，每个进程又有很多线程，都会占用内存</p>
+<p>这也意味着内存等资源消耗会很大，有点拿空间换时间的意思</p>
+<p>到此可不只是为了让我们理解为何 Chrome 运行时间长了电脑会卡，哈哈，第一个重点来了</p>
+<h4 id="简述渲染进程-Renderer-重"><a href="#简述渲染进程-Renderer-重" class="headerlink" title="简述渲染进程 Renderer(重)"></a>简述渲染进程 Renderer(重)</h4><p>页面的渲染，JS 的执行，事件的循环，都在渲染进程内执行，所以我们要重点了解渲染进程</p>
+<p>渲染进程是多线程的，我们来看渲染进程的一些常用较为主要的线程</p>
+<h4 id="渲染进程-Renderer-的主要线程"><a href="#渲染进程-Renderer-的主要线程" class="headerlink" title="渲染进程 Renderer 的主要线程"></a>渲染进程 Renderer 的主要线程</h4><h5 id="GUI-渲染线程"><a href="#GUI-渲染线程" class="headerlink" title="GUI 渲染线程"></a>GUI 渲染线程</h5><ul>
+<li>负责渲染浏览器界面，解析 HTML，CSS，构建 DOM 树和 RenderObject 树，布局和绘制等<ul>
+<li>解析 html 代码(HTML 代码本质是字符串)转化为浏览器认识的节点，生成 DOM 树，也就是 DOM Tree</li>
+<li>解析 css，生成 CSSOM(CSS 规则树)</li>
+<li>把 DOM Tree 和 CSSOM 结合，生成 Rendering Tree(渲染树)</li>
+</ul>
+</li>
+<li>当我们修改了一些元素的颜色或者背景色，页面就会重绘(Repaint)</li>
+<li>当我们修改元素的尺寸，页面就会回流(Reflow)</li>
+<li>当页面需要 Repaing 和 Reflow 时 GUI 线程执行，绘制页面</li>
+<li>回流(Reflow)比重绘(Repaint)的成本要高，我们要尽量避免 Reflow 和 Repaint</li>
+<li>GUI 渲染线程与 JS 引擎线程是互斥的<ul>
+<li>当 JS 引擎执行时 GUI 线程会被挂起(相当于被冻结了)</li>
+<li>GUI 更新会被保存在一个队列中等到 JS 引擎空闲时立即被执行</li>
+</ul>
+</li>
+</ul>
+<h5 id="JS-引擎线程"><a href="#JS-引擎线程" class="headerlink" title="JS 引擎线程"></a>JS 引擎线程</h5><ul>
+<li>JS 引擎线程就是 JS 内核，负责处理 Javascript 脚本程序(例如 V8 引擎)</li>
+<li>JS 引擎线程负责解析 Javascript 脚本，运行代码</li>
+<li>JS 引擎一直等待着任务队列中任务的到来，然后加以处理<ul>
+<li>浏览器同时只能有一个 JS 引擎线程在运行 JS 程序，所以 js 是单线程运行的</li>
+<li>一个 Tab 页(renderer 进程)中无论什么时候都只有一个 JS 线程在运行 JS 程序</li>
+</ul>
+</li>
+<li>GUI 渲染线程与 JS 引擎线程是互斥的，js 引擎线程会阻塞 GUI 渲染线程<ul>
+<li>就是我们常遇到的 JS 执行时间过长，造成页面的渲染不连贯，导致页面渲染加载阻塞(就是加载慢)</li>
+<li>例如浏览器渲染的时候遇到``标签，就会停止 GUI 的渲染，然后 js 引擎线程开始工作，执行里面的 js 代码，等 js 执行完毕，js 引擎线程停止工作，GUI 继续渲染下面的内容。所以如果 js 执行时间太长就会造成页面卡顿的情况</li>
+</ul>
+</li>
+</ul>
+<h5 id="事件触发线程"><a href="#事件触发线程" class="headerlink" title="事件触发线程"></a>事件触发线程</h5><ul>
+<li>属于浏览器而不是 JS 引擎，用来控制事件循环，并且管理着一个事件队列(task queue)</li>
+<li>当 js 执行碰到事件绑定和一些异步操作(如 setTimeOut，也可来自浏览器内核的其他线程，如鼠标点击、AJAX 异步请求等)，会走事件触发线程将对应的事件添加到对应的线程中(比如定时器操作，便把定时器事件添加到定时器线程)，等异步事件有了结果，便把他们的回调操作添加到事件队列，等待 js 引擎线程空闲时来处理。</li>
+<li>当对应的事件符合触发条件被触发时，该线程会把事件添加到待处理队列的队尾，等待 JS 引擎的处理</li>
+<li>因为 JS 是单线程，所以这些待处理队列中的事件都得排队等待 JS 引擎处理</li>
+</ul>
+<h5 id="定时触发器线程"><a href="#定时触发器线程" class="headerlink" title="定时触发器线程"></a>定时触发器线程</h5><ul>
+<li><code>setInterval</code> 与 <code>setTimeout</code> 所在线程</li>
+<li>浏览器定时计数器并不是由 JavaScript 引擎计数的 (因为 JavaScript 引擎是单线程的，如果处于阻塞线程状态就会影响记计时的准确)</li>
+<li>通过单独线程来计时并触发定时(计时完毕后，添加到事件触发线程的事件队列中，等待 JS 引擎空闲后执行)，这个线程就是定时触发器线程，也叫定时器线程</li>
+<li>W3C 在 HTML 标准中规定，规定要求<code>setTimeout</code>中低于 4ms 的时间间隔算为 4ms</li>
+</ul>
+<h5 id="异步-http-请求线程"><a href="#异步-http-请求线程" class="headerlink" title="异步 http 请求线程"></a>异步 http 请求线程</h5><ul>
+<li>在 XMLHttpRequest 在连接后是通过浏览器新开一个线程请求</li>
+<li>将检测到状态变更时，如果设置有回调函数，异步线程就产生状态变更事件，将这个回调再放入事件队列中再由 JavaScript 引擎执行</li>
+<li>简单说就是当执行到一个 http 异步请求时，就把异步请求事件添加到异步请求线程，等收到响应 (准确来说应该是 http 状态变化)，再把回调函数添加到事件队列，等待 js 引擎线程来执行</li>
+</ul>
+<p>了解了上面这些基础后，接下来我们开始进入今天的正题，输入 URL 拿到资源之后，如何渲染，又经历了那些过程？</p>
+<h2 id="渲染过程"><a href="#渲染过程" class="headerlink" title="渲染过程"></a>渲染过程</h2><h3 id="Webkit-渲染流程图"><a href="#Webkit-渲染流程图" class="headerlink" title="Webkit 渲染流程图"></a>Webkit 渲染流程图</h3><p>我们都知道，浏览器之间的渲染流程是有些细微差别的，我们这里介绍的一些知识点是基于 Chrome 的，也就是 Webkit，毕竟它是主流，先来看一下 Webkit 的渲染流程图</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200421232942705.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>大家如果第一次看到这张图，可能会有点迷茫，不知从哪看起，别急，先大致过一眼，我们下面会慢慢介绍，一步步的分析，如果大家完整的阅读完此文，不妨回过头来再看一遍这张图，会清晰很多</p>
+<h3 id="解析-HTML-构建-DOM-树"><a href="#解析-HTML-构建-DOM-树" class="headerlink" title="解析 HTML 构建 DOM 树"></a>解析 HTML 构建 DOM 树</h3><p>浏览器渲染，那么浏览器肯定就拿到页面内容了，肯定要先解析 HTML 的</p>
+<p>话不多说，我们直接来看 HTML 解析的图 ( 网图侵删 )</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200408224734313.png" srcset="/blog/img/loading.gif" lazyload alt="image-20200408224734313"></p>
+<p>如果是第一次看到这张图可能看不懂，没关系，慢慢道来</p>
+<p>先来看图中解析 DOM 的这几个大过程</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">Bytes(字节) -&gt; Characters(字符) -&gt; Tokens(词) -&gt; Nodes(节点) -&gt; DOM(DOM树)<br></code></pre></td></tr></table></figure>
+
+<p>首先，发起请求拿到页面 HTML 内容，这个内容它是 0/1 这样的原始 <code>字节流</code></p>
+<p>接着，浏览器拿到这些 HTML 的原始字节，根据文件的指定编码 (例如 UTF-8) 将它们转换成各个 <code>字符</code></p>
+<p>现在字节流变成了 <code>字符流</code> ，也就是一大串字符串</p>
+<p>为了把 <code>字符流</code> 解析成正确的 <code>DOM</code> 结构，浏览器还要继续努力</p>
+<p>接着进行 <code>词法解析</code> ，把字符流初步解析成我们可理解的 <code>词</code>，学名叫 <code>token</code></p>
+<p><strong>嗯？什么是词 (Token)？</strong></p>
+<p><code>词</code> 是编译原理中的最小单元，如标签开始、属性、标签结束、注释、CDATA 节点</p>
+<p><code>Token</code> 会标识出当前 <code>Token</code> 的种类，有点绕，怎么说方便理解呢，举个例子</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;haha&quot;</span>&gt;</span>haha<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>如上，这是一个标签它有一个 class 属性 (废话)，但是浏览器拿到的只是字符串，它不知道这都是什么标签有啥属性要做什么，那么得给它一点一点拆开读，就是词法解析，怎么解析，就像下面这样</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">1.</span> &lt;div					# 哦，看到了&lt;div，这是一个div标签的开始<br><span class="hljs-number">2.</span> <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">&quot;haha&quot;</span> # 这是一个<span class="hljs-class"><span class="hljs-keyword">class</span>属性</span><br><span class="hljs-class">3. &gt;						# 哦，到这儿是一个完整的<span class="hljs-title">div</span>开始标签</span><br><span class="hljs-class">4. <span class="hljs-title">haha</span>					# 嗯，这是一个文本</span><br><span class="hljs-class">5. &lt;/<span class="hljs-title">div</span>&gt;				# 奥，看到了&lt;/<span class="hljs-title">div</span>&gt;，整个<span class="hljs-title">div</span>标签结束了</span><br></code></pre></td></tr></table></figure>
+
+<p><code>词法解析</code> 是编译原理中的概念，上面是极度简化版本 (防大佬死磕)，只是为了方便大家理解</p>
+<p>现在理解了吗，<code>Tokens</code> 这个阶段中会标识出当前 <code>Token</code> 是 <code>开始标签</code> 或是 <code>结束标签</code> 亦或是 <code>文本</code> 等信息</p>
+<p>那么我们收回思路，接着上面的步骤，经历 <code>词法解析</code> 我们把字符流解析成了 词 (Token)</p>
+<p>接着在每个 <code>Token</code> 被生成后，会立刻消耗这个 <code>Token</code> 创建出节点对象，就是 节点 (Nodes) 阶段</p>
+<p>把开始结束标签配对、属性赋值好、父子关系这些都连接好了，最终就构成了 <code>DOM</code> 树</p>
+<p>后面这两小步也可称为 <code>语法解析</code> ，到此 <code>DOM Tree</code> 就解析完了</p>
+<p>另外多嘴一句，<code>DOM树(DOM Tree) | 文档对象模型</code> ，这些东西说的都是 <code>DOM树</code></p>
+<h3 id="解析-CSS-构建-CSSOM-树"><a href="#解析-CSS-构建-CSSOM-树" class="headerlink" title="解析 CSS 构建 CSSOM 树"></a>解析 CSS 构建 CSSOM 树</h3><p>有 <code>HTML</code> 解析，那肯定有 <code>CSS</code> 解析，比如我们构建 <code>DOM</code> 的时候遇到了 <code>link</code> 标记，该标记引用一个外部 <code>CSS</code> 样式表，那么浏览器会认为它需要这个外部样式资源，就会立即发出对该资源的请求，并返回样式内容，也是字节流</p>
+<p>与处理 <code>HTML</code> 时一样，将收到的 <code>CSS</code> 规则转换成某种浏览器能够理解和处理的东西，基本步骤重复 <code>HTML</code> 过程，不过是构建 CSS 而不是 HTML</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200408234346575.png" srcset="/blog/img/loading.gif" lazyload alt="image-20200408234346575"></p>
+<p><code>CSS</code> 字节转换成字符，接着词法解析与法解析，最后构成 <code>CSS对象模型(CSSOM)</code> 的树结构</p>
+<p>我们都知道，节点样式是可以继承的，所以在构建的过程中浏览器得递归 <code>DOM</code> 树来确定元素到底是什么样式，为了 <code>CSSOM</code> 的完整性，只有等构建完毕才能进入到下一个阶段，所以就算 <code>DOM</code> 已经构建完了，也得等 <code>CSSOM</code>，然后才能进入下一个阶段</p>
+<p>所以 <code>CSS</code> 的加载速度与构建 <code>CSSOM</code> 的速度会影响首屏渲染速度，这就是我们常说的 <code>CSS</code> 资源的加载会阻塞渲染</p>
+<p>怎么优化？DOM 树要小，CSS 尽量用 <code>id</code> 和 <code>class</code> 少直接用标签 😄</p>
+<h3 id="解析-JavaScript-脚本"><a href="#解析-JavaScript-脚本" class="headerlink" title="解析 JavaScript 脚本"></a>解析 JavaScript 脚本</h3><p>这个解析 <code>JS</code> 的步骤是不固定的，因为在构建 DOM 树的过程中，当 <code>HTML</code> 解析器遇到一个 <code>script</code> 标记时，即遇到了 js，立即阻塞 DOM 树的构建，就会将控制权移交给 <code>JavaScript</code> 引擎，等到 <code>JavaScript</code> 引擎运行完毕，浏览器才会从中断的地方恢复 DOM 树的构建</p>
+<p>为什么上面也说了，<strong>JS 会对 DOM 节点进行操作，浏览器无法预测未来的 DOM 节点的具体内容，为了防止无效操作，节省资源，只能阻塞 DOM 树的构建</strong></p>
+<p>例如，若不阻塞 DOM 树的构建，若 JS 删除了某个 DOM 节点 A，那么浏览器为构建此节点 A 花费的资源就是无效的</p>
+<p>若在 HTML 头部加载 JS 文件，由于 JS 阻塞，会推迟页面的首绘，所以为了加快页面渲染，一般将 JS 文件放到 HTML 底部进行加载，或是对 JS 文件执行 <code>async</code> 或 <code>defer</code> 加载</p>
+<ul>
+<li><code>async</code> 是异步执行，异步下载完毕后就会执行，不确保执行顺序，一定在 <code>onload</code> 前，但不确定在 <code>DOMContentLoaded</code> 事件的前或后</li>
+<li><code>defer</code> 是延迟执行，在浏览器看起来的效果像是将脚本放在了 <code>body</code> 后面一样（虽然按规范应该是在 <code>DOMContentLoaded</code> 事件前，但实际上不同浏览器的优化效果不一样，也有可能在它后面）</li>
+</ul>
+<h3 id="构建渲染树-呈现树-Render-Tree"><a href="#构建渲染树-呈现树-Render-Tree" class="headerlink" title="构建渲染树/呈现树(Render Tree)"></a>构建渲染树/呈现树(Render Tree)</h3><p>渲染树 ( Render Tree ) 由 <code>DOM树</code>、<code>CSSOM树</code> 合并而成，但并不是必须等 <code>DOM树</code> 及 <code>CSSOM树</code> 加载完成后才开始合并构建 <code>渲染树</code>，三者的构建并无先后条件，也并非完全独立，而是会有交叉，并行构建，因此会形成一边加载，一边解析，一边渲染的工作现象</p>
+<p><code>CSSOM 树</code>和 <code>DOM 树</code> 合并成渲染树，<code>渲染树</code> 只包含渲染网页所需的节点，然后用于计算每个可见元素的布局，并输出给绘制流程，将像素渲染到屏幕上</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200418220809467.png" srcset="/blog/img/loading.gif" lazyload alt="image-20200418220809467"></p>
+<p>如上图 ( 网图侵删 ) ，为了构建渲染树，我们看看浏览器都做了什么</p>
+<ul>
+<li>浏览器首先会从 DOM 树的根节点开始遍历每个可见节点<ul>
+<li>例如脚本标记、元标记等有些节点不可见，因为它们不会体现在渲染输出中，所以会被忽略</li>
+<li>某些节点通过 CSS 隐藏，因此在渲染树中也会被忽略，例如上图的其中一个 <code>span</code> 标签有 <code>display: none</code> 属性，也会被忽略</li>
+</ul>
+</li>
+<li>对于每个可见节点，找到其对应的的 CSSOM 规则并应用它们</li>
+<li>输出可见节点，连同其内容和计算的样式</li>
+</ul>
+<h3 id="布局-Layout"><a href="#布局-Layout" class="headerlink" title="布局(Layout)"></a>布局(Layout)</h3><p><code>渲染树</code> 同时包含了屏幕上的所有可见内容及其样式信息，有了渲染树，再接着就要进入布局 ( layout ) 阶段了，到目前为止，我们计算了哪些节点应该是可见的以及它们的计算样式，但我们还没有计算它们在设备 <a target="_blank" rel="noopener" href="https://developers.google.com/web/fundamentals/design-and-ux/responsive?hl=zh-cn#set-the-viewport">视口</a> 内的确切位置和大小，这就是 <code>布局</code> ( Layout ) 阶段，也称为 <code>自动重排</code> 或 <code>回流</code> ( Reflow )</p>
+<p>此阶段一般意味着元素的内容、结构、位置或尺寸发生了变化，需要重新计算样式和渲染树</p>
+<p>简单举个例子，我们看下面这段代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;viewport&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;width=device-width,initial-scale=1&quot;</span> /&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>hahaha<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;width: 50%&quot;</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;width: 50%&quot;</span>&gt;</span>Hello world<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>上面代码网页的正文包含两个嵌套 div：第一个父 div 将节点的显示尺寸设置为视口宽度的 50%，父 div 包含的第二个 div 将其宽度设置为其父项的 50%，即视口宽度的 25% （网图侵删）</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200418223841109.png" srcset="/blog/img/loading.gif" lazyload alt="image-20200418223841109"></p>
+<p>布局流程的输出是一个 <code>盒模型</code>，它会精确地捕获每个元素在视口内的确切位置和尺寸，当然，所有相对测量值都转换为屏幕上的绝对像素</p>
+<p>我们先往下看，稍后还会给大家介绍</p>
+<h3 id="绘制-Painting"><a href="#绘制-Painting" class="headerlink" title="绘制(Painting)"></a>绘制(Painting)</h3><p>经历了以上种种步骤，终于来到了 <code>绘制</code> ，这一步听名字就能想到其作用了</p>
+<p>经由前几步我们知道了哪些节点可见、它们的计算样式以及几何信息，我们将这些信息传递给最后一个阶段将渲染树中的每个节点转换成屏幕上的实际像素，也就是俗称的 <code>绘制</code> 或 <code>栅格化</code></p>
+<p><code>绘制</code> 过程中有一种绘制叫 <code>重绘</code>，也就是下我们要说的</p>
+<h4 id="重绘-Repaint"><a href="#重绘-Repaint" class="headerlink" title="重绘(Repaint)"></a>重绘(Repaint)</h4><p>元素发生的改变只是影响了元素的一些外观之类的时候（例如，背景色，边框颜色，文字颜色等），此时只需要应用新样式绘制这个元素就可以了，这叫做 <code>重绘</code> ( Repaint )</p>
+<h4 id="回流-Reflow"><a href="#回流-Reflow" class="headerlink" title="回流 (Reflow)"></a>回流 (Reflow)</h4><p>上面我们已经说过了 <code>回流</code> ，当然也叫 <code>重排</code> ，要知道，<code>回流</code> 一定伴随着 <code>重绘</code> ，<code>重绘</code> 却可以单独出现，对比来看，显然回流的成本开销要高于重绘，而且一个节点的回流往往还会导致子节点以及同级节点的回流，所以优化方案中一般都包括，尽量避免 <code>回流</code></p>
+<h4 id="什么会引起回流"><a href="#什么会引起回流" class="headerlink" title="什么会引起回流"></a>什么会引起回流</h4><ul>
+<li><p>页面渲染初始化</p>
+</li>
+<li><p>DOM 结构改变，比如删除了某个节点</p>
+</li>
+<li><p>render 树变化，比如减少了 padding</p>
+</li>
+<li><p>窗口 <code>resize</code></p>
+</li>
+<li><p>某些 JS 属性，引发回流，很多浏览器会对回流做优化，等到数量足够时做一次批处理回流，<br>但除了 <code>render树</code> 的直接变化，当获取一些属性时，浏览器为了获得正确的值也会触发回流，这样使得浏览器优化无效</p>
+</li>
+<li><p>offset ( Top/Left/Width/Height )</p>
+<ul>
+<li>scroll ( Top/Left/Width/Height )</li>
+<li>cilent ( Top/Left/Width/Height )</li>
+<li>width, height</li>
+<li>调用了 <code>getComputedStyle()</code> 或者 IE 的 <code>currentStyle</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="如何减少和避免回流重绘"><a href="#如何减少和避免回流重绘" class="headerlink" title="如何减少和避免回流重绘"></a>如何减少和避免回流重绘</h4><p>上面我们说到，回流开销太大了，那么我们肯定是要优化的，接着看，其实就是尽量避免上面那些操作</p>
+<ul>
+<li>减少逐项更改样式，最好一次性更改 <code>style</code>，或者将样式定义为 <code>class</code> 并一次性更新</li>
+<li>避免循环操作 DOM，让 DOM 离线后再修改<ul>
+<li>创建一个 <code>documentFragment</code> ，在它上面应用所有 DOM 操作，最后再把它添加到 <code>window.document</code></li>
+<li>先把 DOM 节点 <code>display:none</code> ( 会触发一次 <code>reflow</code>)，然后做修改后，再把它显示出来</li>
+<li>克隆一个 DOM 节点在内存里，修改之后，与在线的节点相替换</li>
+</ul>
+</li>
+<li>避免多次读取 offset 等属性，无法避免则将它们缓存到变量</li>
+<li>将复杂的元素绝对定位或固定定位，使得它脱离文档流，否则回流代价会很高</li>
+<li>改变字体大小也会引发回流，所以尽可能减少这种操作</li>
+<li>table 布局，一个小改动会造成整个 table 的重新布局，所以，少用为好</li>
+</ul>
+<p>总之，说来说去，回流重绘，特别是回流，特别耗费资源，尽量避免就好，关于一些 CSS 属性会引起的回流重绘，可以去这个网站查查看 <a target="_blank" rel="noopener" href="https://csstriggers.com/">https://csstriggers.com/</a></p>
+<h3 id="合成-Composite"><a href="#合成-Composite" class="headerlink" title="合成(Composite)"></a>合成(Composite)</h3><p>终于来到了最后一个点 <code>合成</code> ，我们先来总结一下上面的步骤，到目前我们经历渲染过程如下</p>
+<ul>
+<li>首先解析 <code>HTML</code> 文档，形成 DOM 树</li>
+<li>接着解析 <code>CSS</code>，产生 CSSOM 树</li>
+<li>在 DOM 和 CSSOM 树解析过程中，遇到 JS，会立即阻塞 DOM 树的构建，JS 解析完成，接着走上面两步</li>
+<li>再接着，浏览器通过 DOM 和 CSSOM 树构建渲染树 ( Render 树 )<ul>
+<li>这个过程中，DOM 中不可见标签元素不会放到渲染树中，就像<code>&lt;head&gt;&lt;/head&gt; 或 display:none</code></li>
+<li>CSSOM 树规则会附加给渲染树的每个元素上</li>
+</ul>
+</li>
+<li>渲染树构建完成，浏览器会对这些元素进行定位和布局，这一步也叫 重排/回流 ( <code>Reflow</code>) 或 布局(<code>Layout</code> )</li>
+<li>接下来绘制这些元素的样式，颜色，背景，大小及边框等，这一步也叫做 重绘 (<code>Repaint</code>)</li>
+<li>再接下来是我们这最后一步合成( <code>composite</code> )，浏览器会将各层信息发送给 GPU，GPU 将各层合成，显示在屏幕上</li>
+</ul>
+<p>关于合成这一步骤，准备细聊一下子，让大家对其有个基本概念，因为刚开始忽略了它</p>
+<p>首先，我们需要简单了解一些基本概念</p>
+<h4 id="浏览器渲染方式"><a href="#浏览器渲染方式" class="headerlink" title="浏览器渲染方式"></a>浏览器渲染方式</h4><p>浏览器在渲染图形的时候，有一个绘图上下文，绘图上下文又分成两种类型</p>
+<ul>
+<li>第一种是用来绘制 2D 图形的上下文，称之为 2D 绘图上下文（GraphicsContext）</li>
+<li>第二种是绘制 3D 图形的上下文，称之为 3D 绘图上下文（GraphicsContext3D）</li>
+</ul>
+<p>网页也有三种渲染方式</p>
+<ul>
+<li>软件渲染（CPU 内存）</li>
+<li>使用软件绘图的合成化渲染（GPU 内存）CSS3D、WebGL</li>
+<li>硬件加速的合成化渲染（GPU 内存）</li>
+</ul>
+<p>当然，这些我们也不需要深入理解，知道它们的存在即可</p>
+<h4 id="软件渲染技术"><a href="#软件渲染技术" class="headerlink" title="软件渲染技术"></a>软件渲染技术</h4><p>Webkit 在不需要硬件加速内容的时候（包括但不限于 <code>CSS3 3D变形</code>、<code>CSS3 3D变换</code> 、 <code>WebGL</code> 和 <code>视频</code>），它就可以使用 <code>软件渲染技术</code> 来完成页面绘制</p>
+<p>上面我们看到了软件渲染技术，它是什么呢？我们接着看</p>
+<p>对于每个渲染对象，需要三个阶段绘制自己</p>
+<ul>
+<li>第一阶段是绘制该层中所有块的背景和边框</li>
+<li>第二阶段是绘制浮动内容</li>
+<li>第三阶段是前景 ( Foreground ) ，也就是内容部分、轮廓、字体颜色、大小等 ( 内嵌元素的背景、边框等发生在这一阶段 )</li>
+</ul>
+<h4 id="硬件加速技术"><a href="#硬件加速技术" class="headerlink" title="硬件加速技术"></a>硬件加速技术</h4><p>硬件加速技术是指使用 GPU 的硬件能力来帮助渲染网页 ( GPU 的作用主要是用来绘制 3D 图形并且性能很 nice )</p>
+<h4 id="普通图层和复合图层"><a href="#普通图层和复合图层" class="headerlink" title="普通图层和复合图层"></a>普通图层和复合图层</h4><p>浏览器渲染的图层一般包含两大类：<code>普通图层</code> 以及 <code>复合图层</code></p>
+<p>普通文档流大家就可以理解为一个复合图层，我们叫它<code>默认复合层</code>，因为里面不管添加多少元素，其实都是在同一个复合图层中，<code>absolute</code> 布局、 <code>fixed</code> 也一样，虽然可以脱离普通文档流，但它仍然属于 <code>默认复合层</code></p>
+<p>复合图层，可以独立于普通文档流中，改动后可以避免整个页面重绘，提升性能，但也不要大量使用复合图层，否则由于资源消耗过度，页面反而会变的更卡，因小失大</p>
+<p>GPU 中，各个复合图层是单独绘制的，所以也互不影响，通过 <code>硬件加速</code> 的方式，会声明一个 <code>新的复合图层</code> ，它会单独分配资源，当然也会脱离普通文档流，这样一来，不管这个复合图层中怎么变化，也不会影响 <code>默认复合层</code> 里的回流重绘</p>
+<h4 id="何为复合图层-硬件加速"><a href="#何为复合图层-硬件加速" class="headerlink" title="何为复合图层/硬件加速"></a>何为复合图层/硬件加速</h4><p>复合图层或者说硬件加速，其实就是仅触发合成 <code>composite</code> ，那么也就必须符合以下三个条件</p>
+<ul>
+<li>不影响文档流</li>
+<li>不依赖文档流</li>
+<li>不会造成重绘</li>
+</ul>
+<p>寻思一下，可以做到这种情况得还真的不多 ( Chrome )</p>
+<ul>
+<li>最常用的方式是 <code>transform</code></li>
+<li><code>opacity</code> 属性 / 过渡动画 (需要动画执行的过程中才会创建合成层，动画没有开始或结束后元素还会回到之前的状态)</li>
+<li><code>will-chang</code> 属性 (这个比较偏僻)，一般配合 <code>opacity</code> 与 <code>translate</code> 使用，除了上述可以引发硬件加速的属性外，其它属性并不会变成复合层，作用是提前告诉浏览器要变化，这样浏览器会开始做一些优化工作 (最好用完后就释放)</li>
+<li><code>&lt;canvas&gt; &lt;webgl&gt;</code> 等元素</li>
+<li>还有以前的 <code>flash</code> 插件等等</li>
+</ul>
+<p>通俗一点，假如我们给一个元素加了 <code>transform</code> 属性吧，那么该元素就不会影响也不会依赖文档流，也不会造成重绘，就变成了一个复合图层，也就可以说我们对它使用了传说中的 <code>硬件加速技术</code></p>
+<h4 id="absolute？"><a href="#absolute？" class="headerlink" title="absolute？"></a>absolute？</h4><p>到了这里，大家可能有些迷惑，我们不是常说 <code>absolute</code> 是脱离文档流吗，为什么上面复合图层或者说硬件加速中没有 <code>absolute</code> 呢</p>
+<p>其实，<code>absolute</code> 虽然可以脱离普通文档流，但是无法脱离默认复合层，就像它的 <code>left</code> 属性可以使用百分比的值，依赖于它的 <code>offset parent</code></p>
+<p>所以，就算 <code>absolute</code> 中信息改变时不会改变普通文档流中的 <code>渲染树</code> ，但浏览器最终绘制时，是整个复合层绘制的，所以 <code>absolute</code> 中信息改变，仍会影响整个复合层的绘制，浏览器还是会重绘它，如果复合层中内容多，<code>absolute</code> 带来的绘制信息变化过大，资源消耗也非常严重</p>
+<p>而我们上面说的硬件加速，那直接就是在另一个复合层了，所以它的信息改变不会影响默认复合层，当然内部肯定会影响属于自己的复合层，仅仅是引发最后的合成渲染</p>
+<h2 id="页面渲染优化"><a href="#页面渲染优化" class="headerlink" title="页面渲染优化"></a>页面渲染优化</h2><p>浏览器对上文介绍的关键渲染步骤进行了很多优化，针对每一次变化产生尽量少的操作，还有优化判断重新绘制或布局的方式等等，据上文所述，总结下页面渲染这块的优化实践，不分先后，大家也可一块来补充</p>
+<ul>
+<li><p>HTML 文档结构层次尽量少，最好不深于六层</p>
+</li>
+<li><p>JS 脚本尽量后放</p>
+</li>
+<li><p>样式结构层次尽量简单</p>
+</li>
+<li><p>少量首屏样式使用内联方式放在标签内</p>
+</li>
+<li><p>在脚本中尽量减少 DOM 操作，尽量访问离线 DOM 样式信息，避免过度触发回流</p>
+</li>
+<li><p>减少通过 JS 代码修改元素样式，尽量使用修改 <code>class</code> 名方式操作样式或动画</p>
+</li>
+<li><p>尽量减少浏览器重排和重绘的一些情况发生</p>
+</li>
+<li><p>2020 年了！就不要使用 <code>table</code> 布局了</p>
+</li>
+<li><p>CSS 动画中尽量只使用 <code>transform</code> 和 <code>opacity</code> ，不会发生重排和重绘</p>
+</li>
+<li><p>隐藏在屏幕外，或在页面滚动时，尽量停止动画</p>
+</li>
+<li><p>尽可能只使用 CSS 做动画，CSS 动画肯定比 JS 动画要好很多</p>
+</li>
+<li><p>避免浏览器的隐式合成</p>
+</li>
+<li><p>改变复合层的尺寸</p>
+</li>
+</ul>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>上面讲的有些随意，最后再来波官方点的总结吧</p>
+<p>发起一个请求，我们拿到了页面，下载完的网页将被交给浏览器内核（渲染进程）进行处理</p>
+<ul>
+<li>首先，根据顶部定义的 DTD 类型进行对应的解析方式</li>
+<li>渲染进程内部是多线程的，网页的解析将会被交给内部的 GUI 渲染线程处理</li>
+<li>渲染线程中的 HTML 解释器，将 HTML 网页和资源从字节流解释转换成字符流</li>
+<li>再通过词法分析器将字符流解释成词</li>
+<li>之后经过语法分析器根据词构建成节点，最后通过这些节点组建一个 DOM 树</li>
+<li>这个过程中，如果遇到的 DOM 节点是 JS 代码，就会调用 <code>JS引擎</code> 对 JS 代码进行解释执行，此时由 <code>JS引擎</code> 和 <code>GUI渲染线程</code> 的互斥，<code>GUI渲染线程</code> 就会被挂起，渲染过程停止，如果 JS 代码的运行中对 DOM 树进行了修改，那么 DOM 的构建需要从新开始</li>
+<li>如果节点需要依赖其他资源，图片/CSS 等等，就会调用网络模块的资源加载器来加载它们，它们是异步的，不会阻塞当前 DOM 树的构建</li>
+<li>如果遇到的是 JS 资源 URL（没有标记异步），则需要停止当前 DOM 的构建，直到 JS 的资源加载并被 <code>JS引擎</code> 执行后才继续构建 DOM</li>
+<li>对于 CSS，CSS 解释器会将 CSS 文件解释成内部表示结构，生成 CSS 规则树</li>
+<li>然后合并 CSS 规则树和 DOM 树，生成 Render 渲染树，也叫呈现树</li>
+<li>最后对 Render 树进行布局和绘制，并将结果通过 IO 线程传递给浏览器控制进程进行显示</li>
+</ul>
+<p>页面渲染篇到此就结束了，又是上万字，好像也没讲太多东西，大家还是只能以庞观的方式去了解，私下想深入的话还是要多看些相关资料，此文也是我看了很多资料输出的，看完本文，再去看资料或深入应该也会容易了解一些吧，这几篇帖子的核心都脱离不了那道经典面试题，那么看到了这里基本的一些知识点都已经给大家阐述过了，可以自己尝试总结一番了，一定要自己总结再看下文总结篇，这样大家也算没白浪费时间</p>
+<p>下一文「一道面试题」输入 URL 到渲染全面梳理下-总结篇，待续哦。。</p>
+<p>对您有帮助的话，动动小手，点个赞鼓励下吧，当然，个人理解，如有不正，欢迎指出，不胜感激</p>
+<p>哦，还有，可以加个好友加下群一起交流噻，公众号【不正经的前端】也欢迎关注呦 😄</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200508193235095.png" srcset="/blog/img/loading.gif" lazyload></p>
+<blockquote>
+<p>参考 ( 参考了很多帖子，贴了三个认为比较好的，推荐大家看一看 )</p>
+<ol>
+<li><p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000013662126">从输入 URL 到页面加载的过程？如何由一道题完善自己的前端知识体系</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000012925872">从浏览器多进程到 JS 单线程，JS 运行机制最全面的一次梳理</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000008015671">一篇文章说清浏览器解析和 CSS（GPU）动画优化</a></p>
+</li>
+</ol>
+</blockquote>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E4%B8%80%E9%81%93%E9%9D%A2%E8%AF%95%E9%A2%98/">一道面试题</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/%E7%BD%91%E7%BB%9C/">网络</a>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本站所有文章如需转载，请联系作者！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2020/05/08/mianshi/%E3%80%8C%E4%B8%80%E9%81%93%E9%9D%A2%E8%AF%95%E9%A2%98%E3%80%8D%E8%BE%93%E5%85%A5URL%E5%88%B0%E6%B8%B2%E6%9F%93%E5%85%A8%E9%9D%A2%E6%A2%B3%E7%90%86%E4%B8%8B-%E6%80%BB%E7%BB%93%E7%AF%87/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">「一道面试题」输入URL到渲染全面梳理下-总结篇</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2020/04/15/mianshi/%E3%80%8C%E4%B8%80%E9%81%93%E9%9D%A2%E8%AF%95%E9%A2%98%E3%80%8D%E8%BE%93%E5%85%A5URL%E5%88%B0%E6%B8%B2%E6%9F%93%E5%85%A8%E9%9D%A2%E6%A2%B3%E7%90%86%E4%B8%8A-%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E7%AF%87/">
+                        <span class="hidden-mobile">「一道面试题」输入 URL 到渲染全面梳理上-网络通信篇</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"OuIO62anqvXdvjruYtvDefqV-gzGzoHsz","appKey":"G9BfnEel5vlsGHJqmPkr2B1P","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+       <div style="display: flex;justify-content: center;align-items: center;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/gzh.jpeg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/zs.jpg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;margin-left: 20px;"> </div> 
+    </div>
+  </div>
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     本站使用 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 主题，欢迎关注微信公众号「不正经的前端」！ 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

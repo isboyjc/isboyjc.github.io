@@ -1,0 +1,726 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/images/avatar.jpeg">
+  <link rel="icon" href="/blog/images/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="李建超,isboyjc,句末,不正经的前端">
+  
+  <title>让GIS三维可视化变得简单-Cesium地球初始化 - ISBOYJC</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"isboyjc.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":500711128,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/images/b011.jpeg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="让GIS三维可视化变得简单-Cesium地球初始化">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      isboyjc
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-08-31 14:00" pubdate>
+        2020年8月31日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      46
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">让GIS三维可视化变得简单-Cesium地球初始化</h1>
+            
+            <div class="markdown-body">
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>开发中我们通常会需要一个干净的三维地球实例，本文将介绍 <code>Cesium</code> 如何初始化一个地球，包括地图控件的显示隐藏以及一些常用影像和标注的加载</p>
+<p><a target="_blank" rel="noopener" href="https://isboyjc.top/cesiumdemo/cesium-init/index.html">预览Demo</a> </p>
+<p>Cesium 是一款面向三维地球和地图的，世界级的 <code>JavaScript</code> 开源产品，它提供了基于 <code>JavaScript</code> 语言的开发包，方便用户快速搭建一款零插件的虚拟地球 Web 应用，并在性能，精度，渲染质量以及多平台，易用性上都有高质量的保证</p>
+<p>想了解更多 Cesium 的介绍请看 👉 <a target="_blank" rel="noopener" href="https://juejin.im/post/6854573221191090189">让GIS三维可视化变得简单-初识Cesium</a> </p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>本文及后续文章启动环境皆是基于 <code>Vue-CLI3.X+</code> </p>
+<p>使用我自己写的 <code>CLI</code> 插件 <code>vue-cli-plugin-cesium</code> 零配置搭建 <code>Cesium</code> 环境</p>
+<p>具体环境搭建可看 👉 <a target="_blank" rel="noopener" href="https://juejin.im/post/6854899697661394951">让GIS三维可视化变得简单-Vue项目中集成Cesium</a> </p>
+<h2 id="地球初始化"><a href="#地球初始化" class="headerlink" title="地球初始化"></a>地球初始化</h2><h3 id="申请Token"><a href="#申请Token" class="headerlink" title="申请Token"></a>申请Token</h3><p>在正式开发之前，我们首先需要去注册一个免费的 <code>Cesium ion</code> 账户</p>
+<p>步骤如下</p>
+<p>首先，打开 <a target="_blank" rel="noopener" href="https://cesium.com/ion/">https://cesium.com/ion/</a> 然后注册一个新的账户</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200901115736912.jpeg" srcset="/blog/img/loading.gif" lazyload></p>
+<p>注册成功后登录，点击 <code>Access Token</code>，跳转到 <em><strong>Access Tokens page</strong></em> 页面</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/Xnip2020-09-01_11-59-41.jpeg" srcset="/blog/img/loading.gif" lazyload></p>
+<p>如上所示，选择 <em><strong>Default</strong></em> 默认的 <code>access token</code> 拷贝到内容中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">Cesium.Ion.defaultAccessToken = <span class="hljs-string">&#x27;&lt;YOUR ACCESS TOKEN HERE&gt;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>当然，如果你只是写写demo，那不写 <code>Token</code> 也行</p>
+<h3 id="默认初始化"><a href="#默认初始化" class="headerlink" title="默认初始化"></a>默认初始化</h3><p>环境准备就绪之后，我们就可以初始化Cesium实例了，也就是加载地球</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;template&gt;<br>  &lt;div class=&quot;map-box&quot;&gt;<br>    &lt;div id=&quot;cesiumContainer&quot;&gt;&lt;/div&gt;<br>  &lt;/div&gt;<br>&lt;/template&gt;<br><br>&lt;script&gt;<br>var viewer = null<br>export default &#123;<br>  name: &quot;No01Init&quot;,<br>  data() &#123;<br>    return &#123;&#125;<br>  &#125;,<br>  mounted() &#123;<br>    Cesium.Ion.defaultAccessToken = &#x27;&lt;YOUR ACCESS TOKEN HERE&gt;&#x27;<br>    // viewer = new Cesium.CesiumWidget(&#x27;cesiumContainer&#x27;)<br>    viewer = new Cesium.Viewer(&quot;cesiumContainer&quot;)<br><br>    console.log(viewer)<br>  &#125;,<br>&#125;<br>&lt;/script&gt;<br>&lt;style scoped&gt;<br>.map-box &#123;<br>  width: 100%;<br>  height: 100%;<br>&#125;<br>#cesiumContainer &#123;<br>  width: 100%;<br>  height: 100%;<br>&#125;<br>&lt;/style&gt;<br><br></code></pre></td></tr></table></figure>
+
+<p>如上所示，我们可以使用 <code>new Cesium.CesiumWidget</code> 或者 <code>new Cesium.Viewer</code> 的方式进行初始化，都可以，给一个容器挂载即可，运行项目后效果如下</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200827232433642.jpeg" srcset="/blog/img/loading.gif" lazyload></p>
+<p>可能细心的小伙伴注意到了我们初始化的 <code>viewer</code> 实例并没有写在 <code>data</code> 里，这是因为Vue中会为 <code>data</code> 中的属性做数据劫持，如果属性是一个对象，将会递归进行数据劫持，<code>viewer</code> 这个实例中的属性数量非常多，如果将它放置 <code>data</code> 中。。。只有一个下场，浏览器崩溃</p>
+<p>我们可以在组件上放直接声明一个 <code>viewer</code> 变量，也可以使用 <code>window.viewer</code> 把 <code>viewer</code> 挂载到 <code>window</code> 上面，都可以避免这个问题</p>
+<p>在 <code>Vue + Cesium</code> 开发中和实例有关的数据都不要放在data中，这点一定需要注意</p>
+<h3 id="控件隐藏"><a href="#控件隐藏" class="headerlink" title="控件隐藏"></a>控件隐藏</h3><p>上面我们可以看到，在默认初始化里，页面上有很多控件，开发时我们基本用不到，但是还是先来介绍下这些控件的作用</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200830164028938.jpeg" srcset="/blog/img/loading.gif" lazyload></p>
+<p>在创建 <code>Cesium</code> 实例时，<code>new Cesium.Viewer</code> 构造函数有两个参数</p>
+<ul>
+<li>实例挂载的元素 必选项</li>
+<li>options 初始化配置对象 可选项</li>
+</ul>
+<p>在 <code>options</code> 对象中，我们可以配置初始化的一些控件显示隐藏以及一些渲染配置，这里列举出一些常用的配置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js">viewer = <span class="hljs-keyword">new</span> Cesium.Viewer(<span class="hljs-string">&quot;cesiumContainer&quot;</span>, &#123;<br>  <span class="hljs-attr">animation</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 隐藏动画控件</span><br>  <span class="hljs-attr">baseLayerPicker</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 隐藏图层选择控件</span><br>  <span class="hljs-attr">fullscreenButton</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 隐藏全屏按钮</span><br>  <span class="hljs-attr">vrButton</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 隐藏VR按钮，默认false</span><br>  <span class="hljs-attr">geocoder</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 隐藏地名查找控件</span><br>  <span class="hljs-attr">homeButton</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 隐藏Home按钮</span><br>  <span class="hljs-attr">infoBox</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 隐藏点击要素之后显示的信息窗口</span><br>  <span class="hljs-attr">sceneModePicker</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 隐藏场景模式选择控件</span><br>  <span class="hljs-attr">selectionIndicator</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// 显示实体对象选择框，默认true</span><br>  <span class="hljs-attr">timeline</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 隐藏时间线控件</span><br>  <span class="hljs-attr">navigationHelpButton</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// 隐藏帮助按钮</span><br>  <span class="hljs-attr">scene3DOnly</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// 每个几何实例将只在3D中呈现，以节省GPU内存</span><br>  <span class="hljs-attr">shouldAnimate</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// 开启动画自动播放</span><br>  <span class="hljs-attr">sceneMode</span>: <span class="hljs-number">3</span>, <span class="hljs-comment">// 初始场景模式 1：2D 2：2D循环 3：3D，默认3</span><br>  <span class="hljs-attr">requestRenderMode</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// 减少Cesium渲染新帧总时间并减少Cesium在应用程序中总体CPU使用率</span><br>  <span class="hljs-comment">// 如场景中的元素没有随仿真时间变化，请考虑将设置maximumRenderTimeChange为较高的值，例如Infinity</span><br>  <span class="hljs-attr">maximumRenderTimeChange</span>: <span class="hljs-literal">Infinity</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>我们使用上面 <code>options</code> 配置，即可把页面上的控件全部隐藏掉，如下图所示</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/48991-Xnip2020-08-30_18-33-57.jpg" srcset="/blog/img/loading.gif" lazyload></p>
+<p>可以看到，虽然控件已经没有了，但是屏幕下方还有 <code>Cesium</code> 的 <code>logo</code> 信息，我们需要让它也不显示</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 隐藏下方Cesium logo</span><br>viewer.cesiumWidget.creditContainer.style.display = <span class="hljs-string">&quot;none&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>如上所示，只需再来一行额外的配置隐藏 <code>logo</code> 信息，即可获得一个干净的地球实例，最终效果图如下</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/Xnip2020-08-30_18-40-24.jpeg" srcset="/blog/img/loading.gif" lazyload></p>
+<h3 id="加载影像"><a href="#加载影像" class="headerlink" title="加载影像"></a>加载影像</h3><p><code>Cesium</code> 支持多种服务来源的高精度影像（地图）数据的加载和渲染，图层支持排序和透明混合，每个图层的亮度（brightness），对比度（ contrast），灰度（gamma），色调（hue），饱和度（saturation）都是可以动态修改的</p>
+<p>这里我们忽略细节，先简单介绍下影像相关的几个类，然后直接写代码去添加一些不同的常用影像图层</p>
+<p><strong>PS：Cesium是一个构造函数，在这个构造函数上又有无数个静态属性，它们也是不同作用的构造函数，按照OOP的方式理解，Cesium是一个父类，而它又有很多子类用来做不同的事情</strong> </p>
+<h4 id="Cesium-ImageryProvider类"><a href="#Cesium-ImageryProvider类" class="headerlink" title="Cesium.ImageryProvider类"></a>Cesium.ImageryProvider类</h4><p>说到影像这块儿，首先，我们要了解一下 <code>imageryProvider</code> 这个类，<code>Imagery</code> 可以翻译为图像、影像，这里就统一称之为影像</p>
+<p><code>ImageryProvider</code> 类及其子类封装了加载各种影像图层的方法，其中 <code>Cesium.ImageryProvider</code> 类是抽象类、基类或者可将其理解为接口，它不能被直接实例化</p>
+<p>可以将 <code>ImageryProvider</code> 看作是影像图层的数据源，我们想使用哪种影像图层数据或服务就用对应的 <code>ImageryProvider</code> 类型去加载即可</p>
+<p><code>ImageryProvider</code> 类包含的类型</p>
+<ul>
+<li>ArcGisMapServerImageryProvider<ul>
+<li>ArcGIS Online和Server的相关服务</li>
+</ul>
+</li>
+<li>BinaMapsImageryProvider<ul>
+<li>Bing地图影像，可以指定mapStyle，详见BingMapsStyle类</li>
+</ul>
+</li>
+<li>GoogleEarthEnterpriselmageryProvider<ul>
+<li>企业级服务</li>
+</ul>
+</li>
+<li>GridImageryProvider<ul>
+<li>渲染每一个瓦片内部的格网，了解每个瓦片的精细度</li>
+</ul>
+</li>
+<li>IonImageryProvider<ul>
+<li>Cesium ion REST API提供的影像服务</li>
+</ul>
+</li>
+<li>MapboxImageryProvider<ul>
+<li>Mapbox影像服务，根据 mapId 指定地图风格</li>
+</ul>
+</li>
+<li>MapboxStyleImageryProvider<ul>
+<li>Mapbox影像服务，根据 styleId 指定地图风格</li>
+</ul>
+</li>
+<li>createOpenStreetMapImageryProvider<ul>
+<li>OpenStreetMap提供的影像服务</li>
+</ul>
+</li>
+<li>SingleTilelmageryProvider<ul>
+<li>单张图片的影像服务，适合离线数据或对影像数据要求并不高的场景下</li>
+</ul>
+</li>
+<li>TileCoordinatesImageryProvider<ul>
+<li>渲染每一个瓦片的围，方便调试</li>
+</ul>
+</li>
+<li>TileMapServicelmageryProvider<ul>
+<li>根据MapTiler规范，可自己下载瓦片，发布服务，类似ArcGIS影像服务的过程</li>
+</ul>
+</li>
+<li>UrlTemplateImageryProvider<ul>
+<li>指定url的format模版，方便用户实现自己的Provider，比如国内的高德，腾讯等影像服务，url都是一个固定的规范，都可以通过该Provider轻松实现。而OSM也是通过该类实现的</li>
+</ul>
+</li>
+<li>WebMapServiceImageryProvider<ul>
+<li>符合WMS规范的影像服务都可以通过该类封装，指定具体参数实现</li>
+</ul>
+</li>
+<li>WebMapTileServicelmageryProvider<ul>
+<li>服务WMTS1.0.0规范的影像服务，都可以通过该类实现，比如国内的天地图</li>
+</ul>
+</li>
+</ul>
+<h4 id="Cesium-ImageryLayer类"><a href="#Cesium-ImageryLayer类" class="headerlink" title="Cesium.ImageryLayer类"></a>Cesium.ImageryLayer类</h4><p>要知道，一份 <code>GIS</code> 数据会被组织成图层符号化并渲染，数据相当于内在血液、内脏，信息量丰富，而图层相当于外在皮毛、衣服，用于呈现给外界</p>
+<p><code>Cesium</code> 同样将数据源组织成图层符号化并渲染，<code>Cesium.ImageryLayer</code> 类就用于表示 <code>Cesium</code> 中的影像图层，它就相当于皮毛、衣服，将数据源包裹，它需要数据源为其提供内在丰富的地理空间信息和属性信息</p>
+<h4 id="Cesium-ImageryLayerCollection类"><a href="#Cesium-ImageryLayerCollection类" class="headerlink" title="Cesium.ImageryLayerCollection类"></a>Cesium.ImageryLayerCollection类</h4><p><code>Cesium.ImageryLayerCollection</code> 类是 <code>ImageryLayer</code> 实例的容器，它可以装载、放置多个 <code>ImageryLayer</code> 实例，而且它内部放置的 <code>ImageryLayer</code> 实例是有序的</p>
+<p><code>Cesium.Viewer</code> 类对象中包含的 <code>imageryLayers</code> 属性就是 <code>ImageryLayerCollection</code> 类的实例，它包含了当前 <code>Cesium</code> 应用程序所有的 <code>ImageryLayer</code> 类对象，即当前地球上加载的所有影像图层</p>
+<p>知道了影像图层基础的体系结构，那么影像加载就简单了，上面我们也可以看到 <code>ImageryProvider</code> 类种类非常多，列举出来是为了给大家展示下它可以加载什么影像，但是一一演示不现实，所以接下来我们就来看几个常见影像加载</p>
+<h4 id="加载影像示例"><a href="#加载影像示例" class="headerlink" title="加载影像示例"></a>加载影像示例</h4><h5 id="加载天地图影像"><a href="#加载天地图影像" class="headerlink" title="加载天地图影像"></a>加载天地图影像</h5><p>按照上述所说，首先我们要加载影像图层的数据源，Cesium地球默认加载的是 <code>bing</code> 地图影像，所以我们要先从容器中删除这个默认影像</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">viewer.imageryLayers.remove(viewer.imageryLayers.get(<span class="hljs-number">0</span>))<br></code></pre></td></tr></table></figure>
+
+<p>然后，我们加载影像图层的数据源</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> tianditu = <span class="hljs-keyword">new</span> Cesium.WebMapTileServiceImageryProvider(&#123;<br>  <span class="hljs-attr">url</span>:<span class="hljs-string">&quot;http://t0.tianditu.com/img_w/wmts?service=wmts&amp;request=GetTile&amp;version=1.0.0&amp;LAYER=img&amp;tileMatrixSet=w&amp;TileMatrix=&#123;TileMatrix&#125;&amp;TileRow=&#123;TileRow&#125;&amp;TileCol=&#123;TileCol&#125;&amp;style=default&amp;format=tiles&amp;tk=ebf64362215c081f8317203220f133eb&quot;</span>,<br>  <span class="hljs-attr">layer</span>: <span class="hljs-string">&quot;tdtBasicLayer&quot;</span>,<br>  <span class="hljs-attr">style</span>: <span class="hljs-string">&quot;default&quot;</span>,<br>  <span class="hljs-attr">format</span>: <span class="hljs-string">&quot;image/jpeg&quot;</span>,<br>  <span class="hljs-attr">tileMatrixSetID</span>: <span class="hljs-string">&quot;GoogleMapsCompatible&quot;</span>,<br>  <span class="hljs-attr">show</span>: <span class="hljs-literal">false</span>,<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p><code>url</code> 字段中的 <code>tk</code> 为天地图服务token，去天地图官网注册申请一个即可</p>
+<p>随后，我们将数据源添加至 <code>ImageryLayer</code> 类容器进行符号化并渲染即可</p>
+<p>将数据源添加至 <code>ImageryLayer</code> 类容器进行符号化并渲染有两种方法，第一种是在初始化 <code>viewer</code> 实例时的 <code>options</code> 配置中，你可以直接在 <code>options</code> 对象的 <code>imageryProvider</code> 属性中放置数据源即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">new</span> Cesium.Viewer(<span class="hljs-string">&quot;cesiumContainer&quot;</span>,&#123;<br>  <span class="hljs-attr">imageryProvider</span>: tianditu<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>第二种方法，使用 <code>viewer</code> 实例中 <code>imageryLayers</code> 属性的 <code>addImageryProvider</code> 方法来添加即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> imagery = viewer.imageryLayers.addImageryProvider(tianditu)<br></code></pre></td></tr></table></figure>
+
+<p>天地图影像预览如下</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/tianditu.jpeg" srcset="/blog/img/loading.gif" lazyload></p>
+<h5 id="加载谷歌影像"><a href="#加载谷歌影像" class="headerlink" title="加载谷歌影像"></a>加载谷歌影像</h5><p>上面步骤已经知悉，我们就不一一叙说了，下面直接看代码就好</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js">viewer.imageryLayers.remove(viewer.imageryLayers.get(<span class="hljs-number">0</span>))<br><span class="hljs-keyword">let</span> imagery = viewer.imageryLayers.addImageryProvider(<br>  <span class="hljs-keyword">new</span> Cesium.UrlTemplateImageryProvider(&#123;<br>    <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;http://mt1.google.cn/vt/lyrs=s&amp;hl=zh-CN&amp;x=&#123;x&#125;&amp;y=&#123;y&#125;&amp;z=&#123;z&#125;&amp;s=Gali&quot;</span>,<br>    <span class="hljs-attr">baseLayerPicker</span> : <span class="hljs-literal">false</span><br>  &#125;)<br>)<br></code></pre></td></tr></table></figure>
+
+<p>谷歌影像预览如下</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/guge.jpeg" srcset="/blog/img/loading.gif" lazyload></p>
+<h5 id="加载ArcGIS影像"><a href="#加载ArcGIS影像" class="headerlink" title="加载ArcGIS影像"></a>加载ArcGIS影像</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js">viewer.imageryLayers.remove(viewer.imageryLayers.get(<span class="hljs-number">0</span>))<br><span class="hljs-keyword">let</span> imagery = viewer.imageryLayers.addImageryProvider(<br>  <span class="hljs-keyword">new</span> Cesium.ArcGisMapServerImageryProvider(&#123;<br>    <span class="hljs-attr">url</span>:<span class="hljs-string">&#x27;https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer&#x27;</span>,<br>    <span class="hljs-attr">baseLayerPicker</span> : <span class="hljs-literal">false</span><br>  &#125;)<br>)<br></code></pre></td></tr></table></figure>
+
+<p>ArcGIS影像预览如下</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/arcgis.jpeg" srcset="/blog/img/loading.gif" lazyload></p>
+<h5 id="加载高德影像"><a href="#加载高德影像" class="headerlink" title="加载高德影像"></a>加载高德影像</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js">viewer.imageryLayers.remove(viewer.imageryLayers.get(<span class="hljs-number">0</span>))<br><span class="hljs-keyword">let</span> imagery = viewer.imageryLayers.addImageryProvider(<br>  <span class="hljs-keyword">new</span> Cesium.UrlTemplateImageryProvider(&#123;<br>    <span class="hljs-attr">maximumLevel</span>:<span class="hljs-number">18</span>,<span class="hljs-comment">//最大缩放级别</span><br>    <span class="hljs-attr">url</span> : <span class="hljs-string">&#x27;https://webst02.is.autonavi.com/appmaptile?style=6&amp;x=&#123;x&#125;&amp;y=&#123;y&#125;&amp;z=&#123;z&#125;&#x27;</span>,<br>    <span class="hljs-attr">style</span>: <span class="hljs-string">&quot;default&quot;</span>,<br>    <span class="hljs-attr">format</span>: <span class="hljs-string">&quot;image/png&quot;</span>,<br>    <span class="hljs-attr">tileMatrixSetID</span>: <span class="hljs-string">&quot;GoogleMapsCompatible&quot;</span><br>  &#125;)<br>)<br></code></pre></td></tr></table></figure>
+
+<p>高德影像预览如下</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/gaode.jpeg" srcset="/blog/img/loading.gif" lazyload></p>
+<h5 id="加载天地图标注"><a href="#加载天地图标注" class="headerlink" title="加载天地图标注"></a>加载天地图标注</h5><p>上述影像的加载，可以看到，地图上是没有标注的，我们需要额外加载标柱，同样的，它也是图层</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> label = viewer.imageryLayers.addImageryProvider(<br>  <span class="hljs-keyword">new</span> Cesium.WebMapTileServiceImageryProvider(&#123;<br>    <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;http://t0.tianditu.com/cia_w/wmts?service=wmts&amp;request=GetTile&amp;version=1.0.0&amp;LAYER=cia&amp;tileMatrixSet=w&amp;TileMatrix=&#123;TileMatrix&#125;&amp;TileRow=&#123;TileRow&#125;&amp;TileCol=&#123;TileCol&#125;&amp;style=default.jpg&quot;</span>+<span class="hljs-string">&quot;&amp;tk=&quot;</span>+<span class="hljs-string">&quot;19b72f6cde5c8b49cf21ea2bb4c5b21e&quot;</span>,<br>    <span class="hljs-attr">layer</span>: <span class="hljs-string">&quot;tdtAnnoLayer&quot;</span>,<br>    <span class="hljs-attr">style</span>: <span class="hljs-string">&quot;default&quot;</span>,<br>    <span class="hljs-attr">maximumLevel</span>: <span class="hljs-number">18</span>, <span class="hljs-comment">//天地图的最大缩放级别</span><br>    <span class="hljs-attr">format</span>: <span class="hljs-string">&quot;image/jpeg&quot;</span>,<br>    <span class="hljs-attr">tileMatrixSetID</span>: <span class="hljs-string">&quot;GoogleMapsCompatible&quot;</span>,<br>    <span class="hljs-attr">show</span>: <span class="hljs-literal">false</span>,<br>  &#125;)<br>)<br></code></pre></td></tr></table></figure>
+
+<p>同样的，和天地图影像一样，不要忘了替换 <code>tk</code> 哦</p>
+<p>天地图标注预览如下</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/tianditubiaozhu.jpeg" srcset="/blog/img/loading.gif" lazyload></p>
+<h5 id="影像亮度调整"><a href="#影像亮度调整" class="headerlink" title="影像亮度调整"></a>影像亮度调整</h5><p>我们加载影像拿到影像实例 <code>imagery</code> 后，可以通过其 <code>brightness</code> 属性调节亮度，取值 <code>0～1</code> ，默认为1</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">imagery.brightness = <span class="hljs-number">0.9</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="影像小结"><a href="#影像小结" class="headerlink" title="影像小结"></a>影像小结</h4><p>上文中我们列举的 <code>ImageryProvider</code> 类支持的子类非常多，而上面的示例中</p>
+<p>在加载高德影像服务时，我们使用的指定 <code>url</code> 的 <code>format</code> 模版来实现自己的 <code>Provider</code>，所以使用了 <code>UrlTemplateImageryProvider</code> 类来加载数据源</p>
+<p>在加载 <code>ArcGIS</code> 影像用到了 <code>ArcGIS Server</code> 的相关服务所以使用了 <code>ArcGisMapServerImageryProvider</code> 类来加载数据源</p>
+<p>在加载标柱影像时，因为我们加载的是一个Web Map Tile Service也就是 <code>WMTS</code> 服务，所以我们使用的是 <code>WebMapTileServiceImageryProvider</code> 类</p>
+<p>这几个简单的小例子是为了告诉我们我们使用什么样的数据源，就使用对应的 <code>ImageryProvider</code> 来加载即可</p>
+<p>影像加载这块由于本文重点描述的是初始化，所以只有怎样加载，并没有对应的数据服务相关知识，Get一个新的技能，首先是用起来，下一个阶段是扣一些细节然后用熟它，再接着是扩展，最后是学其原理，后续通过一些使用再来慢慢扩展概念性的东西</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>回顾本文，Cesium实例初始化，围绕着加载一个干净的三维地球实例展开，文中我们主要介绍了 Cesium 控件的现实隐藏以及影像的加载，一般来说为了界面美化，我们都是自己写控件或者直接隐藏掉，当然如果 Cesium 的初始化控件中恰巧有你需要的，但是又觉得默认的空间样式不太好看，其实我们是可以自己改样式的，因为控件只是普通元素节点，完全可以直接在控制台中选中元素，通过类名来修改对应控件的样式来达到自己想要的效果，相信这对于一个前端来说不是什么难事</p>
+<p>到此其实就只做了加载出来地球和加载下影像，对于 Cesium 来说它仅仅一个开始，更多好玩的还在后面，其实不止是做Cesium开发的人群，做前端的同学学一学这些还是有些用处的，可以为你的页面或项目增色不少，后续内容请看暂定目录</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://juejin.im/post/6854573221191090189">让GIS三维可视化变得简单-初识Cesium</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://juejin.im/post/6854899697661394951">让GIS三维可视化变得简单-Vue项目中集成Cesium</a> </p>
+</li>
+<li><p><a href="">让GIS三维可视化变得简单-Cesium地球初始化</a> </p>
+</li>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium坐标转换</p>
+</li>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium球体自转</p>
+</li>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium实体Entity及事件</p>
+</li>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium模型数据之3DTiles</p>
+</li>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium模型数据之gltf</p>
+</li>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium模型数据之geojson</p>
+</li>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium模型数据之czml</p>
+</li>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium流动线绘制</p>
+</li>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium气泡弹窗</p>
+</li>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium粒子系统(火灾、雪花、喷水)</p>
+</li>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium鹰眼图</p>
+</li>
+<li><p>暂定 - 让GIS三维可视化变得简单-Cesium结合Echarts</p>
+</li>
+</ul>
+<p>Cesium国内教程很少，文档也是英文的，不太好入手，所以此系列只是简单入门以及一些效果制作（说白了就是介绍一些简单使用和一些好玩的例子），每一篇介绍一个点，挺难涉及到Cesium核心原理，因为我也在学习中，看后期个人学习情况，我是觉得什么好玩就想学。。。</p>
+<p>没有专业的 GIS 基础知识积累真的好难，此系列不定期更新，暂时先排这么多，不定期插入，不定期更新，敬请期待</p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>原创不易，看完点赞、养成习惯，此文收录在 GitHub，更多精彩请看 👉 <a target="_blank" rel="noopener" href="https://github.com/isboyjc/blog/issues">isboyjc/blog/issues</a> </p>
+<p>如有错误请指出，互相学习，先行谢过，一个前端的 <code>Cesium</code> 学习过程的积累分享，自知深度不够，不喜勿喷</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/Cesium%E7%B3%BB%E5%88%97/">Cesium系列</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/Cesium/">Cesium</a>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96/">数据可视化</a>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/WebGIS/">WebGIS</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本站所有文章如需转载，请联系作者！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2020/11/22/js/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E6%95%B0%E5%AD%97%E4%B9%8B%E7%BE%8E/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">「硬核JS」数字之美</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2020/07/29/cesium/%E8%AE%A9GIS%E4%B8%89%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96%E5%8F%98%E5%BE%97%E7%AE%80%E5%8D%95-Vue%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Cesium/">
+                        <span class="hidden-mobile">让GIS三维可视化变得简单-Vue项目中集成Cesium</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"OuIO62anqvXdvjruYtvDefqV-gzGzoHsz","appKey":"G9BfnEel5vlsGHJqmPkr2B1P","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+       <div style="display: flex;justify-content: center;align-items: center;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/gzh.jpeg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/zs.jpg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;margin-left: 20px;"> </div> 
+    </div>
+  </div>
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     本站使用 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 主题，欢迎关注微信公众号「不正经的前端」！ 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

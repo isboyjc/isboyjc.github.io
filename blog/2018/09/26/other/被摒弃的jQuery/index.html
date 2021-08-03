@@ -1,0 +1,575 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/images/avatar.jpeg">
+  <link rel="icon" href="/blog/images/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="李建超,isboyjc,句末,不正经的前端">
+  
+  <title>被摒弃的jQuery - ISBOYJC</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"isboyjc.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":500711128,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/images/b011.jpeg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="被摒弃的jQuery">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      isboyjc
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-09-26 19:40" pubdate>
+        2018年9月26日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      16
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">被摒弃的jQuery</h1>
+            
+            <div class="markdown-body">
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><hr>
+<p>今年 IT 界发生了很多大事，无意间看到<code>jQ</code>的信息后，我决定码了这篇文章</p>
+<p>首先回顾一下今年的大事(-_-)</p>
+<p>十岁的 GitHub 作为全球最大开源代码托管网站，可谓是全球程序员的一片圣地，但是，今年 6 月，微软以 75 亿美元（折合人民币 480 亿 ）的价格收购了 Github</p>
+<p>根据 cnBeta 新闻，在 GitHub 新闻发布之后，GitLab 收到了超过 14300 个独立访问者，这些开发者在 GitLab.com 上开设了超过 10 万个新的存储库</p>
+<p>很多人因为 GitHub 被微软收购从而转去 GitLab，但是大家都没有想过 GitHub 的这种状况和 Google 投资了竞争对手的 GitLab 没有关系吗</p>
+<p>想着也真是搞笑！</p>
+<p>全球最大的闭源软件公司微软(Mircosoft)对于全球最大的开源软件社区 GitHub 的贡献最多</p>
+<p>手握最大开源数据库 MySQL 和开源编程语言 Java 的 Oracle 是开源死敌</p>
+<p>时代性的开源编程语言 Java 的老大 Oracle 在向非付费用户开枪了</p>
+<p>全球最大源代码托管网站 Github 也被微软帝国收购</p>
+<p>Google 也投资了 GitLab</p>
+<p>开源缔造了 IT 时代，如果开源被把控。。。</p>
+<p>目前，GitHub 一切正常，不知未来如何。。。</p>
+<hr>
+<p>喷了一下(~ _ ~)，以上不是本文主体，进入正题，在微软收购 GitHub 后，表示不打算在 GitHub 上做太多改变，且以开发者为中心的初心不会改变，会积极地拥抱开源 ，52 天后，也就是 7 月份，Github 做出一些微软特色的改变，这之中最重要的是 GitHub 网站<strong>重构过程中放弃了 jQuery</strong>，没有再次使用其他任何框架去代替它，而是使用了原生的 JS ，本文是我个人针对此事的看法:</p>
+<h2 id="jQuery-简介"><a href="#jQuery-简介" class="headerlink" title="jQuery 简介"></a>jQuery 简介</h2><p>jQuery 诞生于 2006 年 8 月，作者 John Resig ，jQuery 倡导写更少的代码，做更多的事情。它封装了 JavaScript 常用的功能代码，提供一种简便的 JavaScript 设计模式，优化 HTML 文档操作、事件处理、动画设计和 Ajax 交互</p>
+<p>jQuery 凭借着 跨浏览器、 简单高效 、稳定可靠 、 插件丰富 这些特性迅速风靡全球</p>
+<p>jQuery 使得操作 DOM、定义动画和实现“AJAX”请求，变得十分简单。简单来说，它使得 Web 开发者可以创建更现代、更动态的效果 ，最重要的是，通过 jQuery 在一种浏览器上实现的功能，基本上也能在其他浏览器上运行</p>
+<p>时至今日，jQuery 仍然在支撑着数以千万计各种规模网站的运作</p>
+<p>但是 jQuery 为什么会被摒弃呢？综合网上以及我自己的看法我认为有以下几点：</p>
+<h2 id="摒弃原因"><a href="#摒弃原因" class="headerlink" title="摒弃原因"></a>摒弃原因</h2><ul>
+<li>原生 Js 的发展，使得原生 API 足够的强大</li>
+<li>jQuery 中的经典<code>$(selector)</code> 可以简单地用<code>querySelectorAll()</code>替换</li>
+<li>CSS 类名切换，可以通过<code>Element.classList</code>实现</li>
+<li>CSS 现在支持在样式表中定义视觉动画，无需使用 JavaScript</li>
+<li>$.ajax 请求可以用 Fetch 标准实现（在不支持的浏览器上可以使用 XHR）</li>
+<li><code>addEventListener()</code>接口已经十分稳定，足以跨平台使用</li>
+<li>jQuery 提供的一些语法糖，已随着 JavaScript 语言的发展，而变得多余</li>
+<li>链式语法并不能满足我们直观地书写代码的需要</li>
+<li>自定义元素技术让用户无需下载、解析或编译任何框架</li>
+<li>原生作为标准，更方便以后维持代码的灵活性</li>
+<li>jQuery 大量 DOM 操作虽然方便，但是会牺牲很多页面的性能</li>
+<li>浏览器兼容问题越来越少 ，如今浏览器 API 及其 polyfill 已经有足够标准化的 Web 应用程序开发</li>
+<li>React、Vue 和 Angularjs 等主流前端框架并不依赖 jQuery，都可以独立使用</li>
+<li>以 DOM 为中心的开发模式过于传统 ，目前复杂页面开发流行的是以数据/状态为中心的开发模式</li>
+<li>前端服务化的趋势，<strong>同构</strong>渲染的问题，也是一个要移除 jQuery 的迫切原因</li>
+</ul>
+<p>同构</p>
+<p>同构指前后端运行同一份代码，后端也可以渲染出页面。React 等流行框架天然支持，已经具有可行性。把现有应用改成同构时，因为代码要运行在服务端，但服务端没有 DOM，所以引用 jQuery 就会报错，在很多场合也要避免直接操作 DOM。</p>
+<h2 id="个人感言"><a href="#个人感言" class="headerlink" title="个人感言"></a>个人感言</h2><p>曾经辉煌的 jQuery 终于走到了可以华丽谢幕的时刻，当然，John Resig 是一个伟大的开发者，jQuery 也是一个伟大的工具，<code>一个伟大的工具是指，它解决的问题不再存在，那么可以功成身退了</code>，这句话我觉得非常好，jQuery 引领了一个前端时代，这是不可否认的</p>
+<p>作为一个前端原生爱好者，个人觉得，随着时代的变迁、技术的进步，jQuery 赖以存在的环境正逐渐消失。jQuery 提供了非常易用的 DOM 操作 API，屏蔽了浏览器差异，虽然极大地提高了开发效率，但这也导致很多前端只懂 jQuery ，而忽略了 js，特别是对于那些对前端深感兴趣的初学者，很多都把重心放在了 jQuery 之类的库上，偏离了本质，等回过头来再研究 js 时，费时不说，还会很不习惯，甚至很难转变，长此以往，不利于 js 语言的蓬勃发展，在我心中，js 和 css 是真正的前端核心，这两样技术，js 主导着核心编程，css 引导我们探索与创造，对我来说，这两样水都很深，很难吃透，在工作中考虑开发效率的话，三大框架精一足以，简洁方便，一些简单的操作，原生即可</p>
+<blockquote>
+<p>本文参考</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/csdnnews/article/details/83189938">使用了 23 年的 Java 不再免费！</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MjM5MjAwODM4MA==&mid=2650698992&idx=1&sn=76bd487d3f044851aaa8da9fc914351d&chksm=bea6052389d18c3523e8024545a81d673c3220c2f21b16f80581fe5bea1d9c44afc849cf8b03&scene=21#wechat_redirect">收购 GitHub 滔天争议后，微软回应一切</a></p>
+<p><a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MjM5MjAwODM4MA==&mid=2650701571&idx=1&sn=61b9cf057317fe00b7bcab4a5a00f034&chksm=bea60ed089d187c67557636b61b73f877ddcce5cf4c946cdf7f27278e8dc3c4b60221c67145c&scene=21#wechat_redirect">GitHub 改版并放弃了 jQuery</a></p>
+<p><a target="_blank" rel="noopener" href="https://githubengineering.com/removing-jquery-from-github-frontend/">从 GitHub.com 前端删除 jQuery–英文原文</a></p>
+</blockquote>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/Web%E7%9B%B8%E5%85%B3/">Web相关</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/jQuery/">jQuery</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本站所有文章如需转载，请联系作者！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2018/10/12/vue/Vue-cli2.0%E6%9E%84%E5%BB%BA%E6%B5%81%E7%A8%8B/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Vue-cli2.0构建流程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2018/09/11/vue/Error%20in%20parsing%20SVG%20Unquoted%20attribute%20value/">
+                        <span class="hidden-mobile">Vue中npm run build报“Error in parsing SVG Unquoted attribute value”</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"OuIO62anqvXdvjruYtvDefqV-gzGzoHsz","appKey":"G9BfnEel5vlsGHJqmPkr2B1P","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+       <div style="display: flex;justify-content: center;align-items: center;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/gzh.jpeg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/zs.jpg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;margin-left: 20px;"> </div> 
+    </div>
+  </div>
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     本站使用 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 主题，欢迎关注微信公众号「不正经的前端」！ 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

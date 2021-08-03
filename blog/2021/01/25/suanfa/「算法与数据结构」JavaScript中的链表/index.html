@@ -1,0 +1,734 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/images/avatar.jpeg">
+  <link rel="icon" href="/blog/images/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="李建超,isboyjc,句末,不正经的前端">
+  
+  <title>「算法与数据结构」JavaScript中的链表 - ISBOYJC</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"isboyjc.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":500711128,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/images/b011.jpeg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="「算法与数据结构」JavaScript中的链表">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      isboyjc
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-25 08:00" pubdate>
+        2021年1月25日 早上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      90
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">「算法与数据结构」JavaScript中的链表</h1>
+            
+            <div class="markdown-body">
+              <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>此文会先探讨下什么是链表以及在 JavaScript 中的链表，接着我们会使用 JavaScript 这门语言动手实现下各类链表的设计，最后我们会抛出一些常规疑问，并从各个方面一一解答，总之，目的就是完全搞定链表</p>
+<p>搞定概念之后我们可以去力扣上选择链表分类，按照难易程度把它们刷完，其实力扣上链表的题目相对简单，只要你完整的看完了此文的链表设计，最起码可以轻松淦掉20题，同时链表题目数量也比较少，一共也就有50题左右，还有十来题需要会员，也就是说刷个40题，链表这种数据结构就可以初步掌握了，如果你不想找题排序，可以按照我的 GitHub 算法仓库库中的顺序刷题，有不太懂的题目或者概念可以看我写的题解，同时我也录制了视频，文末有链接，那么我们来开始学习链表，GO！</p>
+<h2 id="什么是链表"><a href="#什么是链表" class="headerlink" title="什么是链表"></a>什么是链表</h2><p>通常我们在程序中想要存储多个元素，数组可能是最常用的数据结构，数组这种数据结构非常方便，它甚至可以通过非常简单的方式即 <code>[]</code> 这种语法来访问其元素</p>
+<p>而链表存储的也是有序的元素集合，但不同于数组的是，链表中的元素在内存中并不是连续的，每个元素由一个存储元素本身的节点和一个指向下一个元素的引用（也可以称为指针）组成</p>
+<p><img src="https://cdn.jsdelivr.net/gh/isboyjc/PictureBed/other/image-20201227022306651.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>我们接着再来看数组这种数据结构，它有一个缺点，在大多数语言中数组的大小是固定的，从数组的起点或中间插入或移除项的成本很高，因为需要移动元素，如下图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/isboyjc/PictureBed/other/image-20201227023740687.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>上图数组删除索引为 2 值为 3 的元素，那么我们首先要删掉 3 这个元素，因为索引为 2 值为 3 的元素删除了，索引 2 就空了，所以接着，我们要把索引 3 也就是元素 4 向前移动一位，与此同时后面的元素 5 也需要向前移动一位，向数组中插入一个元素也是这个道理，只要数组中少了一位或者多了一位，那么后面的元素都要依次向前或向后移动一位，那么可想而之，当数组长度很大的时候，插入及删除的效率就会逐渐降低</p>
+<p>我们再来看看链表</p>
+<p><img src="https://cdn.jsdelivr.net/gh/isboyjc/PictureBed/other/image-20201227024501152.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>同样是删除元素 3，链表这里只需要迭代到值为 3 的节点，将节点 2 指向节点 4 就行了，节点 3 没有了引用关系，就会被垃圾回收机制当作垃圾回收了，即使当节点非常多的情况下，依然只用改变一下引用关系即可删除元素，而插入元素则是反过来，即先断开插入位置两边的元素，然后让前一个元素指向插入元素，插入元素指向后一个元素即可，元素越多对比数组的效率就会越高</p>
+<p>相对于传统的数组，链表的一个好处就在于，添加或移除元素的时候不需要移动其他元素，但是在数组中，我们可以直接访问任何位置的任何元素，链表中是不行的，因为链表中每个节点只有对下一个节点的引用，所以想访问链表中间的一个元素，必须要从起点（链表头部节点）开始迭代链表直到找到所需的元素，这点需要注意</p>
+<h2 id="JavaScript中的链表"><a href="#JavaScript中的链表" class="headerlink" title="JavaScript中的链表"></a>JavaScript中的链表</h2><p>上面我们简单介绍了常规链表的概念，但是在 JavaScript 这门语言中，我们怎么表示链表呢？</p>
+<p>由于 JS 中没有内置链表这种数据结构，所以我们需要使用对象来模拟实现链表，就如同我们上面介绍链表，它其实是一个单向链表，除此之外还有双向链表、环形链表等等，我们接下来会一一介绍并使用 JavaScript 来实现下</p>
+<h3 id="单向链表"><a href="#单向链表" class="headerlink" title="单向链表"></a>单向链表</h3><p>我们先来看基础的单项链表，单向链表每个元素由一个存储元素本身的节点和一个指向下一个元素的指针构成，如下图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/isboyjc/PictureBed/other/image-20201227135703111.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>要实现链表这种数据结构，关键在于保存 head 元素（即链表的头元素）以及每一个元素的 next 指针，有这两部分我们就可以很方便地遍历链表从而操作所有的元素，你可以把链表想象成一条铁链，铁链中的每一个节点都是相互连接的，我们只要找到铁链的头，整条铁链就都可以找到了，那么单向链表在 JS 中究竟要如何来模拟呢，我们一步一步来</p>
+<p>首先，我们要创建一个类，这个类的作用就是描述链表的节点，它很简单，只需要有两个属性就可以了，一个用来保存此节点的值，一个用来保存指向下一个节点的指针，如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@description</span>: 创建链表单节点类</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param <span class="hljs-type">&#123;*&#125;</span> </span>val 节点值</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return <span class="hljs-type">&#123;*&#125;</span></span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ListNode</span>(<span class="hljs-params">val</span>) </span>&#123;<br>  <span class="hljs-built_in">this</span>.val = val<br>  <span class="hljs-built_in">this</span>.next = <span class="hljs-literal">null</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接着，我们需要先写一个链表类，其中 length属性 代表链表长度，head属性 代表链表头部节点</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@description</span>: 创建链表类</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param <span class="hljs-type">&#123;*&#125;</span></span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return <span class="hljs-type">&#123;*&#125;</span></span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">LinkedList</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-built_in">this</span>.length = <span class="hljs-number">0</span><br>  <span class="hljs-built_in">this</span>.head = <span class="hljs-literal">null</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们思考下，既然是来模拟一个链表类，那么就应该把它所有可能会用到的特性都塞进这个类里，就比如数组有 <code>push/splice/indexOf/...</code> 等等这些好用的方法我们链表必须也得有啊，我们先仔细构思下要给链表添加哪些实用的特性或者说方法，先搭一个基础骨架，这里我列出了很多，我们来一一实现下，也欢迎补充</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 向链表中追加节点</span><br>LinkedList.prototype.append = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>&#123; &#125;<br><br><span class="hljs-comment">// 在链表的指定位置插入节点</span><br>LinkedList.prototype.insert = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index, val</span>) </span>&#123; &#125;<br><br><span class="hljs-comment">// 删除链表中指定位置的元素，并返回这个元素的值</span><br>LinkedList.prototype.removeAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>&#123; &#125;<br><br><span class="hljs-comment">// 删除链表中对应的元素</span><br>LinkedList.prototype.remove = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>&#123; &#125;<br><br><span class="hljs-comment">// 获取链表中给定元素的索引</span><br>LinkedList.prototype.indexOf = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>&#123; &#125;<br><br><span class="hljs-comment">// 获取链表中某个节点</span><br>LinkedList.prototype.find = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>&#123; &#125;<br><br><span class="hljs-comment">// 获取链表中索引所对应的元素</span><br>LinkedList.prototype.getElementAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>&#123; &#125;<br><br><span class="hljs-comment">// 判断链表是否为空</span><br>LinkedList.prototype.isEmpty = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;<br><br><span class="hljs-comment">// 获取链表的长度</span><br>LinkedList.prototype.size = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;<br><br><span class="hljs-comment">// 获取链表的头元素</span><br>LinkedList.prototype.getHead = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;<br><br><span class="hljs-comment">// 清空链表</span><br>LinkedList.prototype.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;<br><br><span class="hljs-comment">// 序列化链表</span><br>LinkedList.prototype.join = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">string</span>) </span>&#123; &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="getElementAt-index"><a href="#getElementAt-index" class="headerlink" title="getElementAt(index)"></a>getElementAt(<em>index</em>)</h4><p>我们先来实现获取链表中索引所对应的元素即 <code>getElementAt</code> 方法以及通过节点值获取链表元素即 <code>find</code> 方法，因为后面要多次用到它们，我们先说 <code>getElementAt</code> 方法，上面我们说想要找一个元素，我们必须从头迭代，所以我们直接根据传入的索引进行迭代即可</p>
+<p>首先判断参数 <code>index</code> 的边界值，如果值超出了索引的范围（小于 0 或者大于 <code>length - 1</code>），则返回<code>null</code>，我们从链表的 <code>head</code> 节点开始，遍历整个链表直到找到对应索引位置的节点，然后返回这个节点，是不是很简单？和所有有序数据集合一样，链表的索引也是从 0 开始，只要有链表的头节点，就可以遍历找到索引所在位置的元素，所以我们在构造函数即 <code>LinkedList</code> 类中保存了 <code>head</code> 值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 获取链表中索引所对应的元素</span><br>LinkedList.prototype.getElementAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span> || index &gt;= <span class="hljs-built_in">this</span>.length) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span><br><br>  <span class="hljs-keyword">let</span> cur = <span class="hljs-built_in">this</span>.head<br>  <span class="hljs-keyword">while</span> (index--) &#123;<br>    cur = cur.next<br>  &#125;<br>  <span class="hljs-keyword">return</span> cur<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="find-val"><a href="#find-val" class="headerlink" title="find(val)"></a>find(<em>val</em>)</h4><p><code>find</code> 方法和 <code>getElementAt</code> 方法类似，一个通过索引找元素，一个通过节点值找元素，所以我们直接迭代查找对比即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 获取链表中某个节点</span><br>LinkedList.prototype.find = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> cur = <span class="hljs-built_in">this</span>.head<br>  <span class="hljs-keyword">while</span> (cur) &#123;<br>    <span class="hljs-keyword">if</span> (cur.val == val) <span class="hljs-keyword">return</span> cur<br>    cur = cur.next<br>  &#125;<br>  <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="append-val"><a href="#append-val" class="headerlink" title="append(val)"></a>append(<em>val</em>)</h4><p>有了 <code>getElementAt</code> 方法后，接下来我们就可以很方便地实现 <code>append</code> 方法，此方法的作用是在链表末尾追加元素</p>
+<p>此方法传入的是一个值，我们可以通过上面的构造函数 <code>ListNode</code> 来创建一个新节点</p>
+<p>而后，我们需要考虑，如果链表的 <code>head</code> 为 <code>null</code> 时，这种情况表示链表为空，所以需要将 <code>head</code> 节点指向新添加的元素，以此来确保存储头节点，如果不为空，我们通过 <code>getElementAt</code> 方法找到链表的最后一个节点，最后一个节点的索引就是构造函数中的我们存的链表长度 <code>length</code> 属性减去 1，再将最后一个节点的 <code>next</code> 指针指向新添加的元素即可</p>
+<p>新添加的元素 <code>next</code> 指针默认为 <code>null</code>，链表最后一个元素的 <code>next</code> 值也就为 <code>null</code>，另外，将节点挂到链表上之后，还需将链表的长度加 1，保证 <code>length</code> 属性等于链表长度，如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 向链表中追加节点</span><br>LinkedList.prototype.append = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> node = <span class="hljs-keyword">new</span> ListNode(val)<br><br>  <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.head) &#123;<br>    <span class="hljs-built_in">this</span>.head = node<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-keyword">let</span> cur = <span class="hljs-built_in">this</span>.getElementAt(<span class="hljs-built_in">this</span>.length - <span class="hljs-number">1</span>)<br>    cur.next = node<br>  &#125;<br>  <span class="hljs-built_in">this</span>.length++<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="insert-index-val"><a href="#insert-index-val" class="headerlink" title="insert(index, val)"></a>insert(<em>index</em>, <em>val</em>)</h4><p>接下来我们要实现 <code>insert</code> 方法，即在链表的任意位置添加节点</p>
+<p>在指定位置插入元素，首先我们还是需要先判断下传入 <code>index</code> 索引是否超出边界</p>
+<p>接着我们分两种情况考虑</p>
+<p>当 <code>index</code> 的值为 0 时，表示要在链表的头部插入新节点，将新插入节点的 <code>next</code> 指针指向现在的 <code>head</code>，然后更新 <code>head</code> 的值为新插入的节点即可，如下图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/isboyjc/PictureBed/other/image-20201227172151358.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>当 <code>index</code> 的值不为 0 时，即插入的节点在链表的中间或者尾部，我们首先找到待插入位置的前一个节点 <code>prevNode</code>，然后将新节点 <code>newNode</code> 的 <code>next</code> 指针指向 <code>prevNode</code> 的 <code>next</code> 所对应的节点，再将 <code>prevNode</code> 的 <code>next</code> 指针指向 <code>newNode</code>，这样就把新节点插入链表中了，当插入的节点在链表的尾部，这种方法也同样适用，如下图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/isboyjc/PictureBed/other/image-20201227172716975.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>最后，我们插入了节点，还需要将链表的长度即 <code>length</code> 长度加 1，代码如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 在链表的指定位置插入节点</span><br>LinkedList.prototype.insert = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index, val</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span> || index &gt; <span class="hljs-built_in">this</span>.length) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br><br>  <span class="hljs-keyword">let</span> node = <span class="hljs-keyword">new</span> ListNode(val)<br><br>  <span class="hljs-keyword">if</span> (index === <span class="hljs-number">0</span>) &#123;<br>    node.next = <span class="hljs-built_in">this</span>.head<br>    <span class="hljs-built_in">this</span>.head = node<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-keyword">let</span> prev = <span class="hljs-built_in">this</span>.getElementAt(index - <span class="hljs-number">1</span>)<br>    node.next = prev.next<br>    prev.next = node<br>  &#125;<br><br>  <span class="hljs-built_in">this</span>.length++<br>  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="removeAt-index"><a href="#removeAt-index" class="headerlink" title="removeAt(index)"></a>removeAt(<em>index</em>)</h4><p>相同的方式，我们可以很容易地写出 <code>removeAt</code> 方法，用来删除链表中指定位置的节点</p>
+<p>依然还是先判断下传入 <code>index</code> 索引是否超出边界</p>
+<p>还是分两种情况</p>
+<p>如果要删除的节点是链表的头部，将 <code>head</code> 移到下一个节点即可，如果当前链表只有一个节点，那么下一个节点为 <code>null</code>，此时将 <code>head</code> 指向下一个节点等同于将 <code>head</code> 设置成 <code>null</code>，删除之后链表为空</p>
+<p><img src="https://cdn.jsdelivr.net/gh/isboyjc/PictureBed/other/image-20201227180334649.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>如果要删除的节点在链表的中间部分，我们需要找出 <code>index</code> 所在位置的前一个节点，将它的 <code>next</code> 指针指向 <code>index</code> 所在位置的下一个节点，总之，删除节点只需要修改相应节点的指针，断开删除位置左右相邻的节点再重新连接上即可</p>
+<p><img src="https://cdn.jsdelivr.net/gh/isboyjc/PictureBed/other/image-20201227180444604.png" srcset="/blog/img/loading.gif" lazyload alt="image-20201227180444604"></p>
+<p>被删除的节点没有了引用关系，JavaScript 垃圾回收机制会处理它，关于垃圾回收机制，同样不在此文讨论范围内，知道即可，删除节点元素，我们还需将链表的长度减 1，最终代码如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 删除链表中指定位置的元素，并返回这个元素的值</span><br>LinkedList.prototype.removeAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span> || index &gt;= <span class="hljs-built_in">this</span>.length) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span><br><br>  <span class="hljs-keyword">let</span> cur = <span class="hljs-built_in">this</span>.head<br><br>  <span class="hljs-keyword">if</span> (index === <span class="hljs-number">0</span>) &#123;<br>    <span class="hljs-built_in">this</span>.head = cur.next<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-keyword">let</span> prev = <span class="hljs-built_in">this</span>.getElementAt(index - <span class="hljs-number">1</span>)<br>    cur = prev.next<br>    prev.next = cur.next<br>  &#125;<br><br>  <span class="hljs-built_in">this</span>.length--<br>  <span class="hljs-keyword">return</span> cur.val<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="indexOf-val"><a href="#indexOf-val" class="headerlink" title="indexOf(val)"></a>indexOf(<em>val</em>)</h4><p>获取链表中给定元素的索引，这个比较简单，直接迭代即可，匹配到了返回对应索引，匹配不到返回 -1</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 获取链表中给定元素的索引</span><br>LinkedList.prototype.indexOf = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> cur = <span class="hljs-built_in">this</span>.head<br><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">this</span>.length; i++) &#123;<br>    <span class="hljs-keyword">if</span> (cur.val === val) <span class="hljs-keyword">return</span> i<br>    cur = cur.next<br>  &#125;<br><br>  <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="remove-val"><a href="#remove-val" class="headerlink" title="remove(val)"></a>remove(<em>val</em>)</h4><p>删除链表中对应的元素，有了之前的铺垫，这里就比较简单了，我们可以直接用 <code>indexOf</code> 方法拿到对应索引，再使用 <code>removeAt</code> 方法删除节点即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 删除链表中对应的元素</span><br>LinkedList.prototype.remove = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> index = <span class="hljs-built_in">this</span>.indexOf(val)<br>  <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.removeAt(index)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="isEmpty"><a href="#isEmpty" class="headerlink" title="isEmpty()"></a>isEmpty()</h4><p>判断链表是否为空，只需要我们判断一下链表长度 <code>length</code> 等不等于 0 即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 判断链表是否为空</span><br>LinkedList.prototype.isEmpty = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">return</span> !<span class="hljs-built_in">this</span>.length<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="size"><a href="#size" class="headerlink" title="size()"></a>size()</h4><p>获取链表长度就是取其 <code>length</code> </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 获取链表的长度</span><br>LinkedList.prototype.size = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.length<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="getHead"><a href="#getHead" class="headerlink" title="getHead()"></a>getHead()</h4><p> 获取链表的头元素即返回 <code>head</code> 属性即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 获取链表的头元素</span><br>LinkedList.prototype.getHead = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.head<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="clear"><a href="#clear" class="headerlink" title="clear()"></a>clear()</h4><p>清空链表，我们只需要将 <code>head</code> 置空，然后让 <code>length</code> 等于 0，等待垃圾回收机制回收无引用的废弃链表即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 清空链表</span><br>LinkedList.prototype.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-built_in">this</span>.head = <span class="hljs-literal">null</span><br>  <span class="hljs-built_in">this</span>.length = <span class="hljs-number">0</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="join-string"><a href="#join-string" class="headerlink" title="join(string)"></a>join(<em>string</em>)</h4><p>序列化链表即使用指定格式输出链表，类似于数组中 <code>join</code> 方法，此举旨在便于我们测试</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 序列化链表</span><br>LinkedList.prototype.join = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">string</span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> cur = <span class="hljs-built_in">this</span>.head<br>  <span class="hljs-keyword">let</span> str = <span class="hljs-string">&#x27;&#x27;</span><br>  <span class="hljs-keyword">while</span> (cur) &#123;<br>    str += cur.val<br><br>    <span class="hljs-keyword">if</span> (cur.next) str += string<br><br>    cur = cur.next<br>  &#125;<br>  <span class="hljs-keyword">return</span> str<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>那么到此，我们的单向链表类就设计完成了，快来测试一下吧，我们输入下面代码进行测试</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> linkedList = <span class="hljs-keyword">new</span> LinkedList()<br>linkedList.append(<span class="hljs-number">10</span>)<br>linkedList.append(<span class="hljs-number">20</span>)<br>linkedList.append(<span class="hljs-number">30</span>)<br><br><span class="hljs-built_in">console</span>.log(linkedList.join(<span class="hljs-string">&quot;--&quot;</span>))<br><br>linkedList.insert(<span class="hljs-number">0</span>, <span class="hljs-number">5</span>)<br>linkedList.insert(<span class="hljs-number">2</span>, <span class="hljs-number">15</span>)<br>linkedList.insert(<span class="hljs-number">4</span>, <span class="hljs-number">25</span>)<br><span class="hljs-built_in">console</span>.log(linkedList.join(<span class="hljs-string">&quot;--&quot;</span>))<br><br><span class="hljs-built_in">console</span>.log(linkedList.removeAt(<span class="hljs-number">0</span>))<br><span class="hljs-built_in">console</span>.log(linkedList.removeAt(<span class="hljs-number">1</span>))<br><span class="hljs-built_in">console</span>.log(linkedList.removeAt(<span class="hljs-number">2</span>))<br><span class="hljs-built_in">console</span>.log(linkedList.join(<span class="hljs-string">&quot;--&quot;</span>))<br><br><span class="hljs-built_in">console</span>.log(linkedList.indexOf(<span class="hljs-number">20</span>))<br><br>linkedList.remove(<span class="hljs-number">20</span>)<br><br><span class="hljs-built_in">console</span>.log(linkedList.join(<span class="hljs-string">&quot;--&quot;</span>))<br><br><span class="hljs-built_in">console</span>.log(linkedList.find(<span class="hljs-number">10</span>))<br><br>linkedList.clear()<br><span class="hljs-built_in">console</span>.log(linkedList.size())<br></code></pre></td></tr></table></figure>
+
+<p>最终输出如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 10--20--30</span><br><span class="hljs-comment">// 5--10--15--20--25--30</span><br><span class="hljs-comment">// 5</span><br><span class="hljs-comment">// 15</span><br><span class="hljs-comment">// 25</span><br><span class="hljs-comment">// 10--20--30</span><br><span class="hljs-comment">// 1</span><br><span class="hljs-comment">// 10--30</span><br><span class="hljs-comment">// ListNode &#123; val: 10, next: ListNode &#123; val: 30, next: null &#125; &#125;</span><br><span class="hljs-comment">// 0</span><br></code></pre></td></tr></table></figure>
+
+<p>上面代码中少了一些参数校验，不过够我们学习用了，完成代码文末附链接</p>
+<h3 id="双向链表"><a href="#双向链表" class="headerlink" title="双向链表"></a>双向链表</h3><p>上面我们说了单向链表，接下来我们来说双向链表，那么什么是双向链表呢？其实听名字就可以听出来，单向链表中每一个元素只有一个 <code>next</code> 指针，用来指向下一个节点，我们只能从链表的头部开始遍历整个链表，任何一个节点只能找到它的下一个节点，而不能找到它的上一个节点，双向链表中的每一个元素拥有两个指针，一个用来指向下一个节点，一个用来指向上一个节点，双向链表中，除了可以像单向链表一样从头部开始遍历之外，还可以从尾部进行遍历，如下图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/isboyjc/PictureBed/other/image-20201227215932114.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>同单向链表，我们首先创建链表节点类，不同的是，它需要多一个 <code>prev</code> 属性用来指向前一个节点</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@description</span>: 创建双向链表单节点类</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param <span class="hljs-type">&#123;*&#125;</span> </span>val 节点值</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return <span class="hljs-type">&#123;*&#125;</span></span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ListNode</span>(<span class="hljs-params">val</span>) </span>&#123;<br>  <span class="hljs-built_in">this</span>.val = val<br>  <span class="hljs-built_in">this</span>.next = <span class="hljs-literal">null</span><br>  <span class="hljs-built_in">this</span>.prev = <span class="hljs-literal">null</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>双向链表类同单向链表多增加了一个尾部节点 <code>tail</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@description</span>: 创建双向链表类</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param <span class="hljs-type">&#123;*&#125;</span></span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return <span class="hljs-type">&#123;*&#125;</span></span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">DoubleLinkedList</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-built_in">this</span>.length = <span class="hljs-number">0</span><br>  <span class="hljs-built_in">this</span>.head = <span class="hljs-literal">null</span><br>  <span class="hljs-built_in">this</span>.tail = <span class="hljs-literal">null</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接下来我们来实现双向链表的原型方法</p>
+<h4 id="getElementAt-index-1"><a href="#getElementAt-index-1" class="headerlink" title="getElementAt(index)"></a>getElementAt(<em>index</em>)</h4><p>首先就是，获取双向链表中索引所对应的元素，双向链表由于可以双向进行迭代查找，所以这里 <code>getElementAt</code> 方法我们可以进行优化，当索引大于链表长度 <code>length/2</code> 时，我们可以从后往前找，反之则从前向后找，这样可以更快找到该节点元素</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 获取双向链表中索引所对应的元素</span><br>DoubleLinkedList.prototype.getElementAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span> || index &gt;= <span class="hljs-built_in">this</span>.length) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span><br>	<br>  <span class="hljs-keyword">let</span> cur = <span class="hljs-literal">null</span><br>  <span class="hljs-keyword">if</span>(index &gt; <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">this</span>.length / <span class="hljs-number">2</span>))&#123;<br>    <span class="hljs-comment">// 从后往前</span><br>    cur = <span class="hljs-built_in">this</span>.tail<br>    <span class="hljs-keyword">let</span> i = <span class="hljs-built_in">this</span>.length - <span class="hljs-number">1</span><br>    <span class="hljs-keyword">while</span> (i &gt; index) &#123;<br>      cur = cur.prev<br>      i--<br>    &#125;<br>  &#125;<span class="hljs-keyword">else</span>&#123;<br>    <span class="hljs-comment">// 从前往后</span><br>    cur = <span class="hljs-built_in">this</span>.head<br>    <span class="hljs-keyword">while</span> (index--) &#123;<br>      cur = cur.next<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">return</span> cur<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="find-val-1"><a href="#find-val-1" class="headerlink" title="find(val)"></a>find(<em>val</em>)</h4><p><code>find</code> 方法和 <code>getElementAt</code> 方法是类似的，<code>getElementAt</code> 方法可以优化，那么 <code>find</code> 再变成双向链表后也可优化，我们想，既然双向都可以进行迭代，那么我们两边同时迭代岂不是更快，双向迭代的情况下，只有找不到时才会迭代整个链表，效率更高</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 获取双向链表中某个节点</span><br>DoubleLinkedList.prototype.find = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>&#123;<br>	<span class="hljs-keyword">let</span> curHead = <span class="hljs-built_in">this</span>.head<br>  <span class="hljs-keyword">let</span> curTail = <span class="hljs-built_in">this</span>.tail<br>  <span class="hljs-keyword">while</span> (curHead) &#123;<br>    <span class="hljs-keyword">if</span> (curHead.val == val) <span class="hljs-keyword">return</span> curHead<br>    curHead = curHead.next<br><br>    <span class="hljs-keyword">if</span> (curTail.val == val) <span class="hljs-keyword">return</span> curTail<br>    curTail = curTail.prev<br>  &#125;<br>  <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="append-val-1"><a href="#append-val-1" class="headerlink" title="append(val)"></a>append(<em>val</em>)</h4><p>又来到了我们的追加节点元素，双向链表追加与单向链表还是有些区别的</p>
+<p>当链表为空时，除了要将 <code>head</code> 指向当前添加的节点外，还要将 <code>tail</code> 也指向当前要添加的节点</p>
+<p>当链表不为空时，直接将 <code>tail</code> 的 <code>next</code> 指向当前要添加的节点 <code>node</code>，然后修改 <code>node</code> 的 <code>prev</code> 指向旧的 <code>tail</code>，最后修改 <code>tail</code> 为新添加的节点</p>
+<p>双向链表的追加操作我们不需要从头开始遍历整个链表，通过 <code>tail</code> 可以直接找到链表的尾部，这一点比单向链表的操作更方便，最后将 <code>length</code> 值加 1，修改链表的长度即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 向双向链表中追加节点</span><br>DoubleLinkedList.prototype.append = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> node = <span class="hljs-keyword">new</span> ListNode(val)<br><br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.head === <span class="hljs-literal">null</span>) &#123;<br>    <span class="hljs-comment">// 链表为空，head 和 tail 都指向当前添加的节点</span><br>    <span class="hljs-built_in">this</span>.head = node<br>    <span class="hljs-built_in">this</span>.tail = node<br>  &#125;<br>  <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-comment">// 链表不为空，将当前节点添加到链表的尾部</span><br>    <span class="hljs-built_in">this</span>.tail.next = node<br>    node.prev = <span class="hljs-built_in">this</span>.tail<br>    <span class="hljs-built_in">this</span>.tail = node<br>  &#125;<br><br>  <span class="hljs-built_in">this</span>.length++<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="insert-index-val-1"><a href="#insert-index-val-1" class="headerlink" title="insert(index, val)"></a>insert(<em>index</em>, <em>val</em>)</h4><p>接着是插入节点元素方法，同样思路一致，并不困难，我们注意 <code>tail</code> 及 <code>prev</code> 指针分情况讨论，插入后长度加 1 即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 在双向链表的指定位置插入节点</span><br>DoubleLinkedList.prototype.insert = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index, val</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span> || index &gt; <span class="hljs-built_in">this</span>.length) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br><br>  <span class="hljs-comment">// 插入到尾部</span><br>  <span class="hljs-keyword">if</span> (index === <span class="hljs-built_in">this</span>.length) &#123;<br>    <span class="hljs-built_in">this</span>.append(val)<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-keyword">let</span> node = <span class="hljs-keyword">new</span> ListNode(val)<br><br>    <span class="hljs-keyword">if</span> (index === <span class="hljs-number">0</span>) &#123; <span class="hljs-comment">// 插入到头部</span><br>      <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.head === <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-built_in">this</span>.head = node<br>        <span class="hljs-built_in">this</span>.tail = node<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        node.next = <span class="hljs-built_in">this</span>.head<br>        <span class="hljs-built_in">this</span>.head.prev = node<br>        <span class="hljs-built_in">this</span>.head = node<br>      &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123; <span class="hljs-comment">// 插入到中间位置</span><br>      <span class="hljs-keyword">let</span> curNode = <span class="hljs-built_in">this</span>.getElementAt(index)<br>      <span class="hljs-keyword">let</span> prevNode = curNode.prev<br>      node.next = curNode<br>      node.prev = prevNode<br>      prevNode.next = node<br>      curNode.prev = node<br>    &#125;<br>    <span class="hljs-built_in">this</span>.length++<br>  &#125;<br>  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="removeAt-index-1"><a href="#removeAt-index-1" class="headerlink" title="removeAt(index)"></a>removeAt(<em>index</em>)</h4><p>删除双向链表中指定位置的元素，同样是注意 <code>tail</code> 及 <code>prev</code> 指针分情况讨论，最后删除后长度减 1 即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 删除双向链表中指定位置的元素，并返回这个元素的值</span><br>DoubleLinkedList.prototype.removeAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span> || index &gt;= <span class="hljs-built_in">this</span>.length) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span><br><br>  <span class="hljs-keyword">let</span> current = <span class="hljs-built_in">this</span>.head<br>  <span class="hljs-keyword">let</span> prevNode<br><br>  <span class="hljs-keyword">if</span> (index === <span class="hljs-number">0</span>) &#123; <span class="hljs-comment">// 移除头部元素</span><br>    <span class="hljs-built_in">this</span>.head = current.next<br>    <span class="hljs-built_in">this</span>.head.prev = <span class="hljs-literal">null</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.length === <span class="hljs-number">1</span>) <span class="hljs-built_in">this</span>.tail = <span class="hljs-literal">null</span><br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (index === <span class="hljs-built_in">this</span>.length - <span class="hljs-number">1</span>) &#123; <span class="hljs-comment">// 移除尾部元素</span><br>    current = <span class="hljs-built_in">this</span>.tail<br>    <span class="hljs-built_in">this</span>.tail = current.prev<br>    <span class="hljs-built_in">this</span>.tail.next = <span class="hljs-literal">null</span><br>  &#125; <span class="hljs-keyword">else</span> &#123; <span class="hljs-comment">// 移除中间元素</span><br>    current = <span class="hljs-built_in">this</span>.getElementAt(index)<br>    prevNode = current.prev<br>    prevNode.next = current.next<br>    current.next.prev = prevNode<br>  &#125;<br><br>  <span class="hljs-built_in">this</span>.length--<br>  <span class="hljs-keyword">return</span> current.val<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="indexOf-val-1"><a href="#indexOf-val-1" class="headerlink" title="indexOf(val)"></a>indexOf(<em>val</em>)</h4><p>在双向链表中查找元素索引，有了上面的 <code>find</code> 方法做铺垫，这里就简单了，思路一致，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 获取双向链表中给定元素的索引</span><br>DoubleLinkedList.prototype.indexOf = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> curHead = <span class="hljs-built_in">this</span>.head<br>  <span class="hljs-keyword">let</span> curTail = <span class="hljs-built_in">this</span>.tail<br>  <span class="hljs-keyword">let</span> idx = <span class="hljs-number">0</span><br>  <span class="hljs-keyword">while</span> (curHead !== curTail) &#123;<br>    <span class="hljs-keyword">if</span> (curHead.val == val) <span class="hljs-keyword">return</span> idx<br>    curHead = curHead.next<br><br>    <span class="hljs-keyword">if</span> (curTail.val == val) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.length - <span class="hljs-number">1</span> - idx<br>    curTail = curTail.prev<br><br>    idx++<br>  &#125;<br>  <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="joinstring"><a href="#joinstring" class="headerlink" title="joinstring)"></a>join<em>string</em>)</h4><p>序列化链表我们还是和上面单向链表一致即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 序列化双向链表</span><br>DoubleLinkedList.prototype.join = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">string</span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> cur = <span class="hljs-built_in">this</span>.head<br>  <span class="hljs-keyword">let</span> str = <span class="hljs-string">&#x27;&#x27;</span><br>  <span class="hljs-keyword">while</span> (cur) &#123;<br>    str += cur.val<br><br>    <span class="hljs-keyword">if</span> (cur.next) str += string<br><br>    cur = cur.next<br>  &#125;<br>  <span class="hljs-keyword">return</span> str<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>双向链表我们就介绍这么多，剩下的方法比较简单，就不赘述了，文末双向链表案例中有完整代码</p>
+<p>同样，我们来简单测试一下对与否</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> doubleLinkedList = <span class="hljs-keyword">new</span> DoubleLinkedList()<br>doubleLinkedList.append(<span class="hljs-number">10</span>)<br>doubleLinkedList.append(<span class="hljs-number">15</span>)<br>doubleLinkedList.append(<span class="hljs-number">20</span>)<br>doubleLinkedList.append(<span class="hljs-number">25</span>)<br><span class="hljs-built_in">console</span>.log(doubleLinkedList.join(<span class="hljs-string">&quot;&lt;-&gt;&quot;</span>))<br><br><span class="hljs-built_in">console</span>.log(doubleLinkedList.getElementAt(<span class="hljs-number">0</span>).val)<br><span class="hljs-built_in">console</span>.log(doubleLinkedList.getElementAt(<span class="hljs-number">1</span>).val)<br><span class="hljs-built_in">console</span>.log(doubleLinkedList.getElementAt(<span class="hljs-number">5</span>))<br><br><span class="hljs-built_in">console</span>.log(doubleLinkedList.join(<span class="hljs-string">&quot;&lt;-&gt;&quot;</span>))<br><span class="hljs-built_in">console</span>.log(doubleLinkedList.indexOf(<span class="hljs-number">10</span>))<br><span class="hljs-built_in">console</span>.log(doubleLinkedList.indexOf(<span class="hljs-number">25</span>))<br><span class="hljs-built_in">console</span>.log(doubleLinkedList.indexOf(<span class="hljs-number">50</span>))<br><br>doubleLinkedList.insert(<span class="hljs-number">0</span>, <span class="hljs-number">5</span>)<br>doubleLinkedList.insert(<span class="hljs-number">3</span>, <span class="hljs-number">18</span>)<br>doubleLinkedList.insert(<span class="hljs-number">6</span>, <span class="hljs-number">30</span>)<br><span class="hljs-built_in">console</span>.log(doubleLinkedList.join(<span class="hljs-string">&quot;&lt;-&gt;&quot;</span>))<br><br><span class="hljs-built_in">console</span>.log(doubleLinkedList.find(<span class="hljs-number">10</span>).val)<br><span class="hljs-built_in">console</span>.log(doubleLinkedList.removeAt(<span class="hljs-number">0</span>))<br><span class="hljs-built_in">console</span>.log(doubleLinkedList.removeAt(<span class="hljs-number">1</span>))<br><span class="hljs-built_in">console</span>.log(doubleLinkedList.removeAt(<span class="hljs-number">5</span>))<br><span class="hljs-built_in">console</span>.log(doubleLinkedList.remove(<span class="hljs-number">10</span>))<br><span class="hljs-built_in">console</span>.log(doubleLinkedList.remove(<span class="hljs-number">100</span>))<br><br><span class="hljs-built_in">console</span>.log(doubleLinkedList.join(<span class="hljs-string">&quot;&lt;-&gt;&quot;</span>))<br></code></pre></td></tr></table></figure>
+
+<p>上面代码输出如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 10&lt;-&gt;15&lt;-&gt;20&lt;-&gt;25</span><br><span class="hljs-comment">// 10</span><br><span class="hljs-comment">// 15</span><br><span class="hljs-comment">// null</span><br><span class="hljs-comment">// 10&lt;-&gt;15&lt;-&gt;20&lt;-&gt;25</span><br><span class="hljs-comment">// 0</span><br><span class="hljs-comment">// 3</span><br><span class="hljs-comment">// -1</span><br><span class="hljs-comment">// 5&lt;-&gt;10&lt;-&gt;15&lt;-&gt;18&lt;-&gt;20&lt;-&gt;25&lt;-&gt;30</span><br><span class="hljs-comment">// 10</span><br><span class="hljs-comment">// 5</span><br><span class="hljs-comment">// 15</span><br><span class="hljs-comment">// null</span><br><span class="hljs-comment">// 10</span><br><span class="hljs-comment">// null</span><br><span class="hljs-comment">// 18&lt;-&gt;20&lt;-&gt;25&lt;-&gt;30</span><br></code></pre></td></tr></table></figure>
+
+<p>嗯，没有报错，简单对比一下，是正确的，No Problem</p>
+<h3 id="环形链表"><a href="#环形链表" class="headerlink" title="环形链表"></a>环形链表</h3><p>我们再来看另一种链表，环形链表，顾名思义，环形链表的尾部节点指向它自己的头节点</p>
+<p>环形链表有单向环形链表，也可以有双向环形链表，如下图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/isboyjc/PictureBed/other/image-20201228203035921.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>单双环形链表这里我们就不再一一的写了，你可以尝试自己写一下，对比上面我们环形链表只需要注意下尾部节点要指向头节点即可</p>
+<h2 id="为什么JavaScript中不内置链表？"><a href="#为什么JavaScript中不内置链表？" class="headerlink" title="为什么JavaScript中不内置链表？"></a>为什么JavaScript中不内置链表？</h2><p>根据我们上面所说，链表有这么多优点，那么为什么 <code>JavaScript</code> 这门语言不内置链表这种数据结构呢？</p>
+<p>其实 JS 中，数组几乎实现了链表的所有功能，所以没那个必要去再麻烦一次了，听到这里你可能会疑惑，上面不是说，数组在某些情况（例如头部插入等等）下性能不如链表吗？</p>
+<p>我们来用事实说话，现在我们用上面完成的单向链表类 <code>LinkedList</code>，同原生数组做一个简单的的时间测试</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> linkedList = <span class="hljs-keyword">new</span> LinkedList()<br><span class="hljs-keyword">let</span> arr = []<br><br><span class="hljs-comment">// 测试 分别尝试 「总数100 插入节点50」/「总数100000 插入节点50000」</span><br><span class="hljs-keyword">let</span> count = <span class="hljs-number">100</span><br><span class="hljs-keyword">let</span> insertIndex = <span class="hljs-number">50</span><br><span class="hljs-comment">// let count = 100000</span><br><span class="hljs-comment">// let insertIndex = 50000</span><br><br><span class="hljs-built_in">console</span>.time(<span class="hljs-string">&#x27;链表push操作&#x27;</span>)<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; count; i++) &#123;<br>  linkedList.append(i)<br>&#125;<br><span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&#x27;链表push操作&#x27;</span>)<br><br><span class="hljs-built_in">console</span>.time(<span class="hljs-string">&#x27;数组push操作&#x27;</span>)<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; count; i++) &#123;<br>  arr.push(i)<br>&#125;<br><span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&#x27;数组push操作&#x27;</span>)<br><br><br><span class="hljs-built_in">console</span>.time(<span class="hljs-string">&#x27;链表insert操作&#x27;</span>)<br>linkedList.insert(<span class="hljs-string">&#x27;test节点&#x27;</span>, insertIndex)<br><span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&#x27;链表insert操作&#x27;</span>)<br><br><span class="hljs-built_in">console</span>.time(<span class="hljs-string">&#x27;数组insert操作&#x27;</span>)<br>arr.splice(insertIndex, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;test节点&#x27;</span>)<br><span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&#x27;数组insert操作&#x27;</span>)<br><br><br><span class="hljs-built_in">console</span>.time(<span class="hljs-string">&#x27;链表remove操作&#x27;</span>)<br>linkedList.removeAt(insertIndex)<br><span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&#x27;链表remove操作&#x27;</span>)<br><br><span class="hljs-built_in">console</span>.time(<span class="hljs-string">&#x27;数组remove操作&#x27;</span>)<br>arr.splice(insertIndex, <span class="hljs-number">1</span>)<br><span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&#x27;数组remove操作&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>我们来看下结果</p>
+<p>追加 100 个数据，在索引 50 插入元素，再删除插入的元素</p>
+<p><img src="https://cdn.jsdelivr.net/gh/isboyjc/PictureBed/other/image-20201228210751995.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>追加 100000 个数据，在索引 50000 插入元素，再删除插入的元素</p>
+<p><img src="https://cdn.jsdelivr.net/gh/isboyjc/PictureBed/other/image-20201228210701979.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>What？？？？？？</p>
+<p>我们从测试结果可以看到不论基数为 100 这样的小量级或者基数为 100000 这样一个很大的量级时，原生 Array 的性能都依然碾压链表</p>
+<p>也就是说链表效率高于数组效率这种话，事实上在 JS 中是不存在的，即使你创建一个长度为 1 亿的数组，再创建一个长度为 10 的数组，并且向这两个数组的中间添加元素，<code>console.time</code> 时间出来看看，你会发现所用时间与数组长度长度无关，这说明 JS 数组达到了链表的效率要求</p>
+<p>而且数组中我们也可以用 <code>splice()</code> 方法向数组的指定位置去添加和删除元素，经测试，所需时间同样与数组长度无关，也能达到链表的要求，而数组的下标完全可以取代链表的 <code>head,tail,next,prev</code> 等方法，并且大多数情况下会更方便些，再加上工作中链表这种数据结构的使用场景不是太多，所以可以说 JS 中的数组是完爆链表的</p>
+<p>当然，这只局限于 JavaScript 这门语言中，这和 JS 内部的数组实现机制有关，其实 JS 中的数组只是叫数组而已，它和常规语言中的数组概念就不同，那么关于数组概念以及内部实现，不在我们此章节讨论范围之内，先留一个疑问，过几天有空了再另起一篇 JS 数组相关的文章吧，其实自己找去答案最好了，我们说 JS 是一门解释型高级语言，它的底层实现并不像我们看起来那么简单循规，有点打破常规的意思</p>
+<p>讲的这里，你可能会吐槽这一篇文章好不容易看完了，现在你给我说没用。。。不要着急，收好臭鸡蛋</p>
+<h2 id="JavaScript中链表无用？"><a href="#JavaScript中链表无用？" class="headerlink" title="JavaScript中链表无用？"></a>JavaScript中链表无用？</h2><p>如我们上面所说，难道 <code>JavaScript</code> 中的链表当真就毫无作用了吗？</p>
+<p>其实也不是，就比如三大法宝之一 <code>React</code> 中的 <code>Fiber</code> 架构，就用到了链表这种数据结构</p>
+<p><code>Fiber</code> 在英文中的意思为 <code>纤维化</code>，即细化，将任务进行细化，它把一个耗时长的任务分成很多小片，每一个小片的运行时间很短，虽然总时间依然很长，但是在每个小片执行完之后，都给其他任务一个执行的机会，这样唯一的线程就不会被独占，其他任务依然有运行的机会，<code>React</code> 中的 <code>Fiber</code> 就把整个 <code>VDOM</code> 的更新过程碎片化</p>
+<p>在之前 <code>React</code> 中的 <code>render()</code> 方法会接收一个 <code>虚拟DOM</code> 对象和一个真实的 <code>容器DOM</code> 作为 <code>虚拟DOM</code> 渲染完成后的挂载节点，其主要作用就是将 <code>虚拟DOM</code> 渲染为 <code>真实DOM</code> 并挂载到容器下，这个方法在更新的时候是进行递归操作的，如果在更新的过程中有大量的节点需要更新，就会出现长时间占用 JS 主线程的情况，并且整个递归过程是无法被打断的，由于 JS 线程和 GUI 线程是互斥的（详看👉<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904050543034376">「硬核JS」一次搞懂JS运行机制</a>），所以大量更新的情况下你可能会看到界面有些卡顿</p>
+<p><code>Fiber</code> 架构其实就解决两个问题，一是保证任务在浏览器空闲的时候执行，二是将任务进行碎片化，接下来我们简单说下 <code>Fiber</code> </p>
+<p>JS 中有一个实验性质的方法 <code>requestIdleCallback(callback)</code> ，它可以传入一个回调函数，回调函数能够收到一个 <code>deadline</code> 对象，通过该对象的 <code>timeRemaining()</code> 方法可以获取到当前浏览器的空闲时间，如果有空闲时间，那么就可以执行一小段任务，如果时间不足了，则继续 <code>requestIdleCallback</code>，等到浏览器又有空闲时间的时候再接着执行，这样就实现了浏览器空闲的时候执行</p>
+<p>但是 <code>虚拟DOM</code> 是树结构，当任务被打断后，树结构无法恢复之前的任务继续执行，所以需要一种新的数据结构，也就是我们的链表，链表可以包含多个指针，<code>Fiber</code> 采用的链表中就包含三个指针，<code>parent</code> 指向其父 <code>Fiber</code>  节点，<code>child</code> 指向其子 <code>Fiber</code> 节点，<code>sibling</code> 指向其兄弟 <code>Fiber</code> 节点，一个 <code>Fiber</code> 节点对应一个任务节点，这样就可以轻易找到下一个节点，继而也就可以恢复任务的执行</p>
+<p>这简简单单的一段，就是大名鼎鼎的 <code>Fiber</code> 架构，那么你说链表有用吗？</p>
+<p>说了这么多，其实对于普通需求，我们 JS 确实不需要用到链表，数组能完爆它，但是特殊需求里，链表独具它一定的优势，总之三个字，看需求，再者，我们现在是在用 JS 来阐述链表，但是其它常规语言可没有 JS 中的数组这么强悍，而且学会了链表，我们下一个学习树结构时就更加得心应手了</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>文中的案例完整代码地址如下 👇</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/isboyjc/DailyAlgorithms/tree/master/demo/algorithm">单双链表DEMO</a> </p>
+<p>此文介绍数据结构之一的链表，作为链表刷题前的小知识</p>
+<p>上班摸鱼水群不如摸鱼刷道算法，百利无一害，坚持每天刷题吧，加油</p>
+<p>GitHub建了个算法仓库，从零更算法题/文字/视频 题解ing，一块来刷吧 👉 <a target="_blank" rel="noopener" href="https://github.com/isboyjc/DailyAlgorithms">GitHub传送门</a>  </p>
+<p>此文视频版本详见 👉 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1aV411q7WF">B站传送门</a> </p>
+<p>看到这里了，来个三连吧，如有错误请指正，也欢迎大家关注公众号「不正经的前端」，和算法群的朋友们组团刷算法，效率更高</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">算法与数据结构</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/JavaScript/">JavaScript</a>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/LeetCode/">LeetCode</a>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/%E5%88%B7%E9%A2%98/">刷题</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本站所有文章如需转载，请联系作者！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2021/02/18/cesium/%E8%AE%A9GIS%E4%B8%89%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96%E5%8F%98%E5%BE%97%E7%AE%80%E5%8D%95-%E5%9C%B0%E7%90%86%E5%9D%90%E6%A0%87%E7%B3%BB%E7%BB%9F/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">让GIS三维可视化变得简单-地理坐标系统</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2020/12/25/suanfa/%E3%80%8C%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%8D%E6%97%B6%E9%97%B4%E4%B8%8E%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">
+                        <span class="hidden-mobile">「算法与数据结构」时间与空间复杂度</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"OuIO62anqvXdvjruYtvDefqV-gzGzoHsz","appKey":"G9BfnEel5vlsGHJqmPkr2B1P","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+       <div style="display: flex;justify-content: center;align-items: center;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/gzh.jpeg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/zs.jpg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;margin-left: 20px;"> </div> 
+    </div>
+  </div>
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     本站使用 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 主题，欢迎关注微信公众号「不正经的前端」！ 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

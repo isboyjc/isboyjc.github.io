@@ -1,0 +1,718 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/images/avatar.jpeg">
+  <link rel="icon" href="/blog/images/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="李建超,isboyjc,句末,不正经的前端">
+  
+  <title>「硬核JS」你的程序中可能存在内存泄漏 - ISBOYJC</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"isboyjc.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":500711128,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/images/b011.jpeg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="「硬核JS」你的程序中可能存在内存泄漏">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      isboyjc
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-07-13 10:00" pubdate>
+        2021年7月13日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      90
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">「硬核JS」你的程序中可能存在内存泄漏</h1>
+            
+            <div class="markdown-body">
+              <span id="more"></span>
+
+<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>想来很多同学看到内存泄漏，内心直接会跳出两个字：闭包！！！再让你说点其它的估计就噤声了。如果你对内存泄漏的了解仅限于闭包，那真的是应该仔细看此文了，闭包可能会造成内存泄漏，但是内存泄漏并不是只有闭包，它只是内存泄漏的引子之一罢了。</p>
+<p>写的程序运行一段时间后慢慢变卡甚至要崩溃了?</p>
+<p>如题，你的程序中可能存在内存泄漏，说到内存泄漏，建议先读 <a target="_blank" rel="noopener" href="https://github.com/isboyjc/blog/issues/35">「硬核JS」你真的懂垃圾回收机制吗</a> 一文，然后再来看此文会比较通透，毕竟垃圾回收和内存泄漏是因果关系，垃圾被回收了啥事没有，垃圾没被回收就是内存泄漏。</p>
+<p>此文我们会介绍内存泄漏的相关概念和引起内存泄漏的一些问题，还会着重给大家介绍内存泄漏的排查、定位及修复方法（学到即可用到），最后还简单扩展了下前端内存三大件的其他两件内存膨胀和频繁 GC 的概念。</p>
+<h2 id="什么是内存泄漏"><a href="#什么是内存泄漏" class="headerlink" title="什么是内存泄漏"></a>什么是内存泄漏</h2><p>引擎中有垃圾回收机制，它主要针对一些程序中不再使用的对象，对其清理回收释放掉内存。</p>
+<p>那么垃圾回收机制会把不再使用的对象（垃圾）全都回收掉吗？</p>
+<p>其实引擎虽然针对垃圾回收做了各种优化从而尽可能的确保垃圾得以回收，但并不是说我们就可以完全不用关心这块了，我们代码中依然要主动避免一些不利于引擎做垃圾回收操作，因为不是所有无用对象内存都可以被回收的，那当不再用到的对象内存，没有及时被回收时，我们叫它内存泄漏（Memory leak）。</p>
+<h2 id="常见的内存泄漏"><a href="#常见的内存泄漏" class="headerlink" title="常见的内存泄漏"></a>常见的内存泄漏</h2><p>代码不规范，同事两行泪，接下来我们看看会引起内存泄漏的一些常见案例。</p>
+<h3 id="不正当的闭包"><a href="#不正当的闭包" class="headerlink" title="不正当的闭包"></a>不正当的闭包</h3><p>闭包就是函数内部嵌套并 return 一个函数？？？这是大多数人认为的闭包，好吧，它确实也是，我们来看看几本 JS 高光书中的描述：</p>
+<ul>
+<li>JavaScript高级程序设计：闭包是指有权访问另一个函数作用域中的变量的函数</li>
+<li>JavaScript权威指南：从技术的角度讲，所有的JavaScript函数都是闭包：它们都是对象，它们都关联到作用域链</li>
+<li>你不知道的JavaScript：当函数可以记住并访问所在的词法作用域时，就产生了闭包，即使函数是在当前词法作用域之外执行</li>
+</ul>
+<p>按照上面三本书中的描述，那闭包所涉及的的范围就比较广了，我们这里暂时不去纠结闭包的定义，就以最简单、大家都认可的闭包例子来看闭包：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn1</span>(<span class="hljs-params"></span>)</span>&#123;<br>  <span class="hljs-keyword">let</span> test = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(<span class="hljs-number">1000</span>).fill(<span class="hljs-string">&#x27;isboyjc&#x27;</span>)<br>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;hahaha&#x27;</span>)<br>  &#125;<br>&#125;<br><span class="hljs-keyword">let</span> fn1Child = fn1()<br>fn1Child()<br></code></pre></td></tr></table></figure>
+
+<p>上例是闭包吗？它造成内存泄漏了吗？</p>
+<p>显然它是一个典型闭包，但是它并没有造成内存泄漏，因为返回的函数中并没有对 <code>fn1</code> 函数内部的引用，也就是说，函数 <code>fn1</code> 内部的 <code>test</code> 变量完全是可以被回收的，那我们再来看：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn2</span>(<span class="hljs-params"></span>)</span>&#123;<br>  <span class="hljs-keyword">let</span> test = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(<span class="hljs-number">1000</span>).fill(<span class="hljs-string">&#x27;isboyjc&#x27;</span>)<br>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(test)<br>    <span class="hljs-keyword">return</span> test<br>  &#125;<br>&#125;<br><span class="hljs-keyword">let</span> fn2Child = fn2()<br>fn2Child()<br></code></pre></td></tr></table></figure>
+
+<p>上例是闭包吗？它造成内存泄漏了吗？</p>
+<p>显然它也是闭包，并且因为 <code>return</code> 的函数中存在函数 <code>fn2</code> 中的 <code>test</code> 变量引用，所以 <code>test</code> 并不会被回收，也就造成了内存泄漏。</p>
+<p>那么怎样解决呢？</p>
+<p>其实在函数调用后，把外部的引用关系置空就好了，如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn2</span>(<span class="hljs-params"></span>)</span>&#123;<br>  <span class="hljs-keyword">let</span> test = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(<span class="hljs-number">1000</span>).fill(<span class="hljs-string">&#x27;isboyjc&#x27;</span>)<br>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(test)<br>    <span class="hljs-keyword">return</span> test<br>  &#125;<br>&#125;<br><span class="hljs-keyword">let</span> fn2Child = fn2()<br>fn2Child()<br>fn2Child = <span class="hljs-literal">null</span><br></code></pre></td></tr></table></figure>
+
+<p>“ 减少使用闭包，闭包会造成内存泄漏。。。 ”</p>
+<p>醒醒，这句话是过去式了，它的描述不准确，So，应该说不正当的使用闭包可能会造成内存泄漏。</p>
+<h3 id="隐式全局变量"><a href="#隐式全局变量" class="headerlink" title="隐式全局变量"></a>隐式全局变量</h3><p>我们知道 <code>JavaScript</code> 的垃圾回收是自动执行的，垃圾回收器每隔一段时间就会找出那些不再使用的数据，并释放其所占用的内存空间。</p>
+<p>再来看全局变量和局部变量，函数中的局部变量在函数执行结束后这些变量已经不再被需要，所以垃圾回收器会识别并释放它们。但是对于全局变量，垃圾回收器很难判断这些变量什么时候才不被需要，所以全局变量通常不会被回收，我们使用全局变量是 OK 的，但同时我们要避免一些额外的全局变量产生，如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>)</span>&#123;<br>  <span class="hljs-comment">// 没有声明从而制造了隐式全局变量test1</span><br>  test1 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(<span class="hljs-number">1000</span>).fill(<span class="hljs-string">&#x27;isboyjc1&#x27;</span>)<br>  <br>  <span class="hljs-comment">// 函数内部this指向window，制造了隐式全局变量test2</span><br>  <span class="hljs-built_in">this</span>.test2 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(<span class="hljs-number">1000</span>).fill(<span class="hljs-string">&#x27;isboyjc2&#x27;</span>)<br>&#125;<br>fn()<br></code></pre></td></tr></table></figure>
+
+<p>调用函数 <code>fn</code> ，因为 没有声明 和 函数中this 的问题造成了两个额外的隐式全局变量，这两个变量不会被回收，这种情况我们要尽可能的避免，在开发中我们可以使用严格模式或者通过 <code>lint</code> 检查来避免这些情况的发生，从而降低内存成本。</p>
+<p>除此之外，我们在程序中也会不可避免的使用全局变量，这些全局变量除非被取消或者重新分配之外也是无法回收的，这也就需要我们额外的关注，也就是说当我们在使用全局变量存储数据时，要确保使用后将其置空或者重新分配，当然也很简单，在使用完将其置为 <code>null</code> 即可，特别是在使用全局变量做持续存储大量数据的缓存时，我们一定要记得设置存储上限并及时清理，不然的话数据量越来越大，内存压力也会随之增高。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> test = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(<span class="hljs-number">10000</span>)<br><br><span class="hljs-comment">// do something</span><br><br>test = <span class="hljs-literal">null</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="游离DOM引用"><a href="#游离DOM引用" class="headerlink" title="游离DOM引用"></a>游离DOM引用</h3><p>考虑到性能或代码简洁方面，我们代码中进行 DOM 时会使用变量缓存 DOM 节点的引用，但移除节点的时候，我们应该同步释放缓存的引用，否则游离的子树无法释放。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;root&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">ul</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;ul&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;li3&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span><br><span class="javascript">  <span class="hljs-keyword">let</span> root = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#root&#x27;</span>)</span><br><span class="javascript">  <span class="hljs-keyword">let</span> ul = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#ul&#x27;</span>)</span><br><span class="javascript">  <span class="hljs-keyword">let</span> li3 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#li3&#x27;</span>)</span><br><span class="javascript">  </span><br><span class="javascript">  <span class="hljs-comment">// 由于ul变量存在，整个ul及其子元素都不能GC</span></span><br><span class="javascript">  root.removeChild(ul)</span><br><span class="javascript">  </span><br><span class="javascript">  <span class="hljs-comment">// 虽置空了ul变量，但由于li3变量引用ul的子节点，所以ul元素依然不能被GC</span></span><br><span class="javascript">  ul = <span class="hljs-literal">null</span></span><br><span class="javascript">  </span><br><span class="javascript">  <span class="hljs-comment">// 已无变量引用，此时可以GC</span></span><br><span class="javascript">  li3 = <span class="hljs-literal">null</span></span><br><span class="javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>如上所示，当我们使用变量缓存 DOM 节点引用后删除了节点，如果不将缓存引用的变量置空，依然进行不了 GC，也就会出现内存泄漏。</p>
+<p>假如我们将父节点置空，但是被删除的父节点其子节点引用也缓存在变量里，那么就会导致整个父 DOM 节点树下整个游离节点树均无法清理，还是会出现内存泄漏，解决办法就是将引用子节点的变量也置空，如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210705152421644.png" srcset="/blog/img/loading.gif" lazyload></p>
+<h3 id="遗忘的定时器"><a href="#遗忘的定时器" class="headerlink" title="遗忘的定时器"></a>遗忘的定时器</h3><p>程序中我们经常会用到计时器，也就是 <code>setTimeout</code> 和 <code>setInterval</code>，先来看一个例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 获取数据</span><br><span class="hljs-keyword">let</span> someResource = getData()<br><span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-keyword">const</span> node = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;Node&#x27;</span>)<br>	<span class="hljs-keyword">if</span>(node) &#123;<br>    node.innerHTML = <span class="hljs-built_in">JSON</span>.stringify(someResource))<br>	&#125;<br>&#125;, <span class="hljs-number">1000</span>)<br></code></pre></td></tr></table></figure>
+
+<p>上面是我随便 <code>copy</code> 的一个小例子，其代码中每隔一秒就将得到的数据放入到 <code>Node</code> 节点中去，但是在 <code>setInterval</code> 没有结束前，回调函数里的变量以及回调函数本身都无法被回收。</p>
+<p>什么才叫结束呢？也就是调用了 <code>clearInterval</code>。如果没有被 <code>clear</code> 掉的话，就会造成内存泄漏。不仅如此，如果回调函数没有被回收，那么回调函数内依赖的变量也没法被回收。所以在上例中，<code>someResource</code> 就没法被回收。</p>
+<p>同样，<code>setTiemout</code> 也会有同样的问题，所以，当不需要 <code>interval</code> 或者 <code>timeout</code> 时，最好调用 <code>clearInterval</code> 或者 <code>clearTimeout</code>来清除，另外，浏览器中的 <code>requestAnimationFrame</code> 也存在这个问题，我们需要在不需要的时候用 <code>cancelAnimationFrame</code> API 来取消使用。</p>
+<h3 id="遗忘的事件监听器"><a href="#遗忘的事件监听器" class="headerlink" title="遗忘的事件监听器"></a>遗忘的事件监听器</h3><p>当事件监听器在组件内挂载相关的事件处理函数，而在组件销毁时不主动将其清除时，其中引用的变量或者函数都被认为是需要的而不会进行回收，如果内部引用的变量存储了大量数据，可能会引起页面占用内存过高，这样就造成意外的内存泄漏。</p>
+<p>我们就拿 Vue 组件来举例子，React 里也是一样的：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span><br><span class="javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span><br><span class="javascript">  <span class="hljs-function"><span class="hljs-title">created</span>(<span class="hljs-params"></span>)</span> &#123;</span><br><span class="javascript">    <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">&quot;resize&quot;</span>, <span class="hljs-built_in">this</span>.doSomething)</span><br><span class="javascript">  &#125;,</span><br><span class="javascript">  <span class="hljs-function"><span class="hljs-title">beforeDestroy</span>(<span class="hljs-params"></span>)</span>&#123;</span><br><span class="javascript">    <span class="hljs-built_in">window</span>.removeEventListener(<span class="hljs-string">&quot;resize&quot;</span>, <span class="hljs-built_in">this</span>.doSomething)</span><br><span class="javascript">  &#125;,</span><br><span class="javascript">  <span class="hljs-attr">methods</span>: &#123;</span><br><span class="javascript">    <span class="hljs-function"><span class="hljs-title">doSomething</span>(<span class="hljs-params"></span>)</span> &#123;</span><br><span class="javascript">      <span class="hljs-comment">// do something</span></span><br><span class="javascript">    &#125;</span><br><span class="javascript">  &#125;</span><br><span class="javascript">&#125;</span><br><span class="javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="遗忘的监听者模式"><a href="#遗忘的监听者模式" class="headerlink" title="遗忘的监听者模式"></a>遗忘的监听者模式</h3><p>监听者模式想必我们都知道，不管是 Vue 、 React 亦或是其他，对于目前的前端开发框架来说，监听者模式实现一些消息通信都是非常常见的，比如 <code>EventBus</code>. . . </p>
+<p>当我们实现了监听者模式并在组件内挂载相关的事件处理函数，而在组件销毁时不主动将其清除时，其中引用的变量或者函数都被认为是需要的而不会进行回收，如果内部引用的变量存储了大量数据，可能会引起页面占用内存过高，这样也会造成意外的内存泄漏。</p>
+<p>还是用 Vue 组件举例子，因为比较简单：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span><br><span class="javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span><br><span class="javascript">  <span class="hljs-function"><span class="hljs-title">created</span>(<span class="hljs-params"></span>)</span> &#123;</span><br><span class="javascript">    eventBus.on(<span class="hljs-string">&quot;test&quot;</span>, <span class="hljs-built_in">this</span>.doSomething)</span><br><span class="javascript">  &#125;,</span><br><span class="javascript">  <span class="hljs-function"><span class="hljs-title">beforeDestroy</span>(<span class="hljs-params"></span>)</span>&#123;</span><br><span class="javascript">    eventBus.off(<span class="hljs-string">&quot;test&quot;</span>, <span class="hljs-built_in">this</span>.doSomething)</span><br><span class="javascript">  &#125;,</span><br><span class="javascript">  <span class="hljs-attr">methods</span>: &#123;</span><br><span class="javascript">    <span class="hljs-function"><span class="hljs-title">doSomething</span>(<span class="hljs-params"></span>)</span> &#123;</span><br><span class="javascript">      <span class="hljs-comment">// do something</span></span><br><span class="javascript">    &#125;</span><br><span class="javascript">  &#125;</span><br><span class="javascript">&#125;</span><br><span class="javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>如上，我们只需在 <code>beforeDestroy</code> 组件销毁生命周期里将其清除即可。</p>
+<h3 id="遗忘的Map、Set对象"><a href="#遗忘的Map、Set对象" class="headerlink" title="遗忘的Map、Set对象"></a>遗忘的Map、Set对象</h3><p>当使用 <code>Map</code> 或 <code>Set</code> 存储对象时，同 <code>Object</code> 一致都是强引用，如果不将其主动清除引用，其同样会造成内存不自动进行回收。</p>
+<p>如果使用 <code>Map</code> ，对于键为对象的情况，可以采用 <code>WeakMap</code>，<code>WeakMap</code> 对象同样用来保存键值对，对于键是弱引用（注：<code>WeakMap</code> 只对于键是弱引用），且必须为一个对象，而值可以是任意的对象或者原始值，由于是对于对象的弱引用，不会干扰 <code>Js</code> 的垃圾回收。</p>
+<p>如果需要使用 <code>Set</code> 引用对象，可以采用 <code>WeakSet</code>，<code>WeakSet</code> 对象允许存储对象弱引用的唯一值，<code>WeakSet</code> 对象中的值同样不会重复，且只能保存对象的弱引用，同样由于是对于对象的弱引用，不会干扰 <code>Js</code> 的垃圾回收。</p>
+<p>这里可能需要简单介绍下，谈弱引用，我们先来说强引用，之前我们说 JS 的垃圾回收机制是如果我们持有对一个对象的引用，那么这个对象就不会被垃圾回收，这里的引用，指的就是 <code>强引用</code> ，而弱引用就是一个对象若只被弱引用所引用，则被认为是不可访问（或弱可访问）的，因此可能在任何时刻被回收。</p>
+<p>不明白？来看例子就晓得了：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// obj是一个强引用，对象存于内存，可用</span><br><span class="hljs-keyword">let</span> obj = &#123;<span class="hljs-attr">id</span>: <span class="hljs-number">1</span>&#125;<br><br><span class="hljs-comment">// 重写obj引用</span><br>obj = <span class="hljs-literal">null</span> <br><span class="hljs-comment">// 对象从内存移除，回收 &#123;id: 1&#125; 对象</span><br></code></pre></td></tr></table></figure>
+
+<p>上面是一个简单的通过重写引用来清除对象引用，使其可回收。</p>
+<p>再看下面这个：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> obj = &#123;<span class="hljs-attr">id</span>: <span class="hljs-number">1</span>&#125;<br><span class="hljs-keyword">let</span> user = &#123;<span class="hljs-attr">info</span>: obj&#125;<br><span class="hljs-keyword">let</span> set = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([obj])<br><span class="hljs-keyword">let</span> map = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>([[obj, <span class="hljs-string">&#x27;hahaha&#x27;</span>]])<br><br><span class="hljs-comment">// 重写obj</span><br>obj = <span class="hljs-literal">null</span> <br><br><span class="hljs-built_in">console</span>.log(user.info) <span class="hljs-comment">// &#123;id: 1&#125;</span><br><span class="hljs-built_in">console</span>.log(set)<br><span class="hljs-built_in">console</span>.log(map)<br></code></pre></td></tr></table></figure>
+
+<p>此例我们重写 <code>obj</code> 以后，<code>&#123;id: 1&#125;</code> 依然会存在于内存中，因为 <code>user</code> 对象以及后面的 <code>set/map</code> 都强引用了它，Set/Map、对象、数组对象等都是强引用，所以我们仍然可以获取到 <code>&#123;id: 1&#125;</code> ，我们想要清除那就只能重写所有引用将其置空了。</p>
+<p>接下来我们看 <code>WeakMap</code> 以及 <code>WeakSet</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> obj = &#123;<span class="hljs-attr">id</span>: <span class="hljs-number">1</span>&#125;<br><span class="hljs-keyword">let</span> weakSet = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakSet</span>([obj])<br><span class="hljs-keyword">let</span> weakMap = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakMap</span>([[obj, <span class="hljs-string">&#x27;hahaha&#x27;</span>]])<br><br><span class="hljs-comment">// 重写obj引用</span><br>obj = <span class="hljs-literal">null</span><br><br><span class="hljs-comment">// &#123;id: 1&#125; 将在下一次 GC 中从内存中删除</span><br></code></pre></td></tr></table></figure>
+
+<p>如上所示，使用了 <code>WeakMap</code> 以及 <code>WeakSet</code> 即为弱引用，将 <code>obj</code> 引用置为 <code>null</code> 后，对象 <code>&#123;id: 1&#125;</code> 将在下一次 GC 中被清理出内存。</p>
+<h3 id="未清理的Console输出"><a href="#未清理的Console输出" class="headerlink" title="未清理的Console输出"></a>未清理的Console输出</h3><p>写代码的过程中，肯定避免不了一些输出，在一些小团队中可能项目上线也不清理这些 <code>console</code>，殊不知这些 <code>console</code> 也是隐患，同时也是容易被忽略的，我们之所以在控制台能看到数据输出，是因为浏览器保存了我们输出对象的信息数据引用，也正是因此未清理的 <code>console</code> 如果输出了对象也会造成内存泄漏。</p>
+<p>所以，开发环境下我们可以使用控制台输出来便于我们调试，但是在生产环境下，一定要及时清理掉输出。</p>
+<p>可能有同学会觉得不可思议，甚至不相信，这里我们留一个例子，大家看完文章刚好可以自己测试一下（如何测试看完下文就明白啦！）</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;click&quot;</span>&gt;</span>click<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span><br><span class="javascript">    !<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="javascript">      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Test</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="javascript">        <span class="hljs-built_in">this</span>.init()</span><br><span class="javascript">      &#125;</span><br><span class="javascript">      Test.prototype.init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="javascript">        <span class="hljs-built_in">this</span>.a = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(<span class="hljs-number">10000</span>).fill(<span class="hljs-string">&#x27;isboyjc&#x27;</span>)</span><br><span class="javascript">        <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>)</span><br><span class="javascript">      &#125;</span><br><span class="javascript"></span><br><span class="javascript">      <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#click&#x27;</span>).onclick = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="javascript">        <span class="hljs-keyword">new</span> Test();</span><br><span class="javascript">      &#125;</span><br><span class="javascript">    &#125;()</span><br><span class="javascript">  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="内存泄漏排查、定位与修复"><a href="#内存泄漏排查、定位与修复" class="headerlink" title="内存泄漏排查、定位与修复"></a>内存泄漏排查、定位与修复</h2><p>正如开头所说，程序运行一段时间后慢慢变卡甚至要崩溃了，不知道是什么原因，那我们就通过一个例子来走一遍排查、定位以及修复内存泄漏的整个流程，敲黑板，这是大家真正能够用上的。</p>
+<p>既然上面我们说了几个会造成内存泄漏的案例，那我们就用这些案例写个 <code>Demo</code> 来从浏览器的角度反推排查是否存在内存泄漏，存在的话定位泄漏源并给予修复。</p>
+<p>首先，我们来捏造一个内存泄漏例子：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;click&quot;</span>&gt;</span>click<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;content&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript"></span><br><span class="javascript">    <span class="hljs-keyword">let</span> click = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#click&quot;</span>);</span><br><span class="javascript">    <span class="hljs-keyword">let</span> content = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#content&quot;</span>)</span><br><span class="javascript">    <span class="hljs-keyword">let</span> arr = []</span><br><span class="javascript"></span><br><span class="javascript">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">closures</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="javascript">      <span class="hljs-keyword">let</span> test = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(<span class="hljs-number">1000</span>).fill(<span class="hljs-string">&#x27;isboyjc&#x27;</span>)</span><br><span class="javascript"></span><br><span class="javascript">      <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="javascript">        <span class="hljs-keyword">return</span> test</span><br><span class="javascript">      &#125;</span><br><span class="javascript">    &#125;</span><br><span class="javascript"></span><br><span class="javascript">    click.addEventListener(<span class="hljs-string">&quot;click&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="javascript">      arr.push(closures())</span><br><span class="javascript">      arr.push(closures())</span><br><span class="javascript"></span><br><span class="javascript">      content.innerHTML = arr.length</span><br><span class="javascript">    &#125;);</span><br><span class="javascript"></span><br><span class="javascript">  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>如上所示，这是一个非常简单的由不正当使用闭包构成的内存泄漏例子。</p>
+<p>我们先来简单介绍下，只看 <code>script</code> 中的 JS 代码即可，首先，我们有一个 <code>closures</code> 函数，这是一个闭包函数，最简单的闭包函数想必不用向大家介绍了吧，然后我们为页面中的 <code>button</code> 元素绑定了一个点击事件，每次点击都将执行 2 次闭包函数并将其执行结果 <code>push</code> 到全局数组 <code>arr</code> 中，由于闭包函数执行结果也是一个函数并且存在对原闭包函数内部数组 <code>test</code> 的引用，所以 <code>arr</code> 数组中每一项元素都使得其引用的闭包内部 <code>test</code> 数组对象无法回收，<code>arr</code> 数组有多少元素，也就代表着我们存在多少次闭包引用，所以此程序点击次数越多，<code>push</code> 的越多，内存消耗越大，页面也会越来越卡。</p>
+<p>那为了便于后期观察，程序中我们在每次点击按钮后，都把全局数组 <code>arr</code> 的长度数据更新到了页面上，即从 0 开始，每点击一次，页面数值加 2。</p>
+<p>当然，这是我们自己写的例子，作为上帝的我们知道是什么原因导致的，那现在，忘掉这些，假设这是我们的一个项目程序，开发完成交付给测试，测试小姐姐发现在程序中不断点击按钮后页面越来越迟钝了，随即提了BUG。</p>
+<p>作为程序员的我们肯定是：“刷新下页面不就好了，卡了就刷新刷新！！！”</p>
+<p>嗯。。。产品和测试肯定都不会答应，一句用户至上就让我们改。。</p>
+<p>行吧，那就改，首先第一步就要排查是哪里出了问题、是什么引起的，那此环节我们就叫排查问题阶段好了。</p>
+<h3 id="排查问题"><a href="#排查问题" class="headerlink" title="排查问题"></a>排查问题</h3><p><code>Chrome</code> 的开发者工具也就是我们所说的浏览器控制台（<code>Chrome Devtool</code> ）功能其实十分强大，通过它可以帮助我们分析程序中像性能、安全、网络等各种东西，也可以让我们快速定位到问题源，只是大多数人并不熟悉其使用而已。</p>
+<p>由于此文我们以内存泄漏为主，那我们就默认上述程序已经排查了除内存之外所有项且都没问题，接下来开始排查内存这块。</p>
+<p>首先我们开启浏览器的无痕模式，接着打开要检查的网页程序代码，然后打开控制台，整个程序界面非常简单，如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210706185132675.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>接着我们找到 <code>Performance</code> 这一面板，之前叫 <code>Timeline</code> ，它是 <code>Chrome Devtool</code> 用来监控性能指标的一个利器，可以记录并分析在网站的生命周期内所发生的各类事件，我们就可以通过它监控我们程序中的各种性能情况并分析，其中就包括内存，如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210706185736718.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>接下来开始操作，在开始之前一定要确认勾选了 <code>Memory</code> 选项也就是上图标记 5 ，这样我们才可以看到内存相关的分析。</p>
+<p>点击开始录制（标记 1）进入录制状态，随后先清理一下GC，也就是点击小垃圾桶（标记 6）。</p>
+<p>接着疯狂点击页面中 <code>click</code> 按钮 100 次，这时页面上的数值应该是 200，我们再点击一下小垃圾桶，手动触发一次 GC。</p>
+<p>再次疯狂点击页面中 <code>click</code> 按钮 100 次，这时页面上的数值应该是 400，然后停止录制。</p>
+<p>我们来观察控制台生成的数据面板，如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210707012650490.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>上面圈红的两块，也就是 <code>Heap</code> 对应的部分表示内存在周期性的回落，简单说就是我们的内存情况。</p>
+<p>我们可以很明显的看到，内存数据呈现出一个不断上涨的趋势，可能有人会说这段时间内是不是还没执行 GC 呢？别急，还记得我们在 200 的时候点击了一下小垃圾桶吗，也就是我们中间手动触发垃圾回收一次，我们就可以通过上面的页面快照找出当页面值为 200 的那一刻在哪里，很简单，鼠标移到内存快照上找就行了，如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210707013517909.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>可以看到，即使我们中间手动做了一次垃圾回收操作，但清理后的内存并没有减少很多，由此我们推断，此程序的点击操作可能存在内存泄漏。</p>
+<p>OK，排查到问题了，那接下来就是定位泄漏源在哪了。</p>
+<p>你可能会说，既然已经找到问题所在就是点击事件了，直接去改不就完了？</p>
+<p>要知道，这是我们写的一个简单的例子，我们一下子就可以看出问题在哪，但是真实项目中一个点击事件里就可能存在大量操作，而我们只知道点击事件可能导致了内存泄漏，但不知道具体问题是在点击事件的哪一步骤上，更加细粒度的引起原因和位置我们也不知，这些都还需要我们进一步分析去定位。</p>
+<h3 id="分析定位"><a href="#分析定位" class="headerlink" title="分析定位"></a>分析定位</h3><p>接下来我们开始分析定位泄漏源</p>
+<p><code>Chrome Devtool</code> 还为我们提供了 <code>Memory</code> 面板，它可以为我们提供更多详细信息，比如记录 JS CPU 执行时间细节、显示 JS 对象和相关的DOM节点的内存消耗、记录内存的分配细节等。</p>
+<p>其中的 <code>Heap Profiling</code> 可以记录当前的堆内存 <code>heap</code> 的快照，并生成对象的描述文件，该描述文件给出了当下 JS 运行所用的所有对象，以及这些对象所占用的内存大小、引用的层级关系等等，用它就可以定位出引起问题的具体原因以及位置。</p>
+<p>注意，可不是 <code>Performance</code> 面板下那个 <code>Memory</code> ，而是与 <code>Performance</code> 面板同级的 <code>Memory</code> 面板，如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210707015743645.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>现在页面值为 400，当然也可以刷新一下页面从 0 开始，这里我们选择继续操作</p>
+<p>首先点击一下小垃圾桶（标记 3），触发一下 GC，把没用的东西从内存中干掉</p>
+<p>点击开始生成快照（标记 1），生成第一次快照并选中，如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210707020531923.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>简单介绍小上图大概表示的什么意思：</p>
+<p>左侧列表中的 <code>Snapshot 1</code> 代表了我们生成的快照1，也就是刚刚那一刻的内存状态</p>
+<p>选中 <code>Snapshot 1</code> 后就是右侧视图表格了，表格左上方有一个下拉框，它有四个值</p>
+<ul>
+<li>Summary：按照构造函数进行分组，捕获对象和其使用内存的情况，可理解为一个内存摘要，用于跟踪定位DOM节点的内存泄漏</li>
+<li>Comparison：对比某个操作前后的内存快照区别，分析操作前后内存释放情况等，便于确认内存是否存在泄漏及造成原因</li>
+<li>Containment：探测堆的具体内容，提供一个视图来查看对象结构，有助分析对象引用情况，可分析闭包及更深层次的对象分析</li>
+<li>Statistics：统计视图</li>
+</ul>
+<p>该下拉默认会为我们选择 <code>Summary</code> ，所以下方表格展示的就是快照1中数据的内存摘要，简单理解就是快照1生成的那一刻，内存中都存了什么，包括占用内存的信息等等。</p>
+<p>来简单了解下 <code>Summary</code> 选项数据表格的列都表示什么</p>
+<ul>
+<li>Constructor：显示所有的构造函数，点击每一个构造函数可以查看由该构造函数创建的所有对象</li>
+<li>Distance：显示通过最短的节点路径到根节点的距离，引用层级</li>
+<li>Shallow Size：显示对象所占内存，不包含内部引用的其他对象所占的内存</li>
+<li>Retained Size：显示对象所占的总内存，包含内部引用的其他对象所占的内存</li>
+</ul>
+<p>OK，暂时知道这么多就可以了，我们继续操作，先点击小垃圾桶手动执行一次GC，然后点击 1 下页面的 <code>click</code> 按钮，最后再次点击生成快照按钮，生成我们的第二次快照。</p>
+<p>为了准确无误，我们多来几次操作，如下：</p>
+<p>先点击小垃圾桶手动执行一次 GC，然后点击 2 下页面的 <code>click</code> 按钮，最后再次点击生成快照按钮，生成我们的第三次快照</p>
+<p>先点击小垃圾桶手动执行一次 GC，然后点击 3 下页面的 <code>click</code> 按钮，最后再次点击生成快照按钮，生成我们的第四次快照</p>
+<p>随后，我们选中快照2，并将其上面的下拉框由默认的 <code>Summary</code> 选项切换为 <code>comparison</code> 选项，也就是对比当前快照与之前一次快照的内存区别，如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210707025409871.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>我们再来看看选择 <code>Comparison</code> 下拉后，下方的表格列代表着什么，这里介绍几个重要的</p>
+<ul>
+<li>New：新建了多少个对象</li>
+<li>Deleted：回收了多少个对象</li>
+<li>Delta：新建的对象数 减去 回收的对象数</li>
+</ul>
+<p>诶，到这我们就有点那味儿了，我们需要重点关注 <code>Delta</code> ，只要它是正数就可能存在问题，贴心的控制台都已经给我们排好序了，最上面的几个我们依次看就可以。</p>
+<p>当然，我们还需要知道这每一行的数据都代表的是什么，注意力转移到 <code>Constructor</code> 这一列，我们也说过，此列是构造函数，每一个构造函数点击都可以查看由该构造函数创建的所有对象，还是要先介绍下此列中常见的构造函数大致代表什么</p>
+<ul>
+<li>system、system/Context 表示引擎自己创建的以及上下文创建的一些引用，这些不用太关注，不重要</li>
+<li>closure 表示一些函数闭包中的对象引用</li>
+<li>array、string、number、regexp 这一系列也能看出，就是引用了数组、字符串、数字或正则表达式的对象类型</li>
+<li>HTMLDivElement、HTMLAnchorElement、DocumentFragment等等这些其实就是你的代码中对元素的引用或者指定的 DOM 对象引用</li>
+</ul>
+<p>诶，又清晰了很多，那接下来我们就可以依次对比 <code>1-&gt;2 / 2-&gt;3 / 3-&gt;4</code> 来看到底哪里有问题了。</p>
+<p>别着急，想一下现在的我们要怎么做？需要单独的点击一个快照再选中 <code>comparison</code> ，然后看 <code>Delta</code> 列为正数的项再进行分析，这样的操作需要进行 3 次，因为我们有 4 个快照，需要对比分析 3 次，甚至有时候可能生成的快照更多以此来确保准确性。</p>
+<p>有没有更简单的方式呢？有的，我们可以直接选中要对比的快照，右侧表格上还有一个弹框我们可以直接选择快照进行对比，并且还会贴心的为我们过滤掉一些没用的信息：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210707032902842.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>我们来进行实际操作，左侧选中快照2，选择 <code>快照1</code> 与<code> 快照2</code> 进行对比分析，结果如下：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210707033315817.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>可以看到，列表中只剩下对比过滤后的 4 项差异</p>
+<p><code>system/Context</code> 我们无需关心。</p>
+<p><code>closure</code> 上面也说过代表闭包引用，我们点击此项看一下具体的信息：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210707033805351.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>可以看到， <code>closure</code> 下有两个引用，还贴心的为我们指出了在代码的 <code>21</code> 行，点击选中其中一个引用，下方还有更详细的信息展示。</p>
+<p>为什么展开后是两个引用？还记得我们在生成 <code>快照2</code> 时的操作吗，手动执行了一次 GC 并点击了一次 <code>click</code> 按钮，触发了一次点击事件，点击事件中我们执行并 <code>push</code> 了两次闭包函数，所以就是 2 条记录。</p>
+<p>最后我们看 <code>array</code> ，这里存在数组的引用是完全因为我们案例代码中那个全局数组变量 <code>arr</code> 的存在，毕竟每次点击都 <code>push</code> 数据呢，这也是我们上面提到的为什么要额外关注全局变量的使用、要将它及时清理什么的，就是因为像这种情况你不清理的话这些全局变量在页面关闭前就一直在内存里，可能大家对构造函数列中有 2 项都是数组有疑问，其实没毛病，一项代表的是 <code>arr</code> 本身，一项代表的是闭包内部引用的数组变量 <code>test</code> （忘了的话回顾一下上面案例代码），这点也可以通过 <code>Distance</code> 列中表示的引用层级来 GET，一个层级是 7，一个层级是 8。至于数组引起泄漏的代码位置我们也可以点击展开并选中其引用条目，详情里就可以看到代码位置，同上面闭包一样的操作，这里就不演示了。</p>
+<p>诶，那好像就知道具体的泄漏源了，我们再次证实一下，左侧选中快照4，选择 <code>快照3</code> 与<code>快照4</code> 进行对比分析，快照4 前我们做的操作是手动执行了一次 GC 并点击了三次 <code>click</code> 按钮，如果上述结论正确的话，应该同我们上面 <code>快照1</code> 和<code>快照2</code> 对比结果的数据项一致都是 4 项，但是每项的内部引用会是 6 条，因为这次快照前我们点击了三次按钮，每次执行并 <code>push</code> 了两次闭包函数，来看结果：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210707041841176.png" srcset="/blog/img/loading.gif" lazyload alt="image-20210707041841176"></p>
+<p>嗯，到这里一切好像变得清晰明朗了，问题一共有 2 个，一是代码 21 行的闭包引用数组造成的内存泄漏，二是全局变量 <code>arr</code> 的元素不断增多造成的内存泄漏。</p>
+<p>分析定位成功，进入下一步骤，修复并再次验证。</p>
+<h3 id="修复验证"><a href="#修复验证" class="headerlink" title="修复验证"></a>修复验证</h3><p>由于这是临时写的一个案例，没有具体的场景，所以也就没有办法使用针对性的方式来修复，So，此步骤暂时忽略，不过在项目中我们还是要解决的。</p>
+<p>比如全局对象一直增大这个问题，全局对象我们无法避免，但是可以限制一下全局对象的大小，根据场景可以超出就清理一部分。</p>
+<p>比如闭包引用的问题，不让它引用，或者执行完置空，这都是上面说过的。</p>
+<p>总之，一切都需要根据具体场景选择解决方案，解决之后重复上面排查流程看内存即可。</p>
+<h2 id="内存三大件"><a href="#内存三大件" class="headerlink" title="内存三大件"></a>内存三大件</h2><p>其实前端关于内存方面主要有三个问题，我把它们亲切的称作内存三大件：</p>
+<p><code>内存泄漏</code> 我们说很久了，对象已经不再使用但没有被回收，内存没有被释放，即内存泄漏，那想要避免就避免让无用数据还存在引用关系，也就是多注意我们上面说的常见的几种内存泄漏的情况。</p>
+<p><code>内存膨胀</code> 即在短时间内内存占用极速上升到达一个峰值，想要避免需要使用技术手段减少对内存的占用。</p>
+<p><code>频繁 GC</code> 同这个名字，就是 GC 执行的特别频繁，一般出现在频繁使用大的临时变量导致新生代空间被装满的速度极快，而每次新生代装满时就会触发 GC，频繁 GC 同样会导致页面卡顿，想要避免的话就不要搞太多的临时变量，因为临时变量不用了就会被回收，这和我们内存泄漏中说避免使用全局变量冲突，其实，只要把握好其中的度，不太过分就 OK。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>如果你的程序运行出现卡顿却找不到原因，那不妨试试本文的排查方法吧，说不定就是内存泄漏引起的，同时，它也是我们在做页面优化时需要额外注意的一个点。</p>
+<p>今天就到这里了，你 GET 到了吗？欢迎指误堪错！写作不易，动动小手点个赞吧，收藏吃灰是大忌 👊</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E7%A1%AC%E6%A0%B8JS%E7%B3%BB%E5%88%97/">硬核JS系列</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/JavaScript/">JavaScript</a>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/">内存泄漏</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本站所有文章如需转载，请联系作者！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2021/07/06/js/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%BD%A0%E7%9C%9F%E7%9A%84%E4%BA%86%E8%A7%A3%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E5%90%97/">
+                        <span class="hidden-mobile">「硬核JS」你真的了解垃圾回收机制吗</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"OuIO62anqvXdvjruYtvDefqV-gzGzoHsz","appKey":"G9BfnEel5vlsGHJqmPkr2B1P","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+       <div style="display: flex;justify-content: center;align-items: center;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/gzh.jpeg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/zs.jpg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;margin-left: 20px;"> </div> 
+    </div>
+  </div>
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     本站使用 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 主题，欢迎关注微信公众号「不正经的前端」！ 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,722 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/images/avatar.jpeg">
+  <link rel="icon" href="/blog/images/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="李建超,isboyjc,句末,不正经的前端">
+  
+  <title>「硬核JS」数字之美 - ISBOYJC</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"isboyjc.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":500711128,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/images/b011.jpeg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="「硬核JS」数字之美">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      isboyjc
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-22 22:00" pubdate>
+        2020年11月22日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      66
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">「硬核JS」数字之美</h1>
+            
+            <div class="markdown-body">
+              <span id="more"></span>
+
+<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>一直都在佛系更新，这次佛系时间有点长，很久没发文了，有很多小伙伴滴我，其实由于换工作以及搬家的原因，节奏以及时间上都在调整，甚至还有那么一小段时间有点焦虑，你懂的，现已逐渐稳定，接下来频率应该就会高了，奥利给～</p>
+<p>可能大家对一些看了能立即上手或者是面经类文章的更为倾向一些，说实话，你可能能瞒过面试官，终究瞒不过自己，应牢记 <strong>技术!=面试题</strong> ，应该有很多人会忽略一些基础的东西吧，殊不知决定楼有多高的是地基</p>
+<p>前几天有朋友问我位运算相关的东西，其实本来是打算写篇位运算的文章，但描述位运算的前提是需要大家能够清晰的了解计算机中的 <code>数字</code>，数字和位运算又是不同的两个点，所以直接淦位运算可能并不太好，就拿出了此文修补一番发一下，也算是来补一补之前写一半就罢工的文章，随后再补发一篇位运算的文章</p>
+<p>数字，很普通的东西，所有语言都有数字，本文的大部分知识点并不仅仅适用于 <code>JavaScript</code> ，其他语言也都类似，数字大家表面看来可能很简单，其实从计算机到语言本身对数字的处理还是比较复杂的，望本文能够体现出数字的精妙，故而取名 <code>数字之美</code> </p>
+<h2 id="二进制"><a href="#二进制" class="headerlink" title="二进制"></a>二进制</h2><p>对于计算机只能存储二进制，想必是大家耳熟能详的知识了</p>
+<p>我们都知道在计算机内部数据的存储和运算都采用二进制，是因为计算机是由很多晶体管组成的，而晶体管只有2种状态，恰好可以用二进制的 0 和 1 表示，并且采用二进制可以使得计算机内部的运算规则简单，稳定性高，但是由于我们平常并不直接使用二进制，所以可能有小伙伴能给十进制转二进制都忘了，这里就简单介绍一下，当作回顾</p>
+<h3 id="整数转二进制"><a href="#整数转二进制" class="headerlink" title="整数转二进制"></a>整数转二进制</h3><p>关于十进制整数转二进制，其实很简单，记住一个秘诀，就可以了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">除 <span class="hljs-number">2</span> 取余，逆序排列<br></code></pre></td></tr></table></figure>
+
+<p>就是用 2 整除十进制数，得到商和余数，再用 2 整除商，得到新的商和余数，一直重复直至商等于 0，将先得到的余数作为二进制数的高位，后得到的余数作为二进制数的低位，依次排序即可</p>
+<p>例如，我们将十进制 55 转换为 2 进制</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">55</span> % <span class="hljs-number">2</span> <span class="hljs-comment">// 商 27 余 1</span><br><span class="hljs-number">27</span> % <span class="hljs-number">2</span> <span class="hljs-comment">// 商 13 余 1</span><br><span class="hljs-number">13</span> % <span class="hljs-number">2</span> <span class="hljs-comment">// 商  6 余 1</span><br><span class="hljs-number">6</span>  % <span class="hljs-number">2</span> <span class="hljs-comment">// 商  3 余 0</span><br><span class="hljs-number">3</span>  % <span class="hljs-number">2</span> <span class="hljs-comment">// 商  1 余 1</span><br><span class="hljs-number">1</span>  % <span class="hljs-number">2</span> <span class="hljs-comment">// 商  0 余 1</span><br></code></pre></td></tr></table></figure>
+
+<p>取余逆序，那么十进制 55 转 2 进制的结果就是 <code>110111</code> </p>
+<p>二进制一个数值是 1 位，也就是 1 比特（bit），那么如果我们需要得到 8 位二进制，那就在转换结果前补 0 即可</p>
+<p>如十进制 55 的 8 位二进制即 <code>00110111</code>，那么可能还会有人为如果是 4 位怎么办呢，4 位是存不了 55 这么大值的，溢出了</p>
+<h3 id="小数转二进制"><a href="#小数转二进制" class="headerlink" title="小数转二进制"></a>小数转二进制</h3><p>可能还有人不了解十进制小数是怎么转二进制的，其实也有方法口诀</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">乘 <span class="hljs-number">2</span> 取整，顺序排列<br></code></pre></td></tr></table></figure>
+
+<p>用 2 乘十进制小数，可以得到积，将积的整数部分取出，再用 2 乘余下的小数部分，又得到一个积，再将积的整数部分取出，如此进行，直到积中的整数部分为零，或者整数部分为1，此时 0 或 1 为二进制的最后一位或者达到所要求的精度为止，然后把取出的整数部分按顺序排列起来，先取的整数作为二进制小数的高位有效位，后取的整数作为低位有效位</p>
+<p>例如，将十进制小数 <code>0.625</code> 转二进制</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">0.625</span> * <span class="hljs-number">2</span> = <span class="hljs-number">1.250</span> <span class="hljs-comment">// 取整数 1</span><br><span class="hljs-number">0.25</span>  * <span class="hljs-number">2</span> = <span class="hljs-number">0.50</span>  <span class="hljs-comment">// 取整数 0</span><br><span class="hljs-number">0.5</span>   * <span class="hljs-number">2</span> = <span class="hljs-number">1</span>			<span class="hljs-comment">// 取整数 1 并结束</span><br></code></pre></td></tr></table></figure>
+
+<p>取整顺序，那么十进制小数 <code>0.625</code> 的二进制即为 <code>0.101</code> </p>
+<p>如果该十进制值是一个大于 1 的小数，那么整数部分和小数部分分别取二进制再拼接即可</p>
+<p>例如，将十进制小数 <code>5.125</code> 转二进制</p>
+<p>我们先计算整数 5 的二进制</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">5</span> % <span class="hljs-number">2</span> <span class="hljs-comment">// 商  2 余 1</span><br><span class="hljs-number">2</span> % <span class="hljs-number">2</span> <span class="hljs-comment">// 商  1 余 0</span><br><span class="hljs-number">1</span> % <span class="hljs-number">2</span> <span class="hljs-comment">// 商  0 余 1</span><br></code></pre></td></tr></table></figure>
+
+<p>那么 5 的二进制即 <code>101</code>，再来看小数部分</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">0.125</span> * <span class="hljs-number">2</span> = <span class="hljs-number">0.250</span> <span class="hljs-comment">// 取整数 0</span><br><span class="hljs-number">0.25</span>  * <span class="hljs-number">2</span> = <span class="hljs-number">0.50</span>  <span class="hljs-comment">// 取整数 0</span><br><span class="hljs-number">0.5</span>   * <span class="hljs-number">2</span> = <span class="hljs-number">1</span>			<span class="hljs-comment">// 取整数 1 并结束</span><br></code></pre></td></tr></table></figure>
+
+<p>那么小数部分 <code>0.125</code> 的二进制即 <code>001</code>，拼接可得出十进制数字 <code>5.125</code> 的二进制为 <code>101.001</code> </p>
+<p>还会有一种情况，例如十进制小数 <code>0.1</code> 取其二进制</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">0.1</span> * <span class="hljs-number">2</span> = <span class="hljs-number">0.2</span> <span class="hljs-comment">// 取整数 0</span><br><span class="hljs-number">0.2</span> * <span class="hljs-number">2</span> = <span class="hljs-number">0.4</span> <span class="hljs-comment">// 取整数 0</span><br><span class="hljs-number">0.4</span> * <span class="hljs-number">2</span> = <span class="hljs-number">0.8</span> <span class="hljs-comment">// 取整数 0</span><br><span class="hljs-number">0.8</span> * <span class="hljs-number">2</span> = <span class="hljs-number">1.6</span> <span class="hljs-comment">// 取整数 1</span><br><span class="hljs-number">0.6</span> * <span class="hljs-number">2</span> = <span class="hljs-number">1.2</span> <span class="hljs-comment">// 取整数 1 -&gt; 到此我们看到开始无限循环了</span><br><span class="hljs-number">0.2</span> * <span class="hljs-number">2</span> = <span class="hljs-number">0.4</span> <span class="hljs-comment">// 取整数 0</span><br><span class="hljs-number">0.4</span> * <span class="hljs-number">2</span> = <span class="hljs-number">0.8</span> <span class="hljs-comment">// 取整数 0</span><br>...<br></code></pre></td></tr></table></figure>
+
+<p>那么它的二进制就是 <code>0.0001100......</code> 这样反复循环，这也引出了我们在语言层面的问题，例如 JS 中被人诟病的 <code>0.1 + 0.2 != 0.3</code> 的问题，我们后面再说</p>
+<h2 id="原码、反码和补码"><a href="#原码、反码和补码" class="headerlink" title="原码、反码和补码"></a>原码、反码和补码</h2><p>再说 JS 中的数字问题前，我们还需要补充了解下原码、反码和补码的概念，这里暂先不说结论，我们一步一步的来看，最后在总结什么是原码、反码和补码</p>
+<h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><p>计算机里保存的是最原始的数字，也就是没有正和负的数字，我们称之为无符号数字</p>
+<p>假如我们在内存中用 4 位（也就是4bit）去存放表示无符号数字，是下面这样子的</p>
+<p><strong>PS：</strong> 这里也说了是假如，当然你也可以用 32 位来理解，这里只是为了解释原码、反码、补码的概念，多少位只有一个区别，那就是可存储的值范围大小不同，可存储位数越大，可以存储的值范围就越大，这点后面会说到，这都不重要，主要是 32 位画图太累。。。</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20201122183341034.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>我们可能注意到了，这样好像没办法表达负数</p>
+<p>So，为了表示正与负，先辈们就发明了 <strong>原码</strong>，把左边第一位腾出来，存放符号，正数用 0 来表示，负用 1 来表示</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20201117212137235.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>上图就是正负数的 <code>原码</code>，你可能在疑惑为什么上面表里我只画到了数字 7，上面也说了，我们这里使用的示例是 4 位（bit）的存储方式，只存 4 位，还有一位是符号位，十进制 7 的二进制表达方式就是 0111 了，数字 8 二进制算上符号为是 01000，这就 5 位了，就不是 4 位二进制能存下的了，所以，在只有 4 位存储二进制时，原码的取值范围只有 <code>-7 ～ +7</code> </p>
+<p><code>原码</code> 这种方式对人来说是很好理解的，但是机器不了解啊，表达值没问题，但是正负相加怎么加呢？</p>
+<p>假如我们要用 <code>(+1) + (-1)</code> ，这个我们上过小学就知道等于 0，但是按照计算机的二进制计算方式，<code>0001 + 1001 = 1010</code> ，我们对比下原码表，也就是 -2</p>
+<p>很明显，这样计算是不对的，还有就是我们会看到，原码中的 0 有两种表示：+0 和 -0，这明显也是不对的</p>
+<p>为了解决正负相加等于 0 的问题，先辈们又在 <code>原码</code> 的基础上发明了 <code>反码</code></p>
+<p>正数的反码还是等同于原码，<code>反码</code> 的表示方式其实就是用来处理负数的，也就是除符号位不变，其余位置皆取反存储，0 就存 1，1 就存 0</p>
+<p>那么我们再来看</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20201122183505866.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>同上，4 位反码的值存储范围也是 <code>-7 ～ +7</code></p>
+<p>当 <code>原码</code> 变成了 <code>反码</code> ，我们看之前的（+1）和（-1）相加，变成了 <code>0001 + 1110 = 1111</code>，相加结果对比反码表， 1111 也就是 -0 ，就完美的解决了正负相加等于 0 的问题</p>
+<p>但是，如果使用 <code>反码</code> 存储数值，还是存在那个问题，即 （+0）和（-0）这两个相同的值，存在两个不同的二进制表达方式</p>
+<p>于是先辈们为了解决这个问题，又提出了 <code>补码</code> 的概念，也是针对 <code>负数</code> 来做处理的，即从原来 <code>反码</code> 的基础上，补充一个新的代码 1</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20201122183627781.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>如上图所示，处理 <code>反码</code> 中的 -0 时，给 1111 再补上一个 1 之后，就变成了 10000，由于我们是 4 位存储，所以要丢掉除符号位的最左侧高位，也就是进位中的那一位，也就变成了 0000，刚好和左边正数的 0 相等</p>
+<p>完美解决了（+0）和（-0）同时存在的问题</p>
+<p>我们看补码表中由于 -0 的补码是 <code>0000</code> 等同于 +0，因为它补了 1嘛，我们发现 -0 就没有了意义，所以去掉了 -0 这个数字</p>
+<p>我们再看负 7 的补码也就是反码加了 1 后的二进制表达方式为 <code>1001</code> ，以 4 位存储的方式我们发现补码表 <code>1001</code> 还可以再小一位，也就是 <code>1000</code> 即 -8，如下图</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20201117225925521.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>于是补码的最后补上了一个 -8，也就是在 4 位存储中补码的值表达范围是 <code>-8 ～ +7</code> </p>
+<p>同时，我们在使用 <code>补码</code> 时，正负相加等于 0 的问题也同样可以解决</p>
+<p><strong>例：</strong></p>
+<p>我们把（+4）和（-4）相加，0100 + 1100 =10000，有进位，把最高位丢掉，也就是 0000（0）</p>
+<p>接下来我们就可以梳理总结下什么是原码、反码、补码了</p>
+<h3 id="原码"><a href="#原码" class="headerlink" title="原码"></a>原码</h3><p>原码其实就是数值前面增加了一位符号位（即最高位为符号位），正数时符号位为 0</p>
+<p>负数时符号位为 1（0有两种表示：+0 和 -0），其余位表示数值的大小</p>
+<p><strong>例：</strong></p>
+<p>我们这次使用 8 位（bit）二进制表示一个数，那么正 5 的原码为 <code>0000 0101</code>，负 5 的原码就是 <code>1000 0101</code>，区别只有符号位</p>
+<h3 id="反码"><a href="#反码" class="headerlink" title="反码"></a>反码</h3><p>正数的反码与其原码相同</p>
+<p>负数的反码是对其原码除符号位外，皆取反</p>
+<p><strong>例：</strong></p>
+<p>使用 12 位（bit）二进制来表示一个数值，那么正 5 的反码等同于原码即为 <code>0000 0000 0101</code>，负 5 的反码符号位为 1 ，其余取反即为 <code>1111 1111 1010</code> </p>
+<h3 id="补码"><a href="#补码" class="headerlink" title="补码"></a>补码</h3><p>正数的补码与其原码相同</p>
+<p>负数的补码是在其反码的末位加 1去掉最高进位</p>
+<p><strong>例：</strong></p>
+<p>使用 32 位（bit）二进制来表示，那么正 5 的补码等同于原码即为 <code>0000 0000 0000 0000 0000 0000 0000 0101</code>，负 5 的补码在反码末位补 1 去掉最高进位，由于负 5 的反码加 1 无进位，即为 <code>1111 1111 1111 1111 1111 1111 1111 1011</code> </p>
+<h3 id="根据补码求原码"><a href="#根据补码求原码" class="headerlink" title="根据补码求原码"></a>根据补码求原码</h3><p>上文我们知晓了原码、反码、补码的概念后，应该已经了解了由原码转换为反码的过程，但是，若已知一个数的补码，求原码的操作呢？</p>
+<p>其实，已知补码求原码的操作就是对这个补码再求补码</p>
+<p>如果补码的符号位为 0，表示是一个正数，那么它的原码就是它的补码</p>
+<p>如果补码的符号位为 1，表示是一个负数，那就直接对这个补码再求一遍它的的补码就是它的原码</p>
+<p><strong>例：</strong> </p>
+<p>求补码 <code>1001</code> 即十进制 -7 的原码</p>
+<p>我们对补码再求补码，也就是先取反再补 1 ，取反得 <code>1110</code> ，再补一得 <code>1111</code>，我们对照上文中 -7 的原码，正是 <code>1111</code> </p>
+<h3 id="二进制在内存中以补码存储"><a href="#二进制在内存中以补码存储" class="headerlink" title="二进制在内存中以补码存储"></a>二进制在内存中以补码存储</h3><p>如上述，此时再和大伙说最终结论，二进制数在内存中最终是以补码的形式存储的，现在知道为什么用补码存储了吗，你 GET 到了吗？</p>
+<p>使用补码，我们可以很方便的将减法运算转化成加法运算，运算过程得到简化，正数的补码即是它所表示的数的真值，而负数的补码的数值部份却不是它所表示的数的真值，采用补码进行运算，所得结果仍为补码</p>
+<p>与原码、反码不同，数值 0 的补码只有一个，4 位为例，即为 0000 </p>
+<p>再次补充，32 位、12位、8 位和 4 位等的不同就是存储的值范围，就像 8 位存储原码和反码的有效值范围是 <code>-127 ～ +127</code>，补码范围是 <code>-128 ~ +127</code>，而 4 位原码和反码范围是 <code>-7 ～ +7</code>，补码范围是 <code>-8 ～ +7</code>，这下你大概了解到为什么 JS 会有最大和最小有效数字这个概念了吧</p>
+<p>当然我们现在只考虑了整数，并没有说小数，是为了方便我们理解原码、反码和补码，接着来道</p>
+<h2 id="JavaScript中数字存储"><a href="#JavaScript中数字存储" class="headerlink" title="JavaScript中数字存储"></a>JavaScript中数字存储</h2><p><code>JavaScript</code> 不是类型语言，它与许多其他编程语言不同，<code>JavaScript</code> 没有不同类型的数字，比如整数、短、长、浮点等等</p>
+<p>在 <code>JavaScript</code> 中，数字不分为整数和浮点型，也就是所有的数字都是使用浮点型类型来存储，它采用 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/IEEE_754">IEEE 754</a> 标准定义的 64 位浮点格式表示数字，如下图</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20201121184413568.png" srcset="/blog/img/loading.gif" lazyload></p>
+<ul>
+<li><p>第 63 位即 1 位符号位 S （sign）</p>
+</li>
+<li><p>52 ～ 62位即 11 位阶码 E （exponent bias）</p>
+</li>
+<li><p>0 ～ 51 位即 52 位尾数 M（Mantissa）</p>
+</li>
+</ul>
+<p>符号位也就是上文说的，表示正负，0 为正，1 为负</p>
+<p>符号位我们比较好理解，那么什么是尾数什么又是阶码呢？</p>
+<h3 id="什么是尾数"><a href="#什么是尾数" class="headerlink" title="什么是尾数"></a>什么是尾数</h3><p>为了方便解释，我们直接使用例子，来看十进制数 5.2 的尾数</p>
+<p>首先，我们把它整数部分和小数部分依次转为二进制，不过多重复这个过程，结果如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">101.00110011</span>... <span class="hljs-comment">// 小数部分 0011 无限循环</span><br></code></pre></td></tr></table></figure>
+
+<p>一个浮点数的表示方式其实有很多，但规范中一般使用科学计数法，就像上面的 <code>101.00110011...</code> ，我们会使用 <code>1.0100110011.. * 2^2</code> 这种只留一位整数的表达方式，我们称之为规格化</p>
+<p>二进制中只有 0 与 1，按照科学计数法，除了数字 0 ，其余所有规格化的数字首位只可能是1，对此 IEEE 754 直接省略了这个默认的 1 用来增加存储值的范围，所以有效尾数实际上是有 <code>52 + 1 = 53</code> 位的</p>
+<p>上文说尾数即表达的是数字的小数部分，也就是说二进制数值 <code>1.0100110011.. * 2^2</code> 的尾数是 <code>0100110011...</code>，因为它是个无限循环小数，所以我们取最大 52 即可，剩余的就截断了，这样就会造成一定的精度损失，这也是为什么 JS 中 <code>0.1 + 0.2 != 0.3</code> 的原因，如果尾数不足 52 位则在后面补 0 即可</p>
+<p>我们可能会疑惑，为什么除了 0 之外的数字转二进制后首位都是 1，比如 <code>0.0101</code> 这种 <code>0 &lt; 值 &lt; 1</code> 的二进制小数首位不就是 0 吗，我们说了是 规格化之后的，二进制小数 <code>0.0101</code> 在规格化之后是 <code>1.01 * 2^-2</code> ，所以省略首位 1 并不会混淆</p>
+<h3 id="什么是阶码"><a href="#什么是阶码" class="headerlink" title="什么是阶码"></a>什么是阶码</h3><p>首先，我们要知道</p>
+<p>阶码  =  阶码真值  +  偏移量 1023，偏移量 = <code>2^(k-1)-1</code>，k 表示阶码位数</p>
+<p>阶码真值即为科学记数法中指数真实值的 2 进制表达，它表明了小数点在尾数中的位置</p>
+<p>那么为什么阶码真值与偏移量相加得到阶码呢？</p>
+<p>简单理解，阶码真值是实际指数中的二进制值，而阶码是指数偏移之后保存起来的二进制数值</p>
+<p>还拿上面数值 5.2 来说，它的规格化二进制为 <code>1.0100110011.. * 2^2</code> ，2 的 2 次方，也就是说它的阶码真值为 2 ，那么加上偏移量 1023 即 1025，转二进制后的 11位阶码即为 <code>10000000001</code> </p>
+<p>那么为什么要偏移呢？</p>
+<h3 id="为什么阶码有偏移量-1023？"><a href="#为什么阶码有偏移量-1023？" class="headerlink" title="为什么阶码有偏移量 1023？"></a>为什么阶码有偏移量 1023？</h3><p>此时你可能会比较好奇为什么阶码会有偏移量这个概念，我们来推导一遍即可</p>
+<p>11位的阶码，那么阶码可以存储的二进制值范围为 0～2047，除去 0 与 2047 两个非规格化情况（非规格化下面会说），变成 1～2046，这里指的是正数，因为还有负数，那指数范围就是 -1022～1023，如果没有偏移量的存在，指数就需引入符号位，因为有负数，还需要引入补码，无疑会使计算更加复杂，为了简化操作，才使用无符号的阶码，并引入偏移量的概念</p>
+<h3 id="不同情况下的阶码-E"><a href="#不同情况下的阶码-E" class="headerlink" title="不同情况下的阶码 E"></a>不同情况下的阶码 E</h3><p>我们上面提到过规格化和非规格化的概念，那么它们是什么呢</p>
+<p>规格化的情况其实就是上面我们说的一般情况，因为阶码不能为 0 也不能为 2047，所以指数不能为 -1023，也不会为 1024，只有这种情况尾数才会有隐含位 1 即默认忽略的那一位，如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">S + (E!=<span class="hljs-number">0</span> &amp;&amp; E!=<span class="hljs-number">2047</span>) + <span class="hljs-number">1.</span>M<br></code></pre></td></tr></table></figure>
+
+<p>那么非规格化就是阶码全为 0，指数为 -1023 的特殊情况了，如果尾数全为 0，则浮点数表示正负 0，否则表示那些非常的接近于 0.0 的数，如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">S + <span class="hljs-number">00000000000</span> + M<br></code></pre></td></tr></table></figure>
+
+<p>非规格化指的是阶码全为 0 ，那么表示了还有一种情况阶码全部为 1，指数就是 1024，在这种情况下，如果尾数全部为 0 ，那就是无穷大，若尾数不等于 0，那就是我们常说的 NaN 了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">无穷大：S + <span class="hljs-number">111</span> <span class="hljs-number">11111111</span> + <span class="hljs-number">00000000</span>...<br><br><span class="hljs-literal">NaN</span>：S + <span class="hljs-number">111</span> <span class="hljs-number">11111111</span> + (M!=<span class="hljs-number">0</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="测试一哈"><a href="#测试一哈" class="headerlink" title="测试一哈"></a>测试一哈</h3><p>可能大家还是有些迷惑，最好反复看一看，那么歇一歇脑子，接下来我们来一个小测试，计算一下十进制数 -15.125 在 JS 内存中的二进制表达方式是多少，动手试一试吧，做完再看答案</p>
+<p>｜</p>
+<p>｜</p>
+<p>都看到这了，动动小手，点个赞吧 😄 </p>
+<p>｜</p>
+<p>｜</p>
+<p>如上，求十进制数 -15.125 在 JS 内存中的二进制</p>
+<p>首先，由于是负数，那么符号为就是 1</p>
+<p>接着，将 15.125 的整数部分 15 和小数部分 0.125 分别转为二进制，计算过程不叙述了，整数除 2 取余逆序排列，小数乘 2 取整顺序排列，结果合到一块为 <code>1111.001</code> </p>
+<p>按照科学技术法规格化结果为 <code>1.111001 * 2^3</code> </p>
+<p>再接下来，计算阶码，3（阶码真值）+ 1023（偏移量）= 1026</p>
+<p>将 1026 转为 11 位二进制 <code>100 0000 0010</code> ，即为阶码</p>
+<p>尾数即规格化结果数去掉整数 1 的小数部分 <code>1110 01</code>，不足 52 位后补 0 尾数结果为 <code>1110 0100 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000</code></p>
+<p>最后，拼接即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js">符号位 + 阶码 + 尾数<br><span class="hljs-number">1</span> <span class="hljs-number">10000000010</span> <span class="hljs-number">1110010000000000000000000000000000000000000000000000</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="JS中数字范围"><a href="#JS中数字范围" class="headerlink" title="JS中数字范围"></a>JS中数字范围</h3><p>如果大家真的理解了上文，那么就会发现数字的范围其实有两个概念，最大正数和最小负数，最小正数和最大负数</p>
+<p>而最终的数字范围即 <code>最小负数~最大负数</code> 并上 <code>最小正数~最大正数</code></p>
+<p>从S、E、M即数符、阶码、尾数三个维度看，S 代表正负，阶码 E 的值远大于尾数 M 的个数，所以阶码  E 决定大小，尾数 M 决定精度</p>
+<p>So，我们从阶码 E 入手分析</p>
+<p>规格化下，当 E 最大值时，2046（最大阶码） - 1023（偏移量） = 1023（阶码真值）即 <code>011 11111111</code> </p>
+<p>从阶码 E 的最大值求出的指数（阶码真值）来看，我们可以得到的数值范围是 <code>-2^1023 ~ 2^1023</code>，使用 JS 的求指函数 <code>Math.pow(2,1023)</code> 得出结果是 <code>8.98846567431158e+307</code>，那么如果尾数是 <code>1.11111111...</code>，则它就无限接近于 2，我们不算这么准确，就用 <code>8.98846567431158 x 2</code>   再合上原来的指数，约等于 <code>1.797693134862316e+308</code></p>
+<p>大家还记得我们用 JS 常量 <code>Number.MAX_VALUE</code> 求到的最大数字值吗，现在就可以在控制台输出一下，即 <code>1.7976931348623157e+308</code>，和我们估算出来的值非常相近（因为为了简单我们把规格化的数字约等于了 2 来计算，算出的数值其实是大了一点的）</p>
+<p>所以数字的最大正数和最小负数范围如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">1.7976931348623157e+308</span> ~ -<span class="hljs-number">1.7976931348623157e+308</span><br></code></pre></td></tr></table></figure>
+
+<p>如果超过这个值，则数字太大就溢出了，在 JS 中会显示 <code>Infinity</code> 或 <code>-Infinity</code>，即无穷大与无穷小，学名叫做正向溢出</p>
+<p>上面说的是规格化下，那么非规格化下，也就是指数为 0（最小阶码） - 1023 (偏移量) =  - 1023，即 <code>10000000001</code> </p>
+<p>从指数来看，我们可以得出最小值是 <code>2^-1023</code> ，当如果尾数是 <code>0.00000...001</code> </p>
+<p>也就是尾数不为 0 的情况，52 位尾数相当于小数点还能虚拟化的向右移动51，可以取得更小的 <code>2^-51</code> ,  所以最小值为为 <code>2^-1074</code>，我们再来计算下 <code>Math.pow(2,-1074)</code> 结果约等于  <code>5e-324</code> </p>
+<p>而 JS 最小值常量 <code>Number.MIN_VALUE</code> 得出的值就是是 <code>5e-324</code> </p>
+<p>所以数字的最小正数和最大负数范围即如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">5e-324</span> ~ -<span class="hljs-number">5e-324</span><br></code></pre></td></tr></table></figure>
+
+<p>如果存了一个数值比可表示的最小数还要小，就显示成 0，学名反向溢出</p>
+<h3 id="JS中整数的范围"><a href="#JS中整数的范围" class="headerlink" title="JS中整数的范围"></a>JS中整数的范围</h3><p>和数字大小不同，数字可以有小数，但是整数就只是单纯整数</p>
+<p>我们从尾数 M 来分析，精度最多是 53 位（包含规格化的隐含位 1 ），精确整数的范围其实就是 M 的最大值，即 <code>1.11111111...111</code> ，也就是 <code>2^53-1</code> ， 使用 JS 函数 <code>Math.pow(2,53)-1</code> 计算得到数字 <code>9007199254740991</code></p>
+<p>所以整数的范围其实就是</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">-<span class="hljs-number">9007199254740991</span> ~ <span class="hljs-number">9007199254740991</span><br></code></pre></td></tr></table></figure>
+
+<p>我们也可以使用 JS 内部常量来获取下最大与最小安全整数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Number</span>.MIN_SAFE_INTEGER  <span class="hljs-comment">// -9007199254740991</span><br><span class="hljs-built_in">Number</span>.MAX_SAFE_INTEGER  <span class="hljs-comment">//  9007199254740991</span><br></code></pre></td></tr></table></figure>
+
+<p>恰好与我们所求一致</p>
+<p>那么我们说如果整数是这个范围内，则是安全整数</p>
+<p>一个整数是否是安全整数可以使用 JS 的内置方法 <code>Number.isSafeInteger()</code> 来验证</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>开发过程中不乏有找过安全范围的计算，这个时候我们就得要转为字符串计算了，当然不想自己转也可以使用开源库来计算，如 <a target="_blank" rel="noopener" href="https://github.com/MikeMcl/bignumber.js">bignumber.js</a> 、<a target="_blank" rel="noopener" href="http://mathjs.org/">Math.js</a> 等等</p>
+<p>感谢大家的阅读，此文在之前最开始写的时候之所以停了就是因为写着写着让二进制搞得有点懵，所以大家一遍如果不太懂可以多看看，不要气馁，如果此文描述的不太恰当也可以看下文末参考链接中的文章辅助理解，如有不正，望指出，谢谢</p>
+<p>也欢迎大家关注公众号「不正经的前端」，来个三连吧，感谢</p>
+<p>更多精彩尽在 <a target="_blank" rel="noopener" href="https://github.com/isboyjc/blog">github.com/isboyjc/blog</a> </p>
+<blockquote>
+<p>参考文章</p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/20159860">原码、反码、补码的产生、应用以及优缺点有哪些？</a> </p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xfca/p/10375645.html">原码、反码、补码之间的相互关系</a> </p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yiyide266/p/7987037.html">[算法]浮点数在内存中的存储方式</a> </p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903680362151950">0.1 + 0.2不等于0.3？为什么JavaScript有这种“骚”操作？</a> </p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/53314373">JS中如何理解浮点数？</a> </p>
+</blockquote>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E7%A1%AC%E6%A0%B8JS%E7%B3%BB%E5%88%97/">硬核JS系列</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本站所有文章如需转载，请联系作者！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2020/12/01/js/%E3%80%8C%E7%A1%AC%E6%A0%B8JS%E3%80%8D%E4%BB%A4%E4%BD%A0%E8%BF%B7%E6%83%91%E7%9A%84%E4%BD%8D%E8%BF%90%E7%AE%97/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">「硬核JS」令你迷惑的位运算</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2020/08/31/cesium/%E8%AE%A9GIS%E4%B8%89%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96%E5%8F%98%E5%BE%97%E7%AE%80%E5%8D%95-Cesium%E5%9C%B0%E7%90%83%E5%88%9D%E5%A7%8B%E5%8C%96/">
+                        <span class="hidden-mobile">让GIS三维可视化变得简单-Cesium地球初始化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"OuIO62anqvXdvjruYtvDefqV-gzGzoHsz","appKey":"G9BfnEel5vlsGHJqmPkr2B1P","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+       <div style="display: flex;justify-content: center;align-items: center;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/gzh.jpeg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/zs.jpg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;margin-left: 20px;"> </div> 
+    </div>
+  </div>
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     本站使用 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 主题，欢迎关注微信公众号「不正经的前端」！ 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>
