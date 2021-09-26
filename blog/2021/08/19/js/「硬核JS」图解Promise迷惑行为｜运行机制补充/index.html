@@ -1,0 +1,1191 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/images/avatar.jpeg">
+  <link rel="icon" href="/blog/images/avatar.jpeg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="isboyjc">
+  <meta name="keywords" content="李建超,isboyjc,句末,不正经的前端">
+  
+  <title>「硬核JS」图解Promise迷惑行为｜运行机制补充 - ISBOYJC</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"isboyjc.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":500711128,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>ISBOYJC</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/images/b011.jpeg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="「硬核JS」图解Promise迷惑行为｜运行机制补充">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      isboyjc
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-19 20:00" pubdate>
+        2021年8月19日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      17.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      212
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">「硬核JS」图解Promise迷惑行为｜运行机制补充</h1>
+            
+            <div class="markdown-body">
+              <span id="more"></span>
+
+<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>Promise用起来很简单，JavaScript运行机制也不难，但是运行机制和 Promise 挂钩之后，往往就能把人迷的晕头转向，如果你也是如此，那此文或许能帮你解惑。</p>
+<p>前些天有几个小伙伴看了我很早之前写的 <a target="_blank" rel="noopener" href="https://github.com/isboyjc/blog/issues/5">「硬核JS」一次搞懂JS运行机制</a> 后私信给我提出了疑问，说是运行机制是懂了，可是涉及到 Promise 的种种迷惑行为（各种嵌套输出、链式 <code>then</code> 等等）还是不太懂。其实那篇文章的核心本来就只是运行机制的概念，而对于 Promise 迷惑行为拿捏不准的小伙伴是因为对 Promise 的整体实现机制不太了解导致的。</p>
+<p>假如你不知道自己对这块是否了解，可以直接跳到最后几个小标题，看一看这些题型自己能否正确解答即可。</p>
+<p>此文应读者要求，算是对 Promise+运行机制的一个梳理与补充，重要的是实战方面，列了几种常见的 Promise 相关求输出顺序的题型，几乎涵盖所有 Promise 难搞题型了，总之，目的只有一个：彻底搞明白 Promise+运行机制的各种迷惑行为。</p>
+<h2 id="JS运行机制简述"><a href="#JS运行机制简述" class="headerlink" title="JS运行机制简述"></a>JS运行机制简述</h2><p>在开始之前，还是有必要简单介绍下 JS 的运行机制。</p>
+<p>JavaScript 中有同步/异步任务的概念，同步任务在主线程上执行，会形成一个 <code>执行栈</code>，主线程之外，事件触发线程管理着一个 <code>任务队列</code>，只要异步任务有了运行结果，就在 <code>任务队列</code> 之中放一个事件回调。一旦 <code>执行栈</code> 中的所有同步任务执行完毕，就会读取 <code>任务队列</code>，将可运行的异步任务（任务队列中的事件回调，只要任务队列中有事件回调，就说明可以执行）添加到执行栈中，开始执行。</p>
+<p>同步/异步任务是广义上的，同时，JavaScript 中还有宏任务（macrotask）和微任务（microtask）这种更加细致的概念，我们可以将每次执行栈执行的代码当做是一个宏任务（包括每次从事件队列中获取一个事件回调并放到执行栈中执行）， 每一个宏任务会从头到尾执行完毕，不会执行其他。而在异步任务中，有些特殊的任务我们称之为微任务，它在当前宏任务执行后立即执行。</p>
+<p>比较常见的微任务有这些：</p>
+<ul>
+<li>process.nextTick-Node</li>
+<li>Promise.then</li>
+<li>catch</li>
+<li>finally</li>
+<li>Object.observe</li>
+<li>MutationObserver</li>
+<li>queueMicrotask</li>
+<li>…</li>
+</ul>
+<p>简单来说，一段完整的 JS 代码，浏览器会将整体的 script（作为第一个宏任务）开始执行，所有代码分为<code>同步任务</code>、<code>异步任务</code>两部分：</p>
+<ol>
+<li>同步任务直接进入主线程执行栈依次执行，异步任务会再分为普通异步任务（也是宏任务），和特殊异步任务（即微任务）；</li>
+<li>普通的异步任务等有了运行结果其回调就会进入事件触发线程管理的 <code>任务队列</code>（可理解为宏任务队列）；</li>
+<li>特殊的异步任务也就是微任务的回调会立即进入一个微任务队列；</li>
+<li>当主线程内的任务执行完毕，即主线程为空时，会检查微任务队列，如果有任务，就全部执行，如果没有就执行下一个宏任务（事件触发线程管理的 <code>任务队列</code> 中）；</li>
+</ol>
+<p>上述过程会不断重复，这就是Event Loop，事件循环。</p>
+<p>浏览器中加上渲染的话就是先执行一个宏任务，再执行当前所有的微任务，接着开始执行渲染，然后再执行下一个宏任务，如此循环。</p>
+<blockquote>
+<p>简单回顾，详细请看 👉 <a target="_blank" rel="noopener" href="https://github.com/isboyjc/blog/issues/5">「硬核JS」一次搞懂JS运行机制</a></p>
+</blockquote>
+<h2 id="Promise手写实现"><a href="#Promise手写实现" class="headerlink" title="Promise手写实现"></a>Promise手写实现</h2><p>由于后面涉及到了一些 Promise 内部的运行机制，所以，这部分手写 Promise 请耐心看完，不多，只有核心部分，也很简单，看看思路即可。</p>
+<h3 id="Promises-A"><a href="#Promises-A" class="headerlink" title="Promises/A+"></a>Promises/A+</h3><p>Promises/A+标准是一个开放、健全且通用的 JavaScript Promise 标准，由开发者制定，供开发者参考。很多 Promise 三方库都是按照 Promises/A+标准实现的。</p>
+<p>so，此次实现我们严格参照 Promises/A+标准，包括完成后我们会使用开源社区提供的测试包来测试。测试通过的话，足以证明代码符合 Promises/A+标准，是合法的、完全可以上线提供给他人使用的。</p>
+<h3 id="构造方法核心基础搭建"><a href="#构造方法核心基础搭建" class="headerlink" title="构造方法核心基础搭建"></a>构造方法核心基础搭建</h3><ul>
+<li>Promise 有三种状态进行中（Pending）、已完成（Resolved/Fulfilled）和已失败 （Rejected）。</li>
+<li>Promise 是一个构造方法，实例化 Promise 时传入一个函数作为处理器。<ul>
+<li>处理器函数有两个参数（resolve 和 reject）分别将结果变为成功态和失败态。</li>
+<li>Promise 对象执行成功了要有一个结果，通过 resolve 传递出去，失败的话失败原因通过 reject 传递出入。</li>
+</ul>
+</li>
+<li>Promise 的原型上定义着 then 方法。</li>
+</ul>
+<p>那么根据我们上面的这些已知需求我们可以写出一个基础的结构（写法千千万，喜欢 class 也可以用 class）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Promise</span>(<span class="hljs-params">executor</span>) </span>&#123;<br>  <span class="hljs-comment">// 状态描述 pending resolved rejected</span><br>  <span class="hljs-built_in">this</span>.state = <span class="hljs-string">&quot;pending&quot;</span><br>  <span class="hljs-comment">// 成功结果</span><br>  <span class="hljs-built_in">this</span>.value = <span class="hljs-literal">undefined</span><br>  <span class="hljs-comment">// 失败原因</span><br>  <span class="hljs-built_in">this</span>.reason = <span class="hljs-literal">undefined</span><br><br>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolve</span>(<span class="hljs-params">value</span>) </span>&#123;&#125;<br><br>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">reject</span>(<span class="hljs-params">reason</span>) </span>&#123;&#125;<br>&#125;<br><br><span class="hljs-built_in">Promise</span>.prototype.then = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">onFulfilled, onRejected</span>) </span>&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如上所示，我们创建了一个 Promise 构造方法，<code>state</code> 属性保存了 Promise 对象的状态，使用 <code>value</code> 属性保存 Promise 对象执行成功的结果，失败原因使用 <code>reason</code> 属性保存，这些命名完全贴合 Promises/A+标准。</p>
+<p>接着我们在构造函数中创建了 <code>resolve</code> 和 <code>reject</code> 两个方法，然后在构造函数的原型上创建了一个 <code>then</code> 方法，以备待用。</p>
+<h3 id="初始化实例-executor-立即执行"><a href="#初始化实例-executor-立即执行" class="headerlink" title="初始化实例 executor 立即执行"></a>初始化实例 executor 立即执行</h3><p>我们知道，在创建一个 Promise 实例时，处理器函数 <code>executor</code> 是会立即执行的，所以我们更改代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Promise</span>(<span class="hljs-params">executor</span>) </span>&#123;<br>  <span class="hljs-built_in">this</span>.state = <span class="hljs-string">&quot;pending&quot;</span><br>  <span class="hljs-built_in">this</span>.value = <span class="hljs-literal">undefined</span><br>  <span class="hljs-built_in">this</span>.reason = <span class="hljs-literal">undefined</span><br><br>  <span class="hljs-comment">// 让其处理器函数立即执行</span><br>  <span class="hljs-keyword">try</span> &#123;<br>    executor(resolve, reject)<br>  &#125; <span class="hljs-keyword">catch</span> (err) &#123;<br>    reject(err)<br>  &#125;<br><br>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolve</span>(<span class="hljs-params">value</span>) </span>&#123;&#125;<br>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">reject</span>(<span class="hljs-params">reason</span>) </span>&#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="resolve-amp-reject-回调实现"><a href="#resolve-amp-reject-回调实现" class="headerlink" title="resolve&amp;reject 回调实现"></a>resolve&amp;reject 回调实现</h3><p>Promises/A+ 规范中规定，当 Promise 对象已经由 pending 状态改变为成功态 <code>resolved</code> 或失败态 <code>rejected</code> 后不可再次更改状态，也就是说成功或失败后状态不可更新已经凝固。</p>
+<p>因此我们更新状态时要判断，如果当前状态是等待态 <code>pending</code> 才可更新，由此我们来完善 <code>resolve</code> 和 <code>reject</code> 方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> _this = <span class="hljs-built_in">this</span><br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolve</span>(<span class="hljs-params">value</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (_this.state === <span class="hljs-string">&quot;pending&quot;</span>) &#123;<br>    _this.value = value<br>    _this.state = <span class="hljs-string">&quot;resolved&quot;</span><br>  &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">reject</span>(<span class="hljs-params">reason</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (_this.state === <span class="hljs-string">&quot;pending&quot;</span>) &#123;<br>    _this.reason = reason<br>    _this.state = <span class="hljs-string">&quot;rejected&quot;</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如上所示，首先我们在 Promise 构造函数内部用变量 <code>_this</code> 托管构造函数的 <code>this</code>。</p>
+<p>接着我们在 <code>resolve</code> 和 <code>reject</code> 函数中分别加入了判断，因为只有当前态是 pending 才可进行状态更改操作。</p>
+<p>同时将成功结果和失败原因都保存到对应的属性上。</p>
+<p>然后将 state 属性置为更新后的状态。</p>
+<h3 id="then-方法基础实现"><a href="#then-方法基础实现" class="headerlink" title="then 方法基础实现"></a>then 方法基础实现</h3><p>接着我们来简单实现 <code>then</code> 方法。</p>
+<p>首先 <code>then</code> 方法有两个回调，当 Promise 的状态发生改变，成功或失败会分别调用 <code>then</code> 方法的两个回调。</p>
+<p>所以，then 方法的实现看起来挺简单，根据 state 状态来调用不同的回调函数即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Promise</span>.prototype.then = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">onFulfilled, onRejected</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;resolved&quot;</span>) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> onFulfilled === <span class="hljs-string">&quot;function&quot;</span>) &#123;<br>      onFulfilled(<span class="hljs-built_in">this</span>.value)<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;rejected&quot;</span>) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> onRejected === <span class="hljs-string">&quot;function&quot;</span>) &#123;<br>      onRejected(<span class="hljs-built_in">this</span>.reason)<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如上所示，由于 <code>onFulfilled &amp; onRejected</code> 两个参数都不是必选参，所以我们在判断状态后又判断了参数类型，当参数不为函数类型，就不执行，因为在 Promises/A+规范中定义非函数类型可忽略。</p>
+<h3 id="让-Promise-支持异步"><a href="#让-Promise-支持异步" class="headerlink" title="让 Promise 支持异步"></a>让 Promise 支持异步</h3><p>写到这里，你可能会觉得，咦？Promise 实现起来也不难嘛，这么快就有模有样了，我们来简单测试下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> p = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;<br>  resolve(<span class="hljs-number">1</span>)<br>&#125;)<br><br>p.then(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(data)) <span class="hljs-comment">// 1</span><br></code></pre></td></tr></table></figure>
+
+<p>嗯，符合预期，再来试下异步代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> p = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;<br>  <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>    resolve(<span class="hljs-number">1</span>);<br>  &#125;，<span class="hljs-number">1000</span>);<br>&#125;)<br><br>p.then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(data)) <span class="hljs-comment">// 无输出</span><br></code></pre></td></tr></table></figure>
+
+<p>问题来了，Promise 一个异步解决方案被我们写的不支持异步。本来是等 1000ms 后执行<code>then</code>方法，运行上面代码发现没有结果，哪里有问题呢？</p>
+<p>setTimeout 函数让<code>resolve</code>变成了异步执行，有延迟，调用<code>then</code>方法的时候，此刻状态还是等待态 <code>pending</code>，<code>then</code>方法即没有调用<code>onFulfilled</code>也没有调用<code>onRejected</code>。</p>
+<p>原因搞清楚了，我们开始改造。我们可以在执行<code>then</code>方法时如果还在等待态 <code>pending</code>，就把回调函数临时寄存到队列（就是一个数组）里，当状态发生改变时依次从数组中取出执行就好了。</p>
+<p>思路有了，我们来实现下：</p>
+<p>首先，我们要在构造方法中新增两个 Array 类型的数组，用于存放成功和失败的回调函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Promise</span>(<span class="hljs-params">executor</span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> _this = <span class="hljs-built_in">this</span><br>  <span class="hljs-built_in">this</span>.state = <span class="hljs-string">&quot;pending&quot;</span><br>  <span class="hljs-built_in">this</span>.value = <span class="hljs-literal">undefined</span><br>  <span class="hljs-built_in">this</span>.reason = <span class="hljs-literal">undefined</span><br>  <span class="hljs-comment">// 保存成功回调</span><br>  <span class="hljs-built_in">this</span>.onResolvedCallbacks = []<br>  <span class="hljs-comment">// 保存失败回调</span><br>  <span class="hljs-built_in">this</span>.onRejectedCallbacks = []<br>  <span class="hljs-comment">// ...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们还需要改善<code>then</code>方法，在<code>then</code>方法执行时如果状态是等待态，就将其回调函数存入对应数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Promise</span>.prototype.then = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">onFulfilled, onRejected</span>) </span>&#123;<br>  <span class="hljs-comment">// 新增等待态判断，此时异步代码还未走完，回调入数组队列</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;pending&quot;</span>) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> onFulfilled === <span class="hljs-string">&quot;function&quot;</span>) &#123;<br>      <span class="hljs-built_in">this</span>.onResolvedCallbacks.push(onFulfilled)<br>    &#125;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> onRejected === <span class="hljs-string">&quot;function&quot;</span>) &#123;<br>      <span class="hljs-built_in">this</span>.onRejectedCallbacks.push(onRejected)<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-comment">// 以下为之前代码块</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;resolved&quot;</span>) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> onFulfilled === <span class="hljs-string">&quot;function&quot;</span>) &#123;<br>      onFulfilled(<span class="hljs-built_in">this</span>.value)<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;rejected&quot;</span>) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> onRejected === <span class="hljs-string">&quot;function&quot;</span>) &#123;<br>      onRejected(<span class="hljs-built_in">this</span>.reason)<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如上所示，我们改写<code>then</code>方法，除了判断成功态 <code>resolved</code>、失败态 <code>rejected</code>，我们又加了一个等待态 <code>pending</code> 判断，当状态为等待态时，异步代码还没有走完，那么我们把对应的回调先存入准备好的数组中即可。</p>
+<p>现在，就差最后一步执行了，我们在 <code>resolve</code> 和 <code>reject</code> 方法中调用即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolve</span>(<span class="hljs-params">value</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (_this.state === <span class="hljs-string">&quot;pending&quot;</span>) &#123;<br>    _this.value = value<br>    <span class="hljs-comment">// 遍历执行成功回调</span><br>    _this.onResolvedCallbacks.forEach(<span class="hljs-function">(<span class="hljs-params">cb</span>) =&gt;</span> cb(value))<br>    _this.state = <span class="hljs-string">&quot;resolved&quot;</span><br>  &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">reject</span>(<span class="hljs-params">reason</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (_this.state === <span class="hljs-string">&quot;pending&quot;</span>) &#123;<br>    _this.reason = reason<br>    <span class="hljs-comment">// 遍历执行失败回调</span><br>    _this.onRejectedCallbacks.forEach(<span class="hljs-function">(<span class="hljs-params">cb</span>) =&gt;</span> cb(reason))<br>    _this.state = <span class="hljs-string">&quot;rejected&quot;</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>到了这里，我们已经完成了 Promise 的异步支持。</p>
+<h3 id="实现-Promise-经典的链式调用"><a href="#实现-Promise-经典的链式调用" class="headerlink" title="实现 Promise 经典的链式调用"></a>实现 Promise 经典的链式调用</h3><p>Promise 的<code>then</code>方法可以链式调用，这也是 Promise 的精华之一，在实现起来也算是比较复杂的地方了。</p>
+<p>首先我们要理清楚<code>then</code>的需求是什么，这需要仔细看 Promises/A+ 规范中对<code>then</code>方法的返回值定义及 Promise 解决过程，如下：</p>
+<ul>
+<li><p><strong>首先<code>then</code> 方法必须返回一个 <code>promise</code> 对象(划重点)</strong></p>
+</li>
+<li><p><strong>如果<code>then</code>方法中返回的是一个普通值(如 Number、String 等)就使用此值包装成一个新的 Promise 对象返回</strong></p>
+</li>
+<li><p><strong>如果<code>then</code>方法中没有<code>return</code>语句，就返回一个用 Undefined 包装的 Promise 对象</strong></p>
+</li>
+<li><p><strong>如果<code>then</code>方法中出现异常，则调用失败态方法(reject)跳转到下一个<code>then</code>的 onRejected</strong></p>
+</li>
+<li><p><strong>如果<code>then</code>方法没有传入任何回调，则继续向下传递(值穿透)</strong></p>
+</li>
+<li><p><strong>如果<code>then</code>方法中返回了一个 Promise 对象，那就以这个对象为准，返回它的结果</strong></p>
+</li>
+</ul>
+<p>嗯，到此我们需求已经明确，开始代码实现。</p>
+<p>需求中说如果<code>then</code>方法没有传入任何回调，则继续向下传递，但是每个<code>then</code>中又返回一个新的 Promise，也就是说当<code>then</code>方法中没有回调时，我们需要把接收到的值继续向下传递，这个其实好办，只需要在判断回调参数不为函数时我们把他变成回调函数返回普通值即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Promise</span>.prototype.then = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">onFulfilled, onRejected</span>) </span>&#123;<br>  onFulfilled =<br>    <span class="hljs-keyword">typeof</span> onFulfilled === <span class="hljs-string">&quot;function&quot;</span> ? onFulfilled : <span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> value<br>  onRejected =<br>    <span class="hljs-keyword">typeof</span> onRejected === <span class="hljs-string">&quot;function&quot;</span><br>      ? onRejected<br>      : <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> &#123;<br>          <span class="hljs-keyword">throw</span> err<br>        &#125;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们上面<code>then</code>实现中，在每个可执行处都加了参数是否为函数的类型校验，但是我们这里在<code>then</code>方法开头统一做了校验，就不需要参数校验了。</p>
+<p>现在的<code>then</code>方法变成了：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Promise</span>.prototype.then = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">onFulfilled, onRejected</span>) </span>&#123;<br>  onFulfilled =<br>    <span class="hljs-keyword">typeof</span> onFulfilled === <span class="hljs-string">&quot;function&quot;</span> ? onFulfilled : <span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> value<br>  onRejected =<br>    <span class="hljs-keyword">typeof</span> onRejected === <span class="hljs-string">&quot;function&quot;</span><br>      ? onRejected<br>      : <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> &#123;<br>          <span class="hljs-keyword">throw</span> err<br>        &#125;<br><br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;pending&quot;</span>) &#123;<br>    <span class="hljs-built_in">this</span>.onResolvedCallbacks.push(onFulfilled)<br>    <span class="hljs-built_in">this</span>.onRejectedCallbacks.push(onRejected)<br>  &#125;<br><br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;resolved&quot;</span>) &#123;<br>    onFulfilled(<span class="hljs-built_in">this</span>.value)<br>  &#125;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;rejected&quot;</span>) &#123;<br>    onRejected(<span class="hljs-built_in">this</span>.reason)<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>既然每个<code>thne</code>都返回一个新的 Promise，那么我们就先在<code>then</code>中创建一个 Promise 实例返回，开始改造。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Promise</span>.prototype.then = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">onFulfilled, onRejected</span>) </span>&#123;<br>  onFulfilled =<br>    <span class="hljs-keyword">typeof</span> onFulfilled === <span class="hljs-string">&quot;function&quot;</span> ? onFulfilled : <span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> value<br>  onRejected =<br>    <span class="hljs-keyword">typeof</span> onRejected === <span class="hljs-string">&quot;function&quot;</span><br>      ? onRejected<br>      : <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> &#123;<br>          <span class="hljs-keyword">throw</span> err<br>        &#125;<br><br>  <span class="hljs-keyword">let</span> promise2 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;pending&quot;</span>) &#123;<br>      <span class="hljs-built_in">this</span>.onResolvedCallbacks.push(onFulfilled)<br>      <span class="hljs-built_in">this</span>.onRejectedCallbacks.push(onRejected)<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;resolved&quot;</span>) &#123;<br>      onFulfilled(<span class="hljs-built_in">this</span>.value)<br>    &#125;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;rejected&quot;</span>) &#123;<br>      onRejected(<span class="hljs-built_in">this</span>.reason)<br>    &#125;<br>  &#125;)<br>  <span class="hljs-keyword">return</span> promise2<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们在<code>then</code>方法中先实例化了一个 Promise 对象并返回，我们把原来写的代码放到该实例的处理器函数中。</p>
+<p>我们把原来写的代码放到该实例的处理器函数中。</p>
+<p>接着在每个执行函数处使用<code>try..catch</code>语法，try 中<code>resolve</code>执行结果，catch 中<code>reject</code>异常，原来的<code>then</code>方法中有 resolved、rejected 和 pending 三种逻辑判断，如下：</p>
+<p>在 resolved 状态判断时，rejected 和 resolved 逻辑一致。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;resolved&quot;</span>) &#123;<br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-comment">// 拿到返回值resolve出去</span><br>    <span class="hljs-keyword">let</span> x = onFulfilled(<span class="hljs-built_in">this</span>.value)<br>    resolve(x)<br>  &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>    <span class="hljs-comment">// catch捕获异常reject抛出</span><br>    reject(e)<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>pending 状态判断，逻辑也和 resolved 相似，但是由于此处为了处理异步，我们在这里做了 push 操作，所以我们 push 时在 onFulfilled 和 onRejected 回调外面再套一个回调做操作即可，都是 JS 惯用小套路，不过分解释。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;pending&quot;</span>) &#123;<br>  <span class="hljs-comment">// push(onFulfilled)</span><br>  <span class="hljs-comment">// push(()=&gt;&#123; onFulfilled() &#125;)</span><br>  <span class="hljs-comment">// 上面两种执行效果一致，后者可在回调中加一些其他功能，如下</span><br>  <span class="hljs-built_in">this</span>.onResolvedCallbacks.push(<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-keyword">let</span> x = onFulfilled(<span class="hljs-built_in">this</span>.value)<br>      resolve(x)<br>    &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>      reject(e)<br>    &#125;<br>  &#125;)<br>  <span class="hljs-built_in">this</span>.onRejectedCallbacks.push(<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-keyword">let</span> x = onRejected(<span class="hljs-built_in">this</span>.value)<br>      resolve(x)<br>    &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>      reject(e)<br>    &#125;<br>  &#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>再接下来我们开始处理根据上一个<code>then</code>方法的返回值来生成新 Promise 对象，这块逻辑复杂些，规范中可以抽离出一个方法来做这件事，我们来照做。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 解析then返回值与新Promise对象</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param <span class="hljs-type">&#123;Object&#125;</span> </span>新的Promise对象，就是我们创建的promise2实例</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param <span class="hljs-type">&#123;*&#125;</span> </span>x 上一个then的返回值</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param <span class="hljs-type">&#123;Function&#125;</span> </span>resolve promise2处理器函数的resolve</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param <span class="hljs-type">&#123;Function&#125;</span> </span>reject promise2处理器函数的reject</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolvePromise</span>(<span class="hljs-params">promise2, x, resolve, reject</span>) </span>&#123;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们来一步步分析完善 resolvePromise 函数。</p>
+<p><strong>避免循环引用，当 then 的返回值与新生成的 Promise 对象为同一个(引用地址相同)，则抛出 TypeError 错误：</strong></p>
+<p>例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> promise2 = p.then(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">return</span> promise2<br>&#125;)<br><br><span class="hljs-comment">// TypeError: Chaining cycle detected for promise #&lt;Promise&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>如果返回了自己的 Promise 对象，状态永远为等待态(pending)，再也无法成为 resolved 或是 rejected，程序就死掉了，因此要先处理它。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolvePromise</span>(<span class="hljs-params">promise2, x, resolve, reject</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (promise2 === x) &#123;<br>    reject(<span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">&quot;请避免Promise循环引用&quot;</span>))<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>判断 x 类型，分情况处理：</strong></p>
+<p>当 x 是一个 Promise，就执行它，成功即成功，失败即失败，如果<code>x</code>是一个对象或是函数，再进一步处理它，否则就是一个普通值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolvePromise</span>(<span class="hljs-params">promise2, x, resolve, reject</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (promise2 === x) &#123;<br>    reject(<span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">&quot;请避免Promise循环引用&quot;</span>))<br>  &#125;<br><br>  <span class="hljs-keyword">if</span> (x !== <span class="hljs-literal">null</span> &amp;&amp; (<span class="hljs-keyword">typeof</span> x === <span class="hljs-string">&quot;object&quot;</span> || <span class="hljs-keyword">typeof</span> x === <span class="hljs-string">&quot;function&quot;</span>)) &#123;<br>    <span class="hljs-comment">// 可能是个对象或是函数</span><br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-comment">// 是个普通值</span><br>    resolve(x)<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果 x 是个对象，尝试将对象上的 then 方法取出来，此时如果报错，那就将 promise2 转为失败态。</p>
+<p>在这里 catch 防止报错是因为 Promise 有很多实现，假设另一个人实现的 Promise 对象使用<code>Object.defineProperty()</code>在取值时抛错，我们可以防止代码出现 bug。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// resolvePromise方法内部片段</span><br><br><span class="hljs-keyword">if</span> (x !== <span class="hljs-literal">null</span> &amp;&amp; (<span class="hljs-keyword">typeof</span> x === <span class="hljs-string">&quot;object&quot;</span> || <span class="hljs-keyword">typeof</span> x === <span class="hljs-string">&quot;function&quot;</span>)) &#123;<br>  <span class="hljs-comment">// 可能是个对象或是函数</span><br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-comment">// 尝试取出then方法引用</span><br>    <span class="hljs-keyword">let</span> then = x.then<br>  &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>    reject(e)<br>  &#125;<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>  <span class="hljs-comment">// 是个普通值</span><br>  resolve(x)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果对象中有<code>then</code>，且<code>then</code>是函数类型，就可以认为是一个 Promise 对象，之后，使用<code>x</code>作为其 this 来调用执行<code>then</code>方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// resolvePromise方法内部片段</span><br><br><span class="hljs-keyword">if</span> (x !== <span class="hljs-literal">null</span> &amp;&amp; (<span class="hljs-keyword">typeof</span> x === <span class="hljs-string">&quot;object&quot;</span> || <span class="hljs-keyword">typeof</span> x === <span class="hljs-string">&quot;function&quot;</span>)) &#123;<br>  <span class="hljs-comment">// 可能是个对象或是函数</span><br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-comment">// 尝试取出then方法引用</span><br>    <span class="hljs-keyword">let</span> then = x.then<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> then === <span class="hljs-string">&quot;function&quot;</span>) &#123;<br>      <span class="hljs-comment">// then是function，那么执行Promise</span><br>      then.call(<br>        x,<br>        <span class="hljs-function">(<span class="hljs-params">y</span>) =&gt;</span> &#123;<br>          resolve(y)<br>        &#125;,<br>        <span class="hljs-function">(<span class="hljs-params">r</span>) =&gt;</span> &#123;<br>          reject(r)<br>        &#125;<br>      )<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      resolve(x)<br>    &#125;<br>  &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>    reject(e)<br>  &#125;<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>  <span class="hljs-comment">// 是个普通值</span><br>  resolve(x)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>此时，我们还要考虑到一种情况，如果 Promise 对象转为成功态或是失败时传入的还是一个 Promise 对象，此时应该继续执行，直到最后的 Promise 执行完，例如下面这种：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-number">1</span>).then(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;<br>    <span class="hljs-comment">// resolve传入的还是Promise</span><br>    resolve(<br>      <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;<br>        resolve(<span class="hljs-number">2</span>)<br>      &#125;)<br>    )<br>  &#125;)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>解决这种情况，我们可以采用递归，把调用 resolve 改写成递归执行 resolvePromise，这样直到解析 Promise 成一个普通值才会终止。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// resolvePromise方法内部片段</span><br><span class="hljs-keyword">if</span> (x !== <span class="hljs-literal">null</span> &amp;&amp; (<span class="hljs-keyword">typeof</span> x === <span class="hljs-string">&quot;object&quot;</span> || <span class="hljs-keyword">typeof</span> x === <span class="hljs-string">&quot;function&quot;</span>)) &#123;<br>  <span class="hljs-comment">// 可能是个对象或是函数</span><br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-keyword">let</span> then = x.then<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> then === <span class="hljs-string">&quot;function&quot;</span>) &#123;<br>      then.call(<br>        x,<br>        <span class="hljs-function">(<span class="hljs-params">y</span>) =&gt;</span> &#123;<br>          <span class="hljs-comment">// 递归调用，传入y若是Promise对象，继续循环</span><br>          resolvePromise(promise2, y, resolve, reject)<br>        &#125;,<br>        <span class="hljs-function">(<span class="hljs-params">r</span>) =&gt;</span> &#123;<br>          reject(r)<br>        &#125;<br>      )<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      resolve(x)<br>    &#125;<br>  &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>    reject(e)<br>  &#125;<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>  <span class="hljs-comment">// 普通值结束递归</span><br>  resolve(x)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>规范中定义，如果 resolvePromise 和 rejectPromise 都被调用，或者多次调用同一个参数，第一个调用优先，任何进一步的调用都将被忽略，为了让成功和失败只能调用一个，我们接着完善，设定一个 called 来防止多次调用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// resolvePromise方法内部片段</span><br><span class="hljs-keyword">let</span> called<br><span class="hljs-keyword">if</span> (x !== <span class="hljs-literal">null</span> &amp;&amp; (<span class="hljs-keyword">typeof</span> x === <span class="hljs-string">&quot;object&quot;</span> || <span class="hljs-keyword">typeof</span> x === <span class="hljs-string">&quot;function&quot;</span>)) &#123;<br>  <span class="hljs-comment">// 可能是个对象或是函数</span><br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-keyword">let</span> then = x.then<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> then === <span class="hljs-string">&quot;function&quot;</span>) &#123;<br>      then.call(<br>        x,<br>        <span class="hljs-function">(<span class="hljs-params">y</span>) =&gt;</span> &#123;<br>          <span class="hljs-keyword">if</span> (called) <span class="hljs-keyword">return</span><br>          called = <span class="hljs-literal">true</span><br>          <span class="hljs-comment">// 递归调用，传入y若是Promise对象，继续循环</span><br>          resolvePromise(promise2, y, resolve, reject)<br>        &#125;,<br>        <span class="hljs-function">(<span class="hljs-params">r</span>) =&gt;</span> &#123;<br>          <span class="hljs-keyword">if</span> (called) <span class="hljs-keyword">return</span><br>          called = <span class="hljs-literal">true</span><br>          reject(r)<br>        &#125;<br>      )<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      resolve(x)<br>    &#125;<br>  &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>    <span class="hljs-keyword">if</span> (called) <span class="hljs-keyword">return</span><br>    called = <span class="hljs-literal">true</span><br>    reject(e)<br>  &#125;<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>  <span class="hljs-comment">// 普通值结束递归</span><br>  resolve(x)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>到此，我们算是实现好了<code>resolvePromise</code>方法，我们来调用它实现完整的<code>then</code>方法，在原来的原型方法<code>then</code>中我们<code>return</code>了一个 promise2，这个实例处理器函数的三种状态判断中把<code>resolve</code>处替换成<code>resolvePromise</code>方法即可。</p>
+<p>那么，此时<code>then</code>方法实现完成了吗？</p>
+<p>当然还没有，我们都知道，Promise 中处理器函数是同步执行，而<code>then</code>方法是异步且是个微任务，但是我们完成这个还是同步。</p>
+<p>解决这个问题其实也很简单，我们可以使用 <code>queueMicrotask</code> 方法实现一个微任务，在<code>then</code>方法内执行处的所有地方使用 <code>queueMicrotask</code> 变为微任务即可，<code>queueMicrotask</code> API有兼容性问题，大多数 Promise 库中此处的实现是递进的策略，简单说就是有好几种微任务实现方案，依次向下，如果都不兼容的话最后使用 <code>setTimeout</code>，如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js">queueMicrotask(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-keyword">let</span> x = onFulfilled(value)<br>    resolvePromise(promise2, x, resolve, reject)<br>  &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>    reject(e)<br>  &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>现在我们的终极版<code>then</code>方法就大功告成了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Promise</span>.prototype.then = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">onFulfilled, onRejected</span>) </span>&#123;<br>  onFulfilled =<br>    <span class="hljs-keyword">typeof</span> onFulfilled === <span class="hljs-string">&quot;function&quot;</span> ? onFulfilled : <span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> value<br>  onRejected =<br>    <span class="hljs-keyword">typeof</span> onRejected === <span class="hljs-string">&quot;function&quot;</span><br>      ? onRejected<br>      : <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> &#123;<br>          <span class="hljs-keyword">throw</span> err<br>        &#125;<br><br>  <span class="hljs-keyword">let</span> promise2 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;<br>    <span class="hljs-comment">// 等待态判断，此时异步代码还未走完，回调入数组队列</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;pending&quot;</span>) &#123;<br>      <span class="hljs-built_in">this</span>.onResolvedCallbacks.push(<span class="hljs-function">() =&gt;</span> &#123;<br>        queueMicrotask(<span class="hljs-function">() =&gt;</span> &#123;<br>          <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">let</span> x = onFulfilled(<span class="hljs-built_in">this</span>.value)<br>            resolvePromise(promise2, x, resolve, reject)<br>          &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>            reject(e)<br>          &#125;<br>        &#125;)<br>      &#125;)<br><br>      <span class="hljs-built_in">this</span>.onRejectedCallbacks.push(<span class="hljs-function">() =&gt;</span> &#123;<br>        queueMicrotask(<span class="hljs-function">() =&gt;</span> &#123;<br>          <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">let</span> x = onRejected(<span class="hljs-built_in">this</span>.value)<br>            resolvePromise(promise2, x, resolve, reject)<br>          &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>            reject(e)<br>          &#125;<br>        &#125;)<br>      &#125;)<br>    &#125;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;resolved&quot;</span>) &#123;<br>      queueMicrotask(<span class="hljs-function">() =&gt;</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>          <span class="hljs-keyword">let</span> x = onFulfilled(<span class="hljs-built_in">this</span>.value)<br>          resolvePromise(promise2, x, resolve, reject)<br>        &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>          reject(e)<br>        &#125;<br>      &#125;)<br>    &#125;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state === <span class="hljs-string">&quot;rejected&quot;</span>) &#123;<br>      queueMicrotask(<span class="hljs-function">() =&gt;</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>          <span class="hljs-keyword">let</span> x = onRejected(<span class="hljs-built_in">this</span>.reason)<br>          resolvePromise(promise2, x, resolve, reject)<br>        &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>          reject(e)<br>        &#125;<br>      &#125;)<br>    &#125;<br>  &#125;)<br>  <span class="hljs-keyword">return</span> promise2<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="catch-实现"><a href="#catch-实现" class="headerlink" title="catch 实现"></a>catch 实现</h3><p>实现了最复杂的<code>then</code>方法后，<code>catch</code>实现非常简单，一看就懂了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Promise</span>.prototype.catch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">onRejected</span>) </span>&#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.then(<span class="hljs-literal">null</span>, onRejected)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="代码测试"><a href="#代码测试" class="headerlink" title="代码测试"></a>代码测试</h3><p>开源社区提供了一个包用于测试我们的代码是否符合 Promises/A+规范：<code>promises-aplus-tests</code>。</p>
+<p>首先我们要为该测试包提供一个 <code>deferred</code> 钩子，用于测试。</p>
+<p>如下，将下面代码防止我们的 <code>Promise.js</code> 文件末尾即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// promises-aplus-tests测试</span><br><span class="hljs-built_in">Promise</span>.defer = <span class="hljs-built_in">Promise</span>.deferred = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> defer = &#123;&#125;<br>  defer.promise = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;<br>    defer.resolve = resolve<br>    defer.reject = reject<br>  &#125;)<br>  <span class="hljs-keyword">return</span> defer<br>&#125;<br><span class="hljs-keyword">try</span> &#123;<br>  <span class="hljs-built_in">module</span>.exports = <span class="hljs-built_in">Promise</span><br>&#125; <span class="hljs-keyword">catch</span> (e) &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接着，安装这个包：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">npm install promises-aplus-tests -D<br></code></pre></td></tr></table></figure>
+
+<p>执行测试：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">npx promises-aplus-tests <span class="hljs-built_in">Promise</span>.js<br></code></pre></td></tr></table></figure>
+
+<p>静等片刻，如果控制台没有爆红就是成功了，符合规范，如图所示：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20200206222942803.png" srcset="/blog/img/loading.gif" lazyload alt="image-20200206222942803"></p>
+<p>其他的 resolve/reject/race/all 等比较简单，不在这里描述了。</p>
+<p>给大家贴个我这边 Promise 多个方法实现的地址，大家有兴趣自行看代码吧，注释写的很详细了，也就大概 200 多行代码。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/isboyjc/promise">Promise/A+实现</a></li>
+</ul>
+<p>其实，这块儿的 Promise 的手写实现是在很久之前的 <a target="_blank" rel="noopener" href="https://github.com/isboyjc/blog/issues/7">「硬核JS」深入了解异步解决方案</a> 一文的 Promise 章节写的，但是搞懂此文需要这块，我就 Copy 了一下稍作修改，跑了一下测试还能过证明还不算过时。</p>
+<p>注意一定要先搞懂手写实现的逻辑哦，不然下面不好懂，那接下来开始进入正文。</p>
+<h2 id="手写后的启发"><a href="#手写后的启发" class="headerlink" title="手写后的启发"></a>手写后的启发</h2><p>Promise 核心实现我们上面已经介绍过了，从上面代码中我们得到了什么启发？</p>
+<p>哦，原来 then 方法返回的是一个全新的 Promise 对象。</p>
+<p>哦，原来 then 方法是一个微任务这种说法是不准确的，应该说 then 方法的回调函数会被作为微任务执行。</p>
+<p>哦，原来 then 方法并不是在上一个 Promise 对象 resolve 后才执行，它在一开始就执行并返回了一个新的 Promise，在返回的新 Promise 中会根据上一个 Promise 的状态来做判断。</p>
+<ul>
+<li><p>上一个 Promise 在成功态 <code>Fulfilled</code> 的时候会直接将 then 方法回调作为微任务入队</p>
+</li>
+<li><p>上一个 Promise 在失败态 <code>Rejected</code> 时候会直接将 then 方法回调作为微任务入队</p>
+</li>
+<li><p>上一个 Promise 还在等待态 <code>pending</code> 的时候它的内部会把 then 方法回调使用微任务方法包裹缓存到新 Promise 实例数组中，并没有直接入队。当上一个 Promise 从等待态变为成功态的时候会调用其自身返回的新 Promise 的 resolve 方法，从而调用新 Promise（也就是返回的那个新 Promise）实例数组中的方法，这时微任务方法包裹的回调函数就会执行，即入栈。</p>
+</li>
+</ul>
+<p>哦，原来上一个 Promise 中 return 一个 Promise 和直接 return 一个值或不写的处理方式是不一样的</p>
+<ul>
+<li>上一个 Promise 中什么都 return 即其回调的返回值为 undefined，和直接 return 一个值一样，都会在上一个 Promise 状态为成功态时调用其返回时内部创建的新 Promise 的 resolve 方法并将值传出。</li>
+<li>上一个 Promise 中 return 一个 Promise 的话会在上一个 Promise 状态为成功态时，<strong>调用其 then 方法执行</strong>，拿到值 resolve 或 reject 出去（注意，由于 return Promise 时回在内部执行一个 then 方法，所以这里多执行了一个微任务，但是这个微任务其实什么都没做，只是为了取我们自己 return 的 Promise 的值）</li>
+</ul>
+<p>绕晕了？没关系，概念还是概念，我们用案例说话。</p>
+<h2 id="多个Promise执行"><a href="#多个Promise执行" class="headerlink" title="多个Promise执行"></a>多个Promise执行</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>)=&gt;</span>&#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>);<br>  resolve();<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span>&#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>);<br>&#125;);<br><br><span class="hljs-built_in">Promise</span>.resolve().then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">10</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">20</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">30</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">40</span>);<br>&#125;);<br><br><span class="hljs-comment">// 1 2 10 3 20 30 40</span><br></code></pre></td></tr></table></figure>
+
+<p>这题相对简单，目的是为了让大家先熟悉一下解题套路，过一遍整体流程，方面后面能够看懂。</p>
+<p>首先，我们为整道题做一个拆分命名，方便后续讲解：</p>
+<ul>
+<li>整个程序有两个 Promise，我们记作 <code>P1、P2</code>。</li>
+<li>P1中 Promise 传入的回调我们记作 <code>P1-主</code>，还有两个 then 方法我们记作 <code>P1-t1、P1-t2</code>。</li>
+<li>P2中直接使用 Promise 构造函数中的 resolve 方法创建了一个成功态的实例，后面有 4 个 then 方法，我们记作 <code>P2-t1、P2-t2、P2-t3、P2-t4</code>。</li>
+</ul>
+<p>分析一下，整个程序会作为一个宏任务第一批执行，而 then 方法中的回调最终会被作为微任务入微任务队列，等待宏任务执行结束后依次执行，在宏任务执行过程中部分 then 方法回调在上一个 Promise 状态为 <code>pending</code> 时会被微任务方法包裹先存入各自 Promise 实例中缓存起来等待后续执行。</p>
+<p>被微任务方法包裹这个描述大概意思就是下面这样子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 缓存数组</span><br><span class="hljs-keyword">let</span> arr = []<br><br><span class="hljs-comment">// 微任务方法包裹的回调存入缓存</span><br>arr.push(<span class="hljs-function">() =&gt;</span> &#123;<br>  queueMicrotask(<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-comment">// 需要作为微任务执行的代码</span><br>    <span class="hljs-keyword">let</span> x = onFulfilled(<span class="hljs-built_in">this</span>.value)<br>    resolvePromise(promise2, x, resolve, reject)<br>    <br>    <span class="hljs-comment">// ...</span><br>  &#125;)<br>&#125;)<br><br><span class="hljs-comment">// 只有arr[0]这个函数执行的时候，微任务才会入队</span><br></code></pre></td></tr></table></figure>
+
+<p>这时，我们脑子里就形成了一个空白的结构图，如下：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210810184731045.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>开始执行代码，首先执行第一个宏任务，即程序整体：</p>
+<ul>
+<li>因为 <code>new Promise</code> 时参数回调是同步执行，所以执行 <code>P1-主</code> 回调，输出 1，接着执行 <code>resolve</code> ，将 <code>new</code> 的 Promise 实例变为成功态 <code>Fulfilled</code> 。</li>
+<li><code>P1-t1</code> 的 then 方法开始执行，由于上一个 Promise 为成功态，所以 <code>P1-t1</code> 回调直接入微任务对列等待执行。</li>
+<li><code>P1-t2</code> 的 then 方法开始执行，由于 <code>P1-t1</code> 回调还在队列中，上一个 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P1-t2</code> 回调使用微任务方法包裹缓存进 Promise 实例（注意：这里的 Promise 实例为 <code>P1-t1</code> 返回的新 Promise，所以我们在各实例缓存列表中以 <code>P1-t1返</code> 开头注明存在哪个 Promise 实例中）。</li>
+<li>P1 执行完毕，开始执行 P2。</li>
+<li>P2 中直接使用 Promise 构造函数中的 resolve 方法创建了一个成功态的实例，<code>P2-t1</code> 的 then 方法执行时，由于是成功态 <code>Fulfilled</code>，所以 <code>P2-t1</code> 直接作为微任务入队等待执行。</li>
+<li>接着 <code>P2-t2</code> 的 then 方法开始执行，由于 <code>P2-t1</code> 回调还在队列中，上一个 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P2-t2</code> 回调使用微任务方法包裹缓存进 <code>P2-t1返</code> 这个 Promise 实例中。</li>
+<li>接着 <code>P2-t3</code> 的 then 方法开始执行，由于 <code>P2-t2</code> 回调还在队列中，上一个 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P2-t3</code> 回调使用微任务方法包裹缓存进 <code>P2-t2返</code> 这个 Promise 实例中。</li>
+<li>接着 <code>P2-t4</code> 的 then 方法开始执行，由于 <code>P2-t3</code> 回调还在队列中，上一个 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P2-t4</code> 回调使用微任务方法包裹缓存进 <code>P2-t3返</code> 这个 Promise 实例中。</li>
+</ul>
+<p>执行到这里，主程序这个宏任务结束，目前程序运行状态如下：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210810192049256.png" srcset="/blog/img/loading.gif" lazyload alt="image-20210810192049256"></p>
+<p>宏任务执行完了，那接下来就是依次执行微任务队列中的任务了</p>
+<ul>
+<li>按照顺序，首先是 <code>P1-t1</code> 执行，输出 2，返回值是 <code>undefined</code> ，这时会调用 <code>P1-t1</code>  这个 then 方法中返回的新 Promise 实例的 resolve 方法并将返回值 <code>undefined</code> 传入，resolve方法执行后即 <code>P1-t1返</code> 实例状态更改为成功态 <code>Fulfilled</code> ，并执行 <code>P1-t1返</code> 实例的缓存方法。</li>
+<li><code>P1-t1返</code> 实例的缓存中只有微任务方法包裹的 <code>P1-t2</code> 回调，执行后即 <code>P1-t2</code> 入微任务队列等待执行，到此微任务 <code>P1-t1</code> 执行结束，出队。</li>
+</ul>
+<p>现在程序运行状态如下：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210810200441935.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>继续执行微任务队列中的方法</p>
+<ul>
+<li> <code>P2-t1</code> 执行，输出 10，返回值是 <code>undefined</code> ，这时会调用 <code>P2-t1</code>  这个 then 方法中返回的新 Promise 实例的 resolve 方法并将返回值 <code>undefined</code> 传入，resolve 方法执行后即 <code>P2-t1返</code> 实例状态更改为成功态 <code>Fulfilled</code> ，并执行 <code>P2-t1返</code> 实例的缓存方法</li>
+<li><code>P2-t1返</code> 实例的缓存中只有微任务方法包裹的 <code>P2-t2</code> 回调，执行后即 <code>P2-t2</code> 入微任务队列等待执行，到此微任务 <code>P2-t1</code> 执行结束，出队</li>
+</ul>
+<p>现在程序运行状态如下：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210810200534781.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>还是一样的套路，接着执行微任务队列的任务</p>
+<ul>
+<li> <code>P1-t2</code> 执行，输出 3，返回值是 <code>undefined</code> ，这时会调用 <code>P1-t2</code>  这个 then 方法中返回的新 Promise 实例的 resolve 方法并将返回值 <code>undefined</code> 传入，resolve 方法执行后即 <code>P1-t2返</code> 实例状态更改为成功态 <code>Fulfilled</code> ，并执行 <code>P1-t2返</code> 实例的缓存方法，由于后续没有 then， <code>P1-t2返</code> 实例也就没有缓存的方法， <code>P1-t2</code>  出队，P1 到此结束</li>
+</ul>
+<p>此时程序运行状态如下：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210810235736888.png" srcset="/blog/img/loading.gif" lazyload></p>
+<ul>
+<li>接着微任务队列中 <code>P2-t2</code> 执行，输出 20， 返回值是 <code>undefined</code> ，这时会调用 <code>P2-t2</code>  这个 then 方法中返回的新 Promise 实例的 resolve 方法并将返回值 <code>undefined</code> 传入，resolve 方法执行后即 <code>P2-t2返</code> 实例状态更改为成功态 <code>Fulfilled</code> ，并执行 <code>P2-t2返</code> 实例的缓存方法</li>
+<li><code>P2-t2返</code> 实例的缓存中只有微任务方法包裹的 <code>P2-t3</code> 回调，执行后即 <code>P2-t3</code> 入微任务队列等待执行，到此微任务 <code>P2-t2</code> 执行结束，出队</li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811000521764.png" srcset="/blog/img/loading.gif" lazyload></p>
+<ul>
+<li>接下来就是执行微任务队列中的 <code>P2-t3</code> ，输出 30，同样， <code>P2-t4</code> 入队，<code>P2-t3</code> 出队，如下图：</li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811000749847.png" srcset="/blog/img/loading.gif" lazyload></p>
+<ul>
+<li>最后 <code>P2-t4</code> 执行，输出 40，结束出队，P2 结束，执行完毕，如下图：</li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811000854307.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>所以，最终的输出如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1 2 10 3 20 30 40</span><br></code></pre></td></tr></table></figure>
+
+<p>其实对于简单题型，我们完全可以脑子里想象一个微任务队列即可，复杂一点可以画图理解。</p>
+<p>这题如果 Get 了的话，接着往下看。。</p>
+<h2 id="Promise嵌套执行"><a href="#Promise嵌套执行" class="headerlink" title="Promise嵌套执行"></a>Promise嵌套执行</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>)=&gt;</span>&#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;1&quot;</span>)<br>  resolve()<br>&#125;).then(<span class="hljs-function">()=&gt;</span>&#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;2&quot;</span>)<br>  <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>)=&gt;</span>&#123;<br>      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;10&quot;</span>)<br>      resolve()<br>  &#125;).then(<span class="hljs-function">()=&gt;</span>&#123;<br>      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;20&quot;</span>)<br>  &#125;).then(<span class="hljs-function">()=&gt;</span>&#123;<br>      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;30&quot;</span>)<br>  &#125;)<br>&#125;).then(<span class="hljs-function">()=&gt;</span>&#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;3&quot;</span>)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>如题，还是与之前一样 new 了两个 Promise实例，不过此题两个 Promise 是嵌套的关系。</p>
+<p>那我们还是先为整道题做一个拆分命名：</p>
+<ul>
+<li>整个程序有两个 Promise，我们记作 <code>P1、P2</code></li>
+<li>P1 中 Promise 传入的回调我们记作 <code>P1-主</code>，还有两个 then 方法我们记作 <code>P1-t1、P1-t2</code></li>
+<li>P2 中 Promise 传入的回调我们记作 <code>P2-主</code>，还有两个 then 方法我们记作 <code>P2-t1、P2-t2</code></li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811004809667.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>其实还是按照一样的套路分析就可以了，首先整个程序会作为一个宏任务第一批执行：</p>
+<ul>
+<li>因为 <code>new Promise</code> 时参数回调是同步执行，所以执行 <code>P1-主</code> 回调，输出 1，接着执行 <code>resolve</code> ，将 <code>new</code> 的 Promise 实例变为成功态 <code>Fulfilled</code> 。</li>
+<li><code>P1-t1</code> 的 then 方法开始执行，由于上一个 Promise 为成功态，所以 <code>P1-t1</code> 回调直接入微任务对列等待执行</li>
+<li>接着 <code>P1-t2</code> 的 then 方法开始执行，由于 <code>P1-t1</code> 回调还在队列中，上一个 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P1-t2</code> 回调使用微任务方法包裹缓存进 <code>P1-t1返</code> 这个 Promise 实例中。</li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811005205779.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>宏任务执行结束，开始依次执行微任务队列所有微任务。</p>
+<ul>
+<li>执行 <code>P1-t1</code>，输出 2，接着执行 <code>P1-t1</code> 回调里的 P2<ul>
+<li><code>P2-主</code> 是同步代码直接执行，输出 10，接着执行 <code>resolve</code> ，将 P2  <code>new</code> 的 Promise 实例变为成功态 <code>Fulfilled</code> 。</li>
+<li>执行 <code>P2-t1</code> 的 then 方法，由于上一个 Promise 为成功态，所以 <code>P2-t1</code> 回调直接入微任务对列等待执行。</li>
+<li>执行 <code>P2-t2</code> 的 then 方法，由于 <code>P2-t1</code> 回调还在队列中，上一个 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P2-t2</code> 回调使用微任务方法包裹缓存进 <code>P2-t1返</code> 这个 Promise 实例中。</li>
+</ul>
+</li>
+<li> <code>P1-t1</code> 回调执行完毕，其返回值是 <code>undefined</code> ，这时会调用 <code>P1-t1</code>  这个 then 方法中返回的新 Promise 实例的 resolve 方法并将返回值 <code>undefined</code> 传入，resolve方法执行后即 <code>P1-t1返</code> 实例状态更改为成功态 <code>Fulfilled</code> ，并执行 <code>P1-t1返</code> 实例的缓存方法。</li>
+<li> <code>P1-t1返</code> 实例中存有被微任务方法包裹的 <code>P1-t2</code> ，执行其微任务方法，<code>P1-t2</code> 入队，最后 <code>P1-t1</code> 出队</li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811012410471.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>接着执行微任务队列：</p>
+<ul>
+<li> <code>P2-t1</code> 开始执行，输出 20，返回值是 <code>undefined</code> ，这时会调用 <code>P2-t1</code>  这个 then 方法中返回的新 Promise 实例的 resolve 方法并将返回值 <code>undefined</code> 传入，resolve 方法执行后即 <code>P2-t1返</code> 实例状态更改为成功态 <code>Fulfilled</code> ，并执行 <code>P2-t1返</code> 实例的缓存方法。</li>
+<li> <code>P2-t1返</code> 实例中存有被微任务方法包裹的 <code>P2-t2</code> ，执行其微任务方法，<code>P2-t2</code> 入队，最后 <code>P2-t1</code> 出队</li>
+</ul>
+<p>目前程序状态如下：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811013049592.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>接着执行微任务队列：</p>
+<ul>
+<li>执行 <code>P1-t2</code>，输出 3， <code>P1-t2</code> 出队。</li>
+<li>执行 <code>P2-t2</code>，输出 30， <code>P2-t2</code> 出队，程序执行完毕，如下图</li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811013406862.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>所以，这个嵌套的 Promise 程序的执行输出是：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1 2 10 20 3 30</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="嵌套返回新Promise"><a href="#嵌套返回新Promise" class="headerlink" title="嵌套返回新Promise"></a>嵌套返回新Promise</h2><h3 id="基础版"><a href="#基础版" class="headerlink" title="基础版"></a>基础版</h3><p>前面在手写 Promise 的时候说过，Promise 实例 resolve 或 then 方法中还可以返回一个新的 Promise，当返回 Promise 对象时内部进行的处理和返回一些基础的值是不同的，那我们接下来就来看看这种情况。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Promise</span>.resolve().then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-number">2</span>)<br>&#125;).then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(res)<br>&#125;)<br><br><span class="hljs-built_in">Promise</span>.resolve().then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">10</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">20</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">30</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">40</span>);<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>同样的，我们还是先为整道题做一个拆分命名：</p>
+<ul>
+<li>整个程序有两个 Promise，我们记作 <code>P1、P2</code></li>
+<li>P1 使用 Promise 构造函数中的 resolve 方法创建了一个成功态的实例，后面有 2 个 then 方法，我们记作 <code>P1-t1</code>、<code>P1-t2</code>。</li>
+<li>P2 使用 Promise 构造函数中的 resolve 方法创建了一个成功态的实例，后面有 4 个 then 方法，记作 <code>P2-t1</code>，<code>P2-t2</code>，<code>P2-t3</code>，<code>P2-t4</code>。</li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811200000107.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>首先整个程序会作为一个宏任务第一批执行：</p>
+<ul>
+<li>P1 中直接使用 Promise 构造函数中的 resolve 方法创建了一个成功态的实例，<code>P1-t1</code> 的 then 方法执行时，由于是成功态 <code>Fulfilled</code>，所以 <code>P1-t1</code> 直接作为微任务入队等待执行。</li>
+<li>接着 <code>P1-t2</code> 的 then 方法开始执行，由于 <code>P1-t1</code> 回调还在队列中，上一个 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P1-t2</code> 回调使用微任务方法包裹缓存进 <code>P1-t1返</code> 这个 Promise 实例中。</li>
+<li>P2 中也是使用 Promise 构造函数中的 resolve 方法创建了一个成功态的实例，<code>P2-t1</code> 的 then 方法执行时，由于是成功态 <code>Fulfilled</code>，所以 <code>P2-t1</code> 直接作为微任务入队等待执行。</li>
+<li>接着 <code>P2-t2</code> 的 then 方法开始执行，由于 <code>P2-t1</code> 回调还在队列中，上一个 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P2-t2</code> 回调使用微任务方法包裹缓存进 <code>P2-t1返</code> 这个 Promise 实例中。</li>
+<li>接着 <code>P2-t3</code> 的 then 方法开始执行，由于 <code>P2-t2</code> 的 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P2-t3</code> 回调使用微任务方法包裹缓存进 <code>P2-t2返</code> 这个 Promise 实例中。</li>
+<li>接着 <code>P2-t4</code> 的 then 方法开始执行，由于 <code>P2-t3</code> 的 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P2-t4</code> 回调使用微任务方法包裹缓存进 <code>P2-t3返</code> 这个 Promise 实例中。</li>
+</ul>
+<p>现在程序运行的状态如下：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811200233374.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>宏任务执行结束，开始依次执行微任务队列中的任务：</p>
+<ul>
+<li>首先是执行 <code>P1-t1</code>，输出 1，注意 ⚠️⚠️⚠️ ，<code>P1-t1</code> 回调中返回的是一个 Promise 对象，还记得我们之前手写 Promise 时对于返回结果是 Promise 对象的处理吗？没错，我们会调用传入 Promise 对象的 then 方法，取到其是成功态或者是失败态并将值传出。由于我们内部又取了 <code>Promise.resolve(2)</code> 这个 Promise 的 then 方法执行，且  <code>Promise.resolve(2)</code>  是一个成功态的 Promise，所以这个 then 方法执行后，其回调也会入队等待，我们记作  <code>P1-t1返</code>  回调，其实 <code>P1-t1返</code> 这个 Promise 实例就是 <code>Promise.resolve(2).then((res)=&gt;&#123;...&#125;)</code> 。</li>
+<li> <code>P1-t1返</code> 回调入队了，由于 <code>P1-t1返</code> 回调在队列中排队，还没有执行，所以 <code>P1-t2</code> 这个 then 方法 对应的 Promise 实例还是等待态 <code>pending</code> ，所以 <code>P1-t2</code> 还是无动作。</li>
+</ul>
+<p>我们来看图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811200719972.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>接着开始执行后微任务队列中的 <code>P2-t1</code> ：</p>
+<ul>
+<li><code>P2-t1</code> 回调执行，输出 10，返回值是 <code>undefined</code> ，这时会调用 <code>P2-t1</code>  这个 then 方法中返回的新 Promise 实例的 resolve 方法并将返回值 <code>undefined</code> 传入，resolve 方法执行后即 <code>P2-t1返</code> 实例状态更改为成功态 <code>Fulfilled</code> ，并执行 <code>P2-t1返</code> 实例的缓存方法。</li>
+<li> <code>P2-t1返</code> 实例中存有被微任务方法包裹的 <code>P2-t2</code> ，执行其微任务方法，<code>P2-t2</code> 入队，最后 <code>P2-t1</code> 出队</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811200933314.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>按照微任务队列中的顺序，现在要开始执行 <code>P1-t1返</code> 这个回调了：</p>
+<ul>
+<li><code>P1-t1返</code> 这个回调是之前 <code>P1-t1</code> 中的 <code>Promise.resolve(2)</code> 的 then 方法回调，它是在内部调用的，其实什么都没做，只是通过 then 取到成功态然后再将 2 这个值传 resolve 出去而已，所以 <code>P1-t1返</code> 回调执行，无输出，<code>P1-t1返</code> 这个 Promise 实例内部 resolve 之后状态改为成功态 <code>Fulfilled</code> ，并执行 <code>P1-t1返</code> 实例的缓存方法。</li>
+<li> <code>P1-t1返</code> 实例中存有被微任务方法包裹的 <code>P1-t2</code> ，执行其微任务方法，<code>P1-t2</code> 入队，最后 <code>P1-t1返</code> 出队。</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811201224223.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>后面的就和之前一样了：</p>
+<ul>
+<li>执行微任务队列中的 <code>P2-t2</code> ，输出 20，<code>P2-t3</code> 入队，<code>P2-t2</code> 出队。</li>
+<li>执行微任务队列中的 <code>P1-t2</code>，输出 2，<code>P1-t2</code> 出队，P1 结束。</li>
+<li>接着执行微任务队列中的 <code>P2-t3</code> ，输出 30，<code>P2-t4</code> 入队，<code>P2-t3</code> 出队。</li>
+<li>执行微任务队列中的 <code>P2-t4</code>，输出 40，<code>P2-t4</code> 出队，P2 结束。</li>
+</ul>
+<p>最终程序的输出结果如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1 10 20 2 30 40</span><br></code></pre></td></tr></table></figure>
+
+<p>好像很顺畅，真的是这样吗？</p>
+<p>我们 <code>copy</code> 一下这段程序在浏览器控制台中执行一下，查看输出结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1 10 20 30 2 40</span><br></code></pre></td></tr></table></figure>
+
+<p>？？？这是为什么？</p>
+<p>按照我们上面的手写 Promise 实现方式输出结果是第一种，但是浏览器中输出结果却是下面这种。。。</p>
+<p>我们之前的手写实现，当使用 Promise 返回一个新的 Promise 时，内部会调用它的 then 方法从而产生一个新的微任务，其回调入队，后面微任务队列执行到这个回调时，拿到传入的值作处理后再 resolve 出去。</p>
+<blockquote>
+<p>但是在 TC39 ECMA 262 SPEC 的 <code>Promise</code> 规范中是这样的：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811213155754.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811190609598.png" srcset="/blog/img/loading.gif" lazyload></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-promise-reject-functions">ECMA 262 spec Promise Resolve Functions</a> </li>
+<li><a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-promise.prototype.then">ECMA 262 spec NewPromiseResolveThenableJob</a> </li>
+</ul>
+<p>如果我们仔细看过规范后，其实就会发现，规范中说的很明确，大概意思就是在 resolve 一个 thenable 时，ECMA 262 规定这个动作必须通过一个 job <code>NewPromiseResolveThenableJob</code> 以异步的方式来完成，也就是说这个 job 其实执行了一个微任务，后面在执行 <code>NewPromiseResolveThenableJob</code> 时又调用了 then 函数（类似我们上面手写 Promise 时，如果返回 Promise 的话，内部回调用这个 Promise 的 then 方法），这个时候又执行了一个微任务，所以是两次微任务。</p>
+</blockquote>
+<p>在 Chrome V8 的 <code>Promise.then</code> 实现中，就严格遵守了这一规范，这里需注意一下，我们上面的 Promise 手写实现遵循的是 Promise/A+ 规范，这个是 ECMA 262 规范，所以我们上面写的也不错，只是我们在面试或者做这种考查输出的题时还是以浏览器为标准的，所以 ECMA 262 要晓得，我们只要知道在返回一个 Promise 对象时，浏览器对其内部的实现会产生 2 次微任务就行，不用刻意纠结，记住就好，没必要扒 V8 源码，意义不大。</p>
+<p>那接下来，我们按照浏览器的标准从零再来解释一下这道题。</p>
+<p>程序回到最初的状态如下：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811200000107.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>首先整个程序会作为一个宏任务第一批执行：</p>
+<ul>
+<li>P1 中直接使用 Promise 构造函数中的 resolve 方法创建了一个成功态的实例，<code>P1-t1</code> 的 then 方法执行时，由于是成功态 <code>Fulfilled</code>，所以 <code>P1-t1</code> 直接作为微任务入队等待执行。</li>
+<li>接着 <code>P1-t2</code> 的 then 方法开始执行，由于 <code>P1-t1</code> 回调还在队列中，上一个 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P1-t2</code> 回调使用微任务方法包裹缓存进 <code>P1-t1返</code> 这个 Promise 实例中。</li>
+<li>P2 中也是使用 Promise 构造函数中的 resolve 方法创建了一个成功态的实例，<code>P2-t1</code> 的 then 方法执行时，由于是成功态 <code>Fulfilled</code>，所以 <code>P2-t1</code> 直接作为微任务入队等待执行。</li>
+<li>接着 <code>P2-t2</code> 的 then 方法开始执行，由于 <code>P2-t1</code> 回调还在队列中，上一个 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P2-t2</code> 回调使用微任务方法包裹缓存进 <code>P2-t1返</code> 这个 Promise 实例中。</li>
+<li>接着 <code>P2-t3</code> 的 then 方法开始执行，由于 <code>P2-t2</code> 的 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P2-t3</code> 回调使用微任务方法包裹缓存进 <code>P2-t2返</code> 这个 Promise 实例中。</li>
+<li>接着 <code>P2-t4</code> 的 then 方法开始执行，由于 <code>P2-t3</code> 的 then 方法返回的 Promise 实例状态还是 <code>pending</code> ，所以 <code>P2-t4</code> 回调使用微任务方法包裹缓存进 <code>P2-t3返</code> 这个 Promise 实例中。</li>
+</ul>
+<p>现在程序运行的状态如下：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811200233374.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>宏任务执行结束，开始依次执行微任务队列中的任务：</p>
+<ul>
+<li>首先是执行 <code>P1-t1</code>，输出 1，由于后面 <code>P1-t1</code> 回调中返回的是一个 Promise 对象，所以和规范中一致，创建一个微任务，我们记作 <code>PRTJob</code> 入队。</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811215549298.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>接着开始执行后微任务队列中的 <code>P2-t1</code> ：</p>
+<ul>
+<li><code>P2-t1</code> 回调执行，输出 10，返回值是 <code>undefined</code> ，这时会调用 <code>P2-t1</code>  这个 then 方法中返回的新 Promise 实例的 resolve 方法并将返回值 <code>undefined</code> 传入，resolve 方法执行后即 <code>P2-t1返</code> 实例状态更改为成功态 <code>Fulfilled</code> ，并执行 <code>P2-t1返</code> 实例的缓存方法。</li>
+<li> <code>P2-t1返</code> 实例中存有被微任务方法包裹的 <code>P2-t2</code> ，执行其微任务方法，<code>P2-t2</code> 入队，最后 <code>P2-t1</code> 出队</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811215851046.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>按照微任务队列中的顺序，要开始执行 <code>PRTJob</code> 这个回调了：</p>
+<ul>
+<li> <code>PRTJob</code> 是在内部调用的，所以没有任何输出， <code>PRTJob</code> 在执行时，就是走 <code>NewPromiseResolveThenableJob</code>  规范，又因为执行时其内部调用了 then 方法，所以此时会作为一个微任务再次入队（第二次微任务），这里我们记作 <code>P1-t1返</code> 回调。</li>
+<li> <code>P1-t1返</code> 回调还在队列中，所以 <code>P1-t1</code> 的 then 方法返回的 Promise 实例的状态还是 <code>pending</code>，所以后续的 <code>P1-t2</code> 还是无动作存在缓存数组中。</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811221429813.png" srcset="/blog/img/loading.gif" lazyload></p>
+<ul>
+<li>接着执行微任务队列中的 <code>P2-t2</code> ，输出 20，<code>P2-t3</code> 入队，<code>P2-t2</code> 出队。</li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811221632681.png" srcset="/blog/img/loading.gif" lazyload></p>
+<ul>
+<li>接着执行微任务队列中的 <code>P1-t1返</code> 回调，同样是内部调用，无输出，该回调内部执行完实例的 resolve 方法后，<code>P1-t1</code> 的 then 方法返回的 Promise 也就是 <code>P1-t1返</code> 这个Promise 实例终于变成了成功态 <code>Fulfilled</code>，接着清空实例的缓存， <code>P1-t2</code> 入队，<code>P1-t1返</code> 回调出队。</li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811222333433.png" srcset="/blog/img/loading.gif" lazyload></p>
+<ul>
+<li>接着执行微任务队列中的 <code>P2-t3</code>，输出 30，<code>P2-t4</code> 入队，<code>P2-t3</code> 出队。</li>
+<li>再执行微任务队列中的 <code>P1-t2</code>，输出 2，<code>P1-t2</code> 出队，P1 执行结束。</li>
+<li>接着执行微任务队列中的 <code>P2-t4</code>，输出 40，<code>P2-t4</code> 出队，P2 执行结束。</li>
+</ul>
+<p>最终程序执行输出结果如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1 10 20 30 2 40</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="增强版"><a href="#增强版" class="headerlink" title="增强版"></a>增强版</h3><p>上面那个小例子只是单纯返回了一个 Promise，我们再给它接个 then 试试看：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Promise</span>.resolve().then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-number">2</span>).then(<span class="hljs-function"><span class="hljs-params">res</span>=&gt;</span>&#123;<br>    <span class="hljs-keyword">return</span> res<br>  &#125;);<br>&#125;).then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(res)<br>&#125;)<br><br><span class="hljs-built_in">Promise</span>.resolve().then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">10</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">20</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">30</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">40</span>);<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>浏览器控制台里运行此段代码后，我们发现输出的结果是：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1 10 20 30 2 40</span><br></code></pre></td></tr></table></figure>
+
+<p>诶？为什么接了一个 then 后输出顺序和没有接 then 是时候一样，没有变化？</p>
+<p>再来接一个 then 试试，如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Promise</span>.resolve().then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-number">2</span>).then(<span class="hljs-function"><span class="hljs-params">res</span>=&gt;</span>&#123;<br>    <span class="hljs-keyword">return</span> res<br>  &#125;).then(<span class="hljs-function"><span class="hljs-params">res</span>=&gt;</span>&#123;<br>    <span class="hljs-keyword">return</span>  res<br>  &#125;)<br>&#125;).then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(res)<br>&#125;)<br><br><span class="hljs-built_in">Promise</span>.resolve().then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">10</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">20</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">30</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">40</span>);<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>现在我们在返回的 <code>Promise.resolve(2)</code> 后面接了 2 个 then 方法，来看输出结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1 10 20 30 40 2</span><br></code></pre></td></tr></table></figure>
+
+<p>诶？输出结果又变了，可以看到，在只返回一个单纯的 Promise 对象时和在 Promise 对象后跟一个 then 方法的输出结果是一样的，但是返回的 Promise 后面跟 2 个以上的 then 方法时，又会影响到输出顺序，这是为什么呢？</p>
+<p>其实很简单，还按照我们之前的套路画一个入队的图就知道了，上面我们已经介绍过了单纯的返回一个 <code>Promise.resolve(2)</code> 的程序微任务入队出队图。这里就不给大家画详细的图了，我们口述一下，最后简单画一个程序整体微任务队列入队出队图。</p>
+<p>回顾 No.1 中只返回一个 <code>Promise.resolve(2)</code> 的程序，我们看它整体的微任务队列图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811222848424.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>我们再来看 <code>Promise.resolve(2).then(res =&gt; return res)</code> 的程序：</p>
+<ul>
+<li>由于多了一个 then，整个程序除了之前说的 P1 和 P2，我们将 <code>Promise.resolve(2).then(res =&gt; return res)</code> 记作 P3，多出的这一个 then 方法我们记作 <code>P3-t1</code> 。</li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811210304349.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>简单口述一下各个微任务的入队出队顺序，大家可以跟着在纸上画一下：</p>
+<ul>
+<li>程序主体作为一个宏任务第一批次执行。</li>
+<li>P1 中由于是 <code>Promise.resolve()</code> ，所以直接返回成功态 Promise，<code>P1-t1</code> 入队。</li>
+<li><code>P1-t2</code> 的 then 方法执行，由于上一个 then 方法返回的 Promise 还在等待态 <code>pending</code> ，所以缓存到 <code>P1-t1返</code> 这个 Promise 实例等待执行。</li>
+<li>P2 中也是 <code>Promise.resolve()</code> ，所以直接返回成功态 Promise，<code>P2-t1</code> 入队。</li>
+<li>P2 后续的 <code>P2-t2</code>、<code>P2-t3</code>、<code>P2-t4</code> 各自缓存进其上一个 then 方法返回的 Promise 实例中</li>
+</ul>
+<p>宏任务结束，开始执行微任务队列：</p>
+<ul>
+<li><code>P1-t1</code> 执行，输出 1，接着执行 <code>return Promise.resolve(2).then(...)</code>，<code>P3-1</code> 入队。</li>
+<li>由于 <code>P1-t1</code> 回调的返回值为 Promise 对象，所以创建 <code>PRTJob</code> 入队。<code>P1-t1</code> 回调执行结束出队。</li>
+<li>接着执行微任务队列中的 <code>P2-t1</code> 回调，输出 10，<code>P2-t1返</code> 实例变为成功态 <code>Fulfilled</code>，<code>P2-t2</code> 入队。</li>
+<li>接着执行微任务队列中的 <code>P3-t1</code> 回调，<code>P3-t1</code> 的 then 方法返回的 Promise 实例状态改为成功态 <code>Fulfilled</code>，无输出，执行结束 <code>P3-t1</code> 出队。</li>
+<li>接着执行微任务队列中的 <code>PRTJob</code> 回调，由于 <code>P3-t1</code> 中返回的 Promise 实例状态为成功态 <code>Fulfilled</code>，所以 <code>PRTJob</code> 执行时，调用 then 方法 <code>P1-t1返</code> 回调直接入队，<code>PRTJob</code> 出队。</li>
+<li>接着执行微任务队列中的 <code>P2-t2</code> 回调，输出 20，<code>P2-t2返</code> 实例变为成功态 <code>Fulfilled</code>，<code>P2-t3</code> 入队， <code>P2-t2</code> 出队。</li>
+<li>接着执行微任务队列中的 <code>P1-t1返</code> 回调， <code>P1-t1返</code> 实例变为成功态 <code>Fulfilled</code>，<code>P1-t2</code> 入队， <code>P1-t1返</code> 出队 。</li>
+<li>接着执行微任务队列中的 <code>P2-t3</code> 回调，输出 30，<code>P2-t3返</code> 实例变为成功态 <code>Fulfilled</code>，<code>P2-t4</code> 入队， <code>P2-t3</code> 出队 。</li>
+<li>接着执行微任务队列中的 <code>P1-t2</code> 回调，输出 2， <code>P1-t2</code> 出队，P1 结束。</li>
+<li> 接着执行微任务队列中的 <code>P2-t4</code> 回调，输出 40， <code>P2-t4</code> 出队，P2 结束。</li>
+</ul>
+<p>整个程序微任务入队出队顺序如下：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811225121431.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>再来看 <code>Promise.resolve(2).then(...).then(...)</code> 的程序：</p>
+<ul>
+<li>由于多了两个 then，整个程序除了之前说的 P1 和 P2，我们将 <code>Promise.resolve(2).then(...).then(...)</code> 记作 P3，两个 then 方法我们分别记作 <code>P3-t1</code>、<code>P3-t2</code> 。</li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811225621580.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>简单口述一下各个微任务的入队出队顺序，和上面一样，大家可以跟着在纸上画一下：</p>
+<ul>
+<li>程序主体作为一个宏任务第一批次执行。</li>
+<li>P1 中由于是 <code>Promise.resolve()</code> ，所以直接返回成功态 Promise，<code>P1-t1</code> 入队。</li>
+<li><code>P1-t2</code> 的 then 方法执行，由于上一个 then 方法返回的 Promise 还在等待态 <code>pending</code> ，所以缓存到 <code>P1-t1返</code> 这个 Promise 实例等待执行。</li>
+<li>P2 中也是 <code>Promise.resolve()</code> ，所以直接返回成功态 Promise，<code>P2-t1</code> 入队。</li>
+<li>P2 后续的 <code>P2-t2</code>、<code>P2-t3</code>、<code>P2-t4</code> 各自缓存进其上一个 then 方法返回的 Promise 实例中</li>
+</ul>
+<p>宏任务结束，开始执行微任务队列：</p>
+<ul>
+<li><code>P1-t1</code> 执行，输出 1，接着执行 <code>return Promise.resolve(2).then(...)</code>，<code>P3-t1</code> 入队。</li>
+<li>由于 <code>P1-t1</code> 回调的返回值为 Promise 对象，所以创建 <code>PRTJob</code> 入队。<code>P1-t1</code> 回调执行结束出队。</li>
+<li>接着执行微任务队列中的 <code>P2-t1</code> 回调，输出 10，<code>P2-t1返</code> 实例变为成功态 <code>Fulfilled</code>，<code>P2-t2</code> 入队。</li>
+<li>接着执行微任务队列中的 <code>P3-t1</code> 回调，<code>P3-t1</code> 的 then 方法返回的 Promise 实例状态改为成功态 <code>Fulfilled</code>，无输出，执行结束 <code>P3-t2</code> 入队， <code>P3-t1</code> 出队。</li>
+<li>接着执行微任务队列中的 <code>PRTJob</code> 回调，由于 <code>P3-t2</code> 还在队列中，即返回的实例状态还在等待态 <code>pending</code>， 所以 <code>PRTJob</code> 执行时，调用实例的 then 方法会直接存入实例缓存，等待 <code>P3-t2</code> 回调执行后状态为成功态 <code>Fulfilled</code>时调用，<code>PRTJob</code> 出队。</li>
+<li>接着执行微任务队列中的 <code>P2-t2</code> 回调，输出 20，<code>P2-t2返</code> 实例变为成功态 <code>Fulfilled</code>，<code>P2-t3</code> 入队， <code>P2-t2</code> 出队。</li>
+<li>接着执行 <code>P3-t2</code> 回调，<code>P3-t2</code> 这个 then 方法返回的 Promise 状态改为成功态 <code>Fulfilled</code>，这时，内部调用其实例的 then 方法，规范中说的返回 Promise时产生的第二次微任务 <code>P1-t1返</code> 回调入队。</li>
+<li>接着执行微任务队列中的 <code>P2-t3</code> 回调，输出 30，<code>P2-t3返</code> 实例变为成功态 <code>Fulfilled</code>，<code>P2-t4</code> 入队， <code>P2-t3</code> 出队 。</li>
+<li>接着执行微任务队列中的 <code>P1-t1返</code> 回调， <code>P1-t1返</code> 实例变为成功态 <code>Fulfilled</code>，<code>P1-t2</code> 入队， <code>P1-t1返</code> 出队 。</li>
+<li>接着执行微任务队列中的 <code>P2-t4</code> 回调，输出 40， <code>P2-t4</code> 出队，P2 结束。</li>
+<li>接着执行微任务队列中的 <code>P1-t2</code> 回调，输出 2， <code>P1-t2</code> 出队，P1 结束。</li>
+</ul>
+<p>整个程序微任务入队出队顺序如下：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811231115853.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>至于为什么一个 then 和不带 then 的输出结果一致，我们来看三个程序的微任务入队出队顺序对比就知道了：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210811231822398.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>其实，主要是因为在返回的 Promise 对象后写一个 then，由于这个 then 的上个 Promise 是 <code>Promise.resolve()</code> ，状态是成功态，所以会先入队。返回一个 Promise 所造成的两次微任务，第二次是调用传入 Promise 对象的 then 方法，只要调用前该 Promise 实例的状态是成功态 <code>Fulfilled</code> 即可。直接返回 <code>Promise.resolve()</code> 的话，其状态直接就是成功态 <code>Fulfilled</code> ，而在返回的 Promise 后写两个及以上的 then，那传入到内部的 Promise 实例的就需要等最后一个 then 返回的 Promise 实例状态为成功态 <code>Fulfilled</code> 时才能执行。</p>
+<p>如果看不懂我的描述也没关系，会画图就可以，按照我们的套路走即可。</p>
+<h2 id="async-await-Promise执行"><a href="#async-await-Promise执行" class="headerlink" title="async/await+Promise执行"></a>async/await+Promise执行</h2><h3 id="基础版-1"><a href="#基础版-1" class="headerlink" title="基础版"></a>基础版</h3><p>async/await 其实就是 Generator + Promise 的一个语法糖，不过它也有很多坑。</p>
+<p>来看下面这个例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">async1</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>);<br>  <span class="hljs-keyword">await</span> async2();<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>);<br>&#125;<br><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">async2</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>);<br>&#125;<br>async1();<br><br><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">10</span>);<br>  resolve();<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">20</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">30</span>)<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">40</span>)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>这个例子在老版本浏览器和新版本浏览器中是有差异的，主要还是浏览器的内部实现。</p>
+<p>可以简单的这样理解，await 下面的代码会被作为一个微任务入队。</p>
+<p>接下来我们来逐步分析：</p>
+<ul>
+<li>首先，整体作为一个宏任务开始执行。</li>
+<li>运行 <code>async1()</code> ，函数 async1 开始执行，输出 1，遇到 await，执行 <code>async2</code>，输出 3，await 下面的代码作为微任务入队。</li>
+<li>接着执行 <code>new Promise()</code> 的回调，输出 10，<code>resolve</code> 的执行让返回的 Promise 实例状态变为了成功态 <code>Fulfilled</code>。</li>
+<li>执行第一个 then 方法，由于接上一个 Promise 返回的实例是成功态 <code>Fulfilled</code> ，所以第一个 then 方法回调直接入队。</li>
+<li>执行第二个 then 方法，由于第一个 then 方法回调还在队列中没有执行，所以上一个 Promise 返回的实例还是等待态 <code>pending</code> ，将第二个 then 方法回调由微任务方法包裹缓存进实例数组。</li>
+<li>执行第三个 then 方法，由于第二个 then 方法回调还在队列中没有执行，所以上一个 Promise 返回的实例还是等待态 <code>pending</code> ，将第三个 then 方法回调由微任务方法包裹缓存进实例数组。</li>
+</ul>
+<p>到此，宏任务结束，开始执行微任务队列的任务。</p>
+<ul>
+<li>首先，执行先入队的 async1 方法中 await 下面的代码回调，输出 2，然后出队。</li>
+<li>接着，执行队列中的第一个 then 回调，输出 20，返回undefined，内部执行 <code>resolve(undefined)</code> 后返回的实例状态改为成功态 <code>Fulfilled</code>，并执行实例上的缓存方法，所以第二个 then 方法回调入队，第一个 then 方法出队。</li>
+<li>接着，执行队列中的第二个 then 回调，输出 30，返回undefined，内部执行 <code>resolve(undefined)</code> 后返回的实例状态改为成功态 <code>Fulfilled</code>，并执行实例上的缓存方法，所以第三个 then 方法回调入队，第一个 then 方法出队。</li>
+<li>接着，执行队列中的第三个 then 回调，输出 40，返回undefined，内部执行 <code>resolve(undefined)</code> 后返回的实例状态改为成功态 <code>Fulfilled</code>，并执行实例上的缓存方法，实例上缓存数组为空，第三个 then 方法出队，程序结束。</li>
+</ul>
+<p>最终的输出结果为：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1 3 10 2 20 30 40</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="增强版-1"><a href="#增强版-1" class="headerlink" title="增强版"></a>增强版</h3><p>题目简单一变，又能迷倒一大群人，如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">async1</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>);<br>  <span class="hljs-keyword">await</span> async2();<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>);<br>&#125;<br><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">async2</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve()<br>&#125;<br>async1();<br><br><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">10</span>);<br>  resolve();<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">20</span>);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">30</span>)<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">40</span>)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，之前的代码中 <code>async2</code> 函数没有写 return ，也就是返回的是一个 undefined，由于是 <code>async</code> 吗，最终函数是返回一个值为 undefined 的 Promise 对象，但现在我们在 <code>async2</code> 函数中返回了一个 Promise 对象。。。</p>
+<p>输出一下，顺序变了：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1 3 10 20 30 2 40</span><br></code></pre></td></tr></table></figure>
+
+<p>聪明的小伙伴可能已经看出蹊跷来了，之前在说 Promise 的时候，我们就在说如果返回的是一个正常的值，Promise 内部会正常 resolve 出去，但是如果返回的是一个新的 Promise 对象，内部会产生 2 个微任务。</p>
+<p>那这里为了方便理解，其实也完全可以按照这种思路来走。</p>
+<p>现在我们在 <code>async2</code> 函数中返回了一个 Promise 对象，相当于多产生了 2 次微任务，所以输出中 2 的顺序后移了 2 位。</p>
+<p>整体流程大概就是：</p>
+<ul>
+<li>首先，整体作为一个宏任务开始执行。</li>
+<li>运行 <code>async1()</code> ，函数 async1 开始执行，输出 1，遇到 await，执行 <code>async2</code>，先输出 3，由于<code>async2</code> 中返回的是 Promise 对象，解析时产生的第一个微任务入队。</li>
+<li>接着执行 <code>new Promise()</code> 的回调，输出 10，<code>resolve</code> 的执行让返回的 Promise 实例状态变为了成功态 <code>Fulfilled</code>。</li>
+<li>执行第一个 then 方法，由于接上一个 Promise 返回的实例是成功态 <code>Fulfilled</code> ，所以第一个 then 方法回调直接入队。</li>
+<li>执行第二个 then 方法，由于第一个 then 方法回调还在队列中没有执行，所以上一个 Promise 返回的实例还是等待态 <code>pending</code> ，将第二个 then 方法回调由微任务方法包裹缓存进实例数组。</li>
+<li>执行第三个 then 方法，由于第二个 then 方法回调还在队列中没有执行，所以上一个 Promise 返回的实例还是等待态 <code>pending</code> ，将第三个 then 方法回调由微任务方法包裹缓存进实例数组。</li>
+</ul>
+<p>到此，宏任务结束，开始执行微任务队列的任务。</p>
+<ul>
+<li>首先，执行 <code>async2</code> 中返回 Promise 对象解析时所产生的第一个微任务，无输出，然后产生的第二个微任务入队，产生的第一个微任务出队。</li>
+<li>接着，执行队列中的第一个 then 回调，输出 20，返回undefined，内部执行 <code>resolve(undefined)</code> 后返回的实例状态改为成功态 <code>Fulfilled</code>，并执行实例上的缓存方法，所以第二个 then 方法回调入队，第一个 then 方法出队。</li>
+<li>接着，执行 <code>async2</code> 中返回 Promise 对象解析时所产生的第二个微任务，无输出，然后 <code>async1</code> 函数中 await 下面的代码作为微任务入队，返回 Promise 对象解析时所产生的第二个微任务出队。</li>
+<li>接着，执行队列中的第二个 then 回调，输出 30，返回undefined，内部执行 <code>resolve(undefined)</code> 后返回的实例状态改为成功态 <code>Fulfilled</code>，并执行实例上的缓存方法，所以第三个 then 方法回调入队，第一个 then 方法出队。</li>
+<li>接着，执行 <code>async1</code> 函数中 await 下面代码产生的微任务，输出 2，随后出队。</li>
+<li>接着，执行队列中的第三个 then 回调，输出 40，返回undefined，内部执行 <code>resolve(undefined)</code> 后返回的实例状态改为成功态 <code>Fulfilled</code>，并执行实例上的缓存方法，实例上缓存数组为空，第三个 then 方法出队，程序结束。</li>
+</ul>
+<p>最终的输出结果即：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1 3 10 20 30 2 40</span><br></code></pre></td></tr></table></figure>
+
+<p>其实，还可以在 <code>async2</code> 函数返回的 <code>Promise.resolve()</code> 后面加一个 then 方法，你会发现输出顺序还是上面这种，加 2 个及以上的 then 方法 输出结果的 2 才会产生后移。有没有发现哪里相似？</p>
+<p>没错，和我们上面 Promise 中说过的案例如出一辙，这里就不再唠叨了，感兴趣可以自己写一写、画一画。。</p>
+<p>其实由于规范在改动，浏览器也在不断升级，所以执行顺序这个东西真的是很扯淡。。。我们了解就好，只要能解释为什么，最终结果不用过分在意。。</p>
+<h2 id="杂七杂八的混编执行"><a href="#杂七杂八的混编执行" class="headerlink" title="杂七杂八的混编执行"></a>杂七杂八的混编执行</h2><p>最后来一个混编的题型，以应对多个宏任务+多个微任务的场景下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">reslove, reject</span>) =&gt;</span> &#123;<br>  <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-number">10</span>);<br>  &#125;, <span class="hljs-number">2000</span>);<br>  <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-number">20</span>);<br>  &#125;, <span class="hljs-number">1000</span>);<br>  reslove();<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">reslove, reject</span>) =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;1-1&#x27;</span>);<br>    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>      <span class="hljs-built_in">console</span>.log(<span class="hljs-number">30</span>);<br>      reslove();<br>    &#125;, <span class="hljs-number">500</span>);<br>  &#125;);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">reslove, reject</span>) =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;2-1&#x27;</span>);<br>    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>      <span class="hljs-built_in">console</span>.log(<span class="hljs-number">40</span>);<br>      reslove();<br>    &#125;, <span class="hljs-number">200</span>);<br>  &#125;);<br>&#125;).then(<span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>);<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>首先，还是为程序中各个部分做一个拆分命名。</p>
+<ul>
+<li>程序中所有的 <code>setTimeout</code> 使用 <code>timer+定时的ms数字</code> 命名。</li>
+<li>最外部的 Promise 记作 P1，<code>new Promise</code> 的回调记作 <code>P1-主</code>，其下三个 then 方法分别记作 <code>P1-t1</code>，<code>P1-t2</code>，<code>P1-t3</code>。</li>
+<li><code>P1-t1</code> 中返回的 <code>new Promise</code> 实例记作 P2，其实例参数回调记作 <code>P2-主</code>。</li>
+<li><code>P1-t2</code> 中返回的 <code>new Promise</code> 实例记作 P3，其实例参数回调记作 <code>P3-主</code>。</li>
+</ul>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210812041257886.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>上图为程序初始化状态，多了一个宏任务队列，我们慢慢来看。</p>
+<p>首先整个程序作为一个宏任务先执行：</p>
+<ul>
+<li><code>P1-主</code> 执行，遇到 <code>timer2000</code> ，<code>setTimeout</code> 为异步宏任务，通过事件触发线程将其移交给定时触发器线程处理，等待其 <code>2000ms</code> 定时结束其回调入宏任务队列。接着执行，遇到 <code>timer1000</code> ，<code>setTimeout</code> 为异步宏任务，通过事件触发线程将其移交给定时触发器线程处理，等待其 <code>1000ms</code> 定时结束其回调入宏任务队列。最后执行 resolve 方法将返回的 Promise 实例状态改为成功态 <code>Fulfilled</code>。</li>
+<li>由于 <code>new Promise</code> 实例参数回调中已经调用 resolve 方法，所以返回的 Promise 实例 <code>P1-主返</code> 状态为成功态 <code>Fulfilled</code> ，<code>P1-t1</code> 的 then 方法执行时，直接入微任务队列。</li>
+<li><code>P1-t2</code> 由于 <code>P1-t1</code> 还在回调中，其返回的 Promise 实例 <code>P1-t1返</code> 状态为等待态 <code>pending</code> ，所以 <code>P1-t2</code> 回调被微任务方法包裹存入 <code>P1-t1返</code> 实例缓存数组中。</li>
+<li><code>P1-t3</code> 由于 <code>P1-t2</code> 回调还未执行，其返回的 Promise 实例 <code>P1-t2返</code> 状态为等待态 <code>pending</code> ，所以 <code>P1-t3</code> 回调被微任务方法包裹存入 <code>P1-t2返</code> 实例缓存数组中。</li>
+</ul>
+<p>此时程序运行状态如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210812050426816.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>到此第一轮宏任务执行完毕，开始执行微任务队列。</p>
+<ul>
+<li>执行 <code>P1-t1</code> 回调，先输出 1，接着执行 return 的 Promise 实例参数回调 <code>P2-主</code> ，输出 <code>1-1</code>，又遇到了 <code>setTimeout</code> ，通过事件触发线程将其移交给定时触发器线程处理，等待其 <code>500ms</code> 定时结束其回调入宏任务队列，由于 resolve 方法是在定时器中执行的，所以此时 通过 new Promise 创建的 Promise 实例状态还是等待态 <code>pending</code>。</li>
+<li>由于 <code>P1-t1</code> 最终返回的是一个 Promise 对象，所以和规范中一致，创建第一个微任务 job，我们记作 <code>PRTJob1</code> 入微任务队列。到此 <code>P1-t1</code> 出队。</li>
+<li>接着执行微任务队列中的任务，即 <code>PRTJob1</code> 回调，执行结束后，开始执行 <code>P1-t1</code> 中 return 的 <code>new Promise</code> 实例的 then 方法（ 该方法执行后会返回 <code>P1-t1返</code> 实例 ），由于 <code>P1-t1</code> 中 return 的 <code>new Promise</code> 实例还是等待态 <code>pending</code>，所以 <code>P1-t1</code> 中 return 的 <code>new Promise</code> 实例的 then 方法回调（记作 <code>P1-t1返</code> 回调）被微任务方法包裹存入 <code>P1-t1返</code> 实例缓存数组中。</li>
+</ul>
+<p>此时程序状态如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210812052915966.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>这时微任务队列已经执行完毕，宏任务队列没有任务，500ms 后，定时器触发线程的 <code>timer500</code> 执行有了结果后将其回调送入宏任务队列。</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210812053231056.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>此时主线程空闲，突然宏任务队列有了任务，所以立即取宏任务队列的第一个任务在 JS主执行栈执行，即开始执行新的宏任务 <code>timer500</code>。</p>
+<ul>
+<li>执行 <code>timer500</code> 回调，输出 30，再接着执行 resolve 方法，此时 <code>P1-t1</code> 中 return 的 <code>new Promise</code> 实例状态改为了成功态 <code>Fulfilled</code> ，并执行其实例中的缓存，即 <code>P1-t1返</code> 回调入微任务队列。</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210812054947123.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>宏任务执行完毕，开始执行当前宏任务所产生的所有微任务。</p>
+<ul>
+<li>执行微任务队列中的  <code>P1-t1返</code>  回调，修改 <code>P1-t1返</code>  实例的状态为成功态 <code>Fulfilled</code> ，执行其实例上的缓存，所以 <code>P1-t2</code> 入微任务队列。</li>
+<li>接着执行微任务队列的  <code>P1-t2</code> 回调，输出 2，接着执行 return 的 Promise 实例参数回调 <code>P3-主</code> ，输出 <code>2-1</code>，又遇到了 <code>setTimeout</code> ，通过事件触发线程将其移交给定时触发器线程处理，等待其 <code>200ms</code> 定时结束其回调入宏任务队列，由于 resolve 方法是在定时器中执行的，所以此时通过 new Promise 创建的 Promise 实例状态还是等待态 <code>pending</code>。</li>
+<li>由于 <code>P1-t2</code> 最终返回的是一个 Promise 对象，所以和规范中一致，创建第一个微任务 job，我们记作 <code>PRTJob2</code> 入微任务队列。到此 <code>P1-t2</code> 出队。</li>
+<li>接着执行微任务队列中的任务，即 <code>PRTJob2</code> 回调，执行结束后，开始执行 <code>P1-t2</code> 中 return 的 <code>new Promise</code> 实例的 then 方法（ 该方法执行后会返回 <code>P1-t2返</code> 实例 ），由于 <code>P1-t2</code> 中 return 的 <code>new Promise</code> 实例还是等待态 <code>pending</code>，所以 <code>P1-t2</code> 中 return 的 <code>new Promise</code> 实例的 then 方法回调（记作 <code>P1-t2返</code> 回调）被微任务方法包裹存入 <code>P1-t2返</code> 实例缓存数组中。</li>
+</ul>
+<p>此时程序状态如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210812055803586.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>这时微任务队列已经执行完毕，宏任务队列没有任务，200ms 后，定时器触发线程的 <code>timer200</code> 执行有了结果后将其回调送入宏任务队列。</p>
+<p>此时主线程空闲，突然宏任务队列有了任务，所以立即取宏任务队列的第一个任务在 JS主执行栈执行，即开始执行新的宏任务 <code>timer200</code>。</p>
+<ul>
+<li>执行 <code>timer200</code> 回调，输出 40，再接着执行 resolve 方法，此时 <code>P1-t2</code> 中 return 的 <code>new Promise</code> 实例状态改为了成功态 <code>Fulfilled</code> ，并执行其实例中的缓存，即 <code>P1-t2返</code> 回调入微任务队列。</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210812060417634.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>宏任务执行完毕，开始执行当前宏任务所产生的所有微任务。</p>
+<ul>
+<li>执行微任务队列中的  <code>P1-t2返</code>  回调，修改 <code>P1-t2返</code>  实例的状态为成功态 <code>Fulfilled</code> ，执行其实例上的缓存，所以 <code>P1-t3</code> 入微任务队列。</li>
+<li>接着执行微任务队列的  <code>P1-t3</code> 回调，输出 3。到这本轮微任务执行结束。</li>
+</ul>
+<p>此时程序状态如下图：</p>
+<p><img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/image-20210812061113544.png" srcset="/blog/img/loading.gif" lazyload></p>
+<p>由于宏任务队列没有任务，此时主线程空闲，（1000ms-500ms-200ms） 后，定时器触发线程的 <code>timer1000</code> 执行有了结果后将其回调送入宏任务队列。</p>
+<p>宏任务队列有了任务，所以立即取宏任务队列的第一个任务在 JS主执行栈执行，即开始执行新的宏任务 <code>timer1000</code>。</p>
+<ul>
+<li>执行 <code>timer1000</code> 回调，输出 20，没有产生微任务，所以本轮执行结束。</li>
+</ul>
+<p>由于宏任务队列没有任务，此时主线程空闲，（2000ms-1000ms） 后，定时器触发线程的 <code>timer2000</code> 执行有了结果后将其回调送入宏任务队列。</p>
+<p>宏任务队列有了任务，所以立即取宏任务队列的第一个任务在 JS主执行栈执行，即开始执行新的宏任务 <code>timer2000</code>。</p>
+<ul>
+<li>执行 <code>timer2000</code> 回调，输出 10，没有产生微任务，所以本轮执行结束。</li>
+</ul>
+<p>到此整个程序结束，最终输出：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1 1-1 30 2 2-1 40 3 20 10</span><br></code></pre></td></tr></table></figure>
+
+<p>Get 到了吗？</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>那么，看懂了吗？看得懂最好了，看不懂也没必要懊恼，只要理解 JS运行机制以及 Promise 的核心概念对一些简单的执行顺序可以做出准确的分析即可，本文的内容对实际开发帮助不大，因为真的不敢想象开发中如果出现了这种基于复杂的调用顺序而写的代码是一件多么糟糕的事情，奈何还真有很多企业面试时会问这些无聊的问题，所以了解这些，从此就不用担心这类面试题了。</p>
+<p>不清楚的地方请评论区留言，欢迎指错勘误！</p>
+<p>最后，码字不易，画图更不易，点赞、点赞、点赞！欢迎关注 <a target="_blank" rel="noopener" href="https://juejin.cn/column/6960559453037199391">「硬核JS」</a> 专栏，Get 更多 JS 知识哦！！</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E7%A1%AC%E6%A0%B8JS%E7%B3%BB%E5%88%97/">硬核JS系列</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/JavaScript/">JavaScript</a>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6/">运行机制</a>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/Promise/">Promise</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本站所有文章如需转载，请联系作者！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2021/09/15/engineering/%E3%80%8C%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%9B%9B%E9%83%A8%E6%9B%B2%E3%80%8D%E6%A8%A1%E5%9D%97%E5%8C%96%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F%EF%BC%88%E4%B8%8A%EF%BC%89/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">「前端工程四部曲」模块化的前世今生（上）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2021/08/02/vue/%E8%B7%9F%E7%9D%80%E6%9D%A5%EF%BC%8C%E4%BD%A0%E4%B9%9F%E5%8F%AF%E4%BB%A5%E6%89%8B%E6%92%B8VueRouter/">
+                        <span class="hidden-mobile">跟着来，你也可以手写VueRouter</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"OuIO62anqvXdvjruYtvDefqV-gzGzoHsz","appKey":"G9BfnEel5vlsGHJqmPkr2B1P","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+       <div style="display: flex;justify-content: center;align-items: center;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/gzh.jpeg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;"> <img src="https://gitee.com/IsboyJC/PictureBed/raw/master/other/zs.jpg" srcset="/blog/img/loading.gif" lazyload class="rounded" style="width:100px; height:100px;margin-left: 20px;"> </div> 
+    </div>
+  </div>
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br /> 欢迎关注微信公众号「不正经的前端」！ 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>
